@@ -69,7 +69,7 @@ Page.Users = class Users extends Page.Base {
 			else avatar_url = '/api/app/avatar/' + user.username + '.png?size=64&mod=' + (user.custom_avatar || 0);
 			
 			return [
-				self.getNiceUser(user, true),
+				'<b>' + self.getNiceUser(user, true) + '</b>',
 				// '<a href="#Users?sub=edit&username=' + user.username + '"><div class="td_avatar" style="background-image:url(' + avatar_url + ')">' + user.username + '</div></a>',
 				'<span class="mono">' + user.username + '</span>',
 				'<a href="mailto:'+user.email+'">'+user.email+'</a>',
