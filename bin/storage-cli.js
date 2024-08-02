@@ -487,6 +487,18 @@ var storage = new StandaloneStorage(config.Storage, function(err) {
 			); // eachSeries
 		break;
 		
+		case 'export':
+			// export all storage data (except completed jobs, sessions)
+			var file = commands.shift();
+			export_data(file);
+		break;
+		
+		case 'import':
+			// import storage data from file
+			var file = commands.shift();
+			import_data(file);
+		break;
+		
 		default:
 			print("Unknown command: " + cmd + "\n");
 			storage.shutdown( function() {;} );
@@ -494,6 +506,169 @@ var storage = new StandaloneStorage(config.Storage, function(err) {
 		
 	} // switch
 });
+
+function export_data(file) {
+	// export data to file or stdout (except for completed jobs, logs, server history and sessions)
+	// one record per line: KEY - JSON
+	var stream = file ? fs.createWriteStream(file) : process.stdout;
+	
+	// file header (for humans)
+	var file_header = "# Orchestra Data Export v1.0\n" + 
+		"# Hostname: " + hostname + "\n" + 
+		"# Date/Time: " + (new Date()).toString() + "\n" + 
+		"# Format: KEY - JSON\n\n";
+	
+	stream.write( file_header );
+	verbose_warn( file_header );
+	
+	if (file) verbose_warn("Exporting to file: " + file + "\n\n");
+	
+	// need to handle users separately, as they're stored as a list + individual records
+	storage.listEach( 'global/users',
+		function(item, idx, callback) {
+			var username = item.username;
+			var key = 'users/' + username.toString().toLowerCase().replace(/\W+/g, '');
+			verbose_warn( "Exporting user: " + username + "\n" );
+			
+			storage.get( key, function(err, user) {
+				if (err) {
+					// user deleted?
+					warn( "\nFailed to fetch user: " + key + ": " + err + "\n\n" );
+					return callback();
+				}
+				
+				stream.write( key + ' - ' + JSON.stringify(user) + "\n", 'utf8', callback );
+			} ); // get
+		},
+		function(err) {
+			// ignoring errors here
+			// proceed to the rest of the lists
+			async.eachSeries(
+				[
+					'global/users',
+					'global/api_keys',
+					'global/plugins',
+					'global/categories',
+					'global/groups',
+					'global/events',
+					'global/channels',
+					'global/commands',
+					'global/monitors',
+					'global/alerts',
+					'global/tags'
+				],
+				function(list_key, callback) {
+					// first get the list header
+					verbose_warn( "Exporting list: " + list_key + "\n" );
+					
+					storage.get( list_key, function(err, list) {
+						if (err) return callback( new Error("Failed to fetch list: " + list_key + ": " + err) );
+						
+						stream.write( list_key + ' - ' + JSON.stringify(list) + "\n" );
+						
+						// now iterate over all the list pages
+						var page_idx = list.first_page;
+						
+						async.whilst(
+							function() { return page_idx <= list.last_page; },
+							function(callback) {
+								// load each page
+								var page_key = list_key + '/' + page_idx;
+								page_idx++;
+								
+								verbose_warn( "Exporting list page: " + page_key + "\n");
+								
+								storage.get(page_key, function(err, page) {
+									if (err) return callback( new Error("Failed to fetch list page: " + page_key + ": " + err) );
+									
+									// write page data
+									stream.write( page_key + ' - ' + JSON.stringify(page) + "\n", 'utf8', callback );
+								} ); // page get
+							}, // iterator
+							callback
+						); // whilst
+						
+					} ); // get
+				}, // iterator
+				function(err) {
+					if (err) {
+						warn( "\nEXPORT ERROR: " + err + "\n" );
+						process.exit(1);
+					}
+					
+					verbose_warn( "\nExport completed at " + (new Date()).toString() + ".\nExiting.\n\n" );
+					
+					if (file) stream.end();
+					
+					storage.shutdown( function() { process.exit(0); } );
+				} // done done
+			); // list eachSeries
+		} // done with users
+	); // users listEach
+};
+
+function import_data(file) {
+	// import storage data from specified file or stdin
+	// one record per line: KEY - JSON
+	print( "\nOrchestra Data Importer v1.0\n" );
+	if (file) print( "Importing from file: " + file + "\n" );
+	else print( "Importing from STDIN\n" );
+	print( "\n" );
+	
+	var count = 0;
+	var queue = async.queue( function(line, callback) {
+		// process each line
+		if (line.match(/^(\w[\w\-\.\/]*)\s+\-\s+(\{.+\})\s*$/)) {
+			var key = RegExp.$1;
+			var json_raw = RegExp.$2;
+			print( "Importing record: " + key + "\n" );
+			
+			var data = null;
+			try { data = JSON.parse(json_raw); }
+			catch (err) {
+				warn( "Failed to parse JSON for key: " + key + ": " + err + "\n" );
+				return callback();
+			}
+			
+			storage.put( key, data, function(err) {
+				if (err) {
+					warn( "Failed to store record: " + key + ": " + err + "\n" );
+					return callback();
+				}
+				count++;
+				callback();
+			} );
+		}
+		else callback();
+	}, 1 );
+	
+	// setup readline to line-read from file or stdin
+	var readline = require('readline');
+	var rl = readline.createInterface({
+		input: file ? fs.createReadStream(file) : process.stdin
+	});
+	
+	rl.on('line', function(line) {
+		// enqueue each line
+		queue.push( line );
+	});
+	
+	rl.on('close', function() {
+		// end of input stream
+		var complete = function() {
+			// finally, delete state so orchestra recreates it
+			storage.delete( 'global/state', function(err) {
+				// ignore error here, as state may not exist yet
+				print( "\nImport complete. " + count + " records imported.\nExiting.\n\n" );
+				storage.shutdown( function() { process.exit(0); } );
+			});
+		};
+		
+		// fire complete on queue drain
+		if (queue.idle()) complete();
+		else queue.drain = complete;
+	}); // rl close
+};
 
 function normalizeUsername(username) {
 	// lower-case, strip all non-alpha
