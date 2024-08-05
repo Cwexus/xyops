@@ -107,6 +107,7 @@ app.extend({
 			{ ID: 'ActivityLog' },
 			{ ID: 'Masters' },
 			{ ID: 'Servers' },
+			{ ID: 'ServerHist' },
 			{ ID: 'Snapshots' },
 			{ ID: 'Alerts' }
 		];
