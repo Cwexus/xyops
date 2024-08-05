@@ -299,6 +299,7 @@ Page.Snapshots = class Snapshots extends Page.ServerUtils {
 		// special hook for intercepting pagination clicks
 		// FUTURE: history.replaceState to update the URI with new offset
 		this.args.offset = offset;
+		this.div.find('#d_search_results .box_content').addClass('loading');
 		this.doSearch();
 	}
 	
@@ -583,7 +584,7 @@ Page.Snapshots = class Snapshots extends Page.ServerUtils {
 		};
 		
 		config.quick_monitors.forEach( function(def, idx) {
-			var chart = new Chart({
+			var chart = self.createChart({
 				"canvas": '#c_vs_' + def.id,
 				"title": def.title,
 				"dataType": def.type,
