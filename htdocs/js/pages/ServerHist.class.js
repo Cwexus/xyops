@@ -589,6 +589,14 @@ Page.ServerHist = class ServerHist extends Page.ServerUtils {
 		this.fetchAlertHistory();
 	}
 	
+	onKeyDown(event) {
+		// key was pressed while not in a text field or dialog
+		switch (event.key) {
+			case 'ArrowLeft': this.navPrev(); break;
+			case 'ArrowRight': this.navNext(); break;
+		}
+	}
+	
 	onDeactivate() {
 		// called when page is deactivated
 		delete this.servers;
