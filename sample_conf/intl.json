@@ -2492,6 +2492,8 @@
 		"tag_update": "Tag updated: [description] ([tag.id])",
 		"tag_delete": "Tag deleted: [description] ([tag.id])",
 		
-		"user_update": "User updated: [description]"
+		"user_update": "User updated: [description]",
+		
+		"state_update": "Master state updated: [description]"
 	}
 }
