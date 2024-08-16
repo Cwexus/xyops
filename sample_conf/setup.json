@@ -86,6 +86,7 @@
 				{ "type":"text", "id":"success_match", "title":"Success Match", "value":"" }, 
 				{ "type":"text", "id":"error_match", "title":"Error Match", "value":"" },
 				{ "type":"checkbox", "id":"follow", "title":"Follow Redirects", "value":false }, 
+				{ "type":"checkbox", "id":"download", "title":"Download File", "value":false }, 
 				{ "type":"checkbox", "id":"ssl_cert_bypass", "title":"SSL Cert Bypass", "value":false }
 			]
 		} ],
