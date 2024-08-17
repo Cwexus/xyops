@@ -5,6 +5,7 @@ Page.Job = class Job extends Page.Base {
 	onInit() {
 		// called once at page load
 		this.colors = app.colors;
+		this.header_bar_width = 175;
 	}
 	
 	onActivate(args) {
@@ -38,6 +39,14 @@ Page.Job = class Job extends Page.Base {
 		
 		if (!this.active) return; // sanity
 		
+// job.state = 'active';
+// job.progress = 0.5;
+// job.started = app.epoch - 120;
+// delete job.complete;
+// delete job.completed;
+// delete job.code;
+// delete job.description;
+		
 		// sanity
 		if (!job.timelines) job.timelines = {};
 		if (!job.timelines.second) job.timelines.second = [];
@@ -64,11 +73,37 @@ Page.Job = class Job extends Page.Base {
 			app.setWindowTitle( "Live Job Progress: #" + job.id );
 		}
 		
-		app.setHeaderNav([
-			{ icon: 'calendar-multiple', loc: '#Events?sub=list', title: 'Events' },
-			{ icon: event.icon || 'file-clock-outline', loc: '#Events?sub=view&id=' + job.event, title: event.title },
+		// construct nav bar
+		var nav_items = [
 			{ icon: icon, title: "Job #" + job.id }
-		]);
+		];
+		
+		if (job.state == 'complete') {
+			// job is complete
+			var jargs = this.getJobResultArgs(job);
+			nav_items.push(
+				{ type: 'badge', color: jargs.color, icon: jargs.icon, title: jargs.text }
+			);
+		}
+		else {
+			// job in progress
+			var bwidth = this.header_bar_width;
+			nav_items.push(
+				'<div class="progress_bar_container" id="d_live_progress_bar_cont" style="width:' + bwidth + 'px;">' + 
+					'<div class="progress_bar_label first_half" style="width:' + bwidth + 'px;"></div>' + 
+					'<div class="progress_bar_inner" style="width:0px;">' + 
+						'<div class="progress_bar_label second_half" style="width:' + bwidth + 'px;"></div>' + 
+					'</div>' + 
+				'</div>'
+			);
+		}
+		
+		app.setHeaderNav( nav_items );
+		// app.setHeaderNav([
+		// 	{ icon: 'calendar-multiple', loc: '#Events?sub=list', title: 'Events' },
+		// 	{ icon: event.icon || 'file-clock-outline', loc: '#Events?sub=view&id=' + job.event, title: event.title },
+		// 	{ icon: icon, title: "Job #" + job.id }
+		// ]);
 		
 		var html = '';
 		
@@ -132,10 +167,12 @@ Page.Job = class Job extends Page.Base {
 				}
 				else {
 					// job is in progress
-					html += '<div id="d_live_progress_bar_cont" class="progress_bar_container" style="width:196px; float:left;">';
-						html += '<div id="d_live_progress_bar" class="progress_bar_inner" style="width:0px;"></div>';
-					html += '</div>';
-					html += '<div id="d_live_pct" style="float:left; margin-left:15px;"></div>';
+					// html += '<div id="d_live_progress_bar_cont" class="progress_bar_container" style="width:196px; float:left;">';
+					// 	html += '<div id="d_live_progress_bar" class="progress_bar_inner" style="width:0px;"></div>';
+					// html += '</div>';
+					// html += '<div id="d_live_pct" style="float:left; margin-left:15px;"></div>';
+					
+					html += 'Job In Progress';
 					
 					html += '<div class="button right danger" onMouseUp="$P().do_abort_job()"><i class="mdi mdi-cancel">&nbsp;</i>Abort Job...</div>';
 					html += '<div class="button right" id="btn_job_notify" onMouseUp="$P().do_notify_me()"><i class="mdi mdi-' + notify_icon + '">&nbsp;</i>Notify Me</div>';
@@ -185,7 +222,7 @@ Page.Job = class Job extends Page.Base {
 					
 					html += '<div>';
 						html += '<div class="info_label">Job Started</div>';
-						html += '<div class="info_value">' + this.getNiceDateTime( job.started ) + '</div>';
+						html += '<div class="info_value">' + this.getNiceDateTime( job.started, true ) + '</div>';
 					html += '</div>';
 					
 					// row 3
@@ -207,7 +244,7 @@ Page.Job = class Job extends Page.Base {
 					html += '<div>';
 						if (job.state == 'complete') {
 							html += '<div class="info_label">Job Completed</div>';
-							html += '<div class="info_value">' + this.getNiceDateTime( job.completed ) + '</div>';
+							html += '<div class="info_value">' + this.getNiceDateTime( job.completed, true ) + '</div>';
 						}
 						else {
 							html += '<div class="info_label">Remaining Time</div>';
@@ -345,6 +382,20 @@ Page.Job = class Job extends Page.Base {
 			html += '</div>'; // box_content
 		html += '</div>'; // box
 		
+		// job json
+		html += '<div class="box" id="d_job_data" style="display:none">';
+			html += '<div class="box_title">';
+				html += 'Job Data JSON';
+				html += '<div class="button right" onMouseUp="$P().do_copy_job_data()"><i class="mdi mdi-clipboard-text-outline">&nbsp;</i>Copy to Clipboard</div>';
+				// html += '<div class="button right" onMouseUp="$P().do_view_job_data()"><i class="mdi mdi-open-in-new">&nbsp;</i>View Raw...</div>';
+				html += '<div class="button right" onMouseUp="$P().do_download_job_data()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i>Download...</div>';
+				html += '<div class="clear"></div>';
+			html += '</div>';
+			html += '<div class="box_content table">';
+				html += '<pre></pre>';
+			html += '</div>'; // box_content
+		html += '</div>'; // box
+		
 		this.div.html(html);
 		
 		if (job.state != 'complete') {
@@ -356,6 +407,7 @@ Page.Job = class Job extends Page.Base {
 			// completed
 			this.getCompletedJobLog();
 			this.getAdditionalJobs();
+			this.showJobData();
 		}
 		
 		this.setupCharts();
@@ -579,7 +631,7 @@ Page.Job = class Job extends Page.Base {
 			
 			perf_keys.forEach( function(pkey) {
 				var value = metrics[pkey] / pscale;
-				var height = Math.floor( (value / max_perf) * max_height );
+				var height = Math.floor( (value / max_perf) * max_height ) || 1;
 				var color = self.colors[ color_idx ];
 				color_idx = (color_idx + 1) % self.colors.length;
 				
@@ -804,21 +856,22 @@ Page.Job = class Job extends Page.Base {
 	updateLiveJobStats() {
 		// update progress and other indicators while job is live
 		var job = this.job;
-		var $prog_cont = this.div.find('#d_live_progress_bar_cont');
-		var $prog_bar = this.div.find('#d_live_progress_bar');
-		var $prog_pct = this.div.find('#d_live_pct');
+		var bwidth = this.header_bar_width;
+		var $prog_cont = $('#d_live_progress_bar_cont');
+		var $prog_bar = $prog_cont.find('.progress_bar_inner');
+		var $prog_pct = $prog_cont.find('.progress_bar_label');
 		
 		if (!job.progress || (job.progress == 1.0)) {
 			// indeterminate
 			if (!$prog_cont.hasClass('indeterminate')) {
 				$prog_cont.addClass('indeterminate');
-				$prog_bar.css('width', 196);
+				$prog_bar.css('width', bwidth);
 				$prog_pct.html('');
 			}
 		}
 		else if ((job.progress > 0) && (job.progress < 1.0)) {
 			if ($prog_cont.hasClass('indeterminate')) $prog_cont.removeClass('indeterminate');
-			var cx = Math.floor( job.progress * 196 );
+			var cx = Math.floor( job.progress * bwidth );
 			$prog_bar.css('width', cx);
 			$prog_pct.html( pct(job.progress, 1.0, true) );
 		}
@@ -1363,14 +1416,14 @@ Page.Job = class Job extends Page.Base {
 		}
 	}
 	
-	updateMinuteTimeline(updates) { // TODO: is this function dead?  it has a console.log in it!
+	updateMinuteTimeline(updates) {
 		// special handler for updating minute timeline data
 		// comes in from special page data event, every 1m
 		var cur_min_epoch = updates.epoch;
 		var procs = updates.procs;
 		var conns = updates.conns;
 		
-		console.log( "Got here, in updateMinuteTimeline", updates );
+		console.log( "Got here, in updateMinuteTimeline", updates ); // TODO: make sure this is really called -- need long running job
 		
 		var job = this.job;
 		var timelines = job.timelines;
@@ -1532,11 +1585,11 @@ Page.Job = class Job extends Page.Base {
 	do_download_job_log() {
 		// download raw complete job log (no ANSI decoding)
 		var job = this.job;
-		window.location = '/api/app/download_job_log?id=' + job.id + '&t=' + this.token;
+		window.location = app.base_api_url + '/app/download_job_log?id=' + job.id + '&t=' + this.token;
 	}
 	
 	do_view_job_log() {
-		// download raw complete job log (no ANSI decoding)
+		// view raw complete job log (no ANSI decoding)
 		var job = this.job;
 		window.open( app.base_api_url + '/app/view_job_log?id=' + job.id + '&t=' + this.token );
 	}
@@ -1549,6 +1602,63 @@ Page.Job = class Job extends Page.Base {
 			}
 		}
 		$('.pxc_tt_overlay').remove();
+	}
+	
+	do_copy_job_data() {
+		// copy job json to clipboard
+		var code = this.getJobJSON();
+		copyToClipboard(code);
+		app.showMessage('success', "Job data JSON copied to your clipboard.");
+	}
+	
+	do_download_job_data() {
+		// download job json data
+		var code = this.getJobJSON();
+		var blob = new Blob([code], { type: "application/json" });
+		
+		var link = document.createElement("a");
+		link.href = URL.createObjectURL(blob);
+		link.download = "orchestra-job-" + this.job.id + '.json';
+		
+		document.body.appendChild(link);
+		link.click();
+		
+		document.body.removeChild(link);
+		URL.revokeObjectURL(link.href);
+	}
+	
+	getJobJSON() {
+		// get pretty-printed and pruned job json
+		var stub = copy_object(this.job);
+		
+		delete stub.activity;
+		delete stub.timelines;
+		delete stub.table;
+		delete stub.html;
+		
+		return JSON.stringify(stub, null, "\t");
+	}
+	
+	showJobData() {
+		// show job json and syntax-highlight it
+		var info = CodeMirror.findModeByExtension( 'json' );
+		if (!info) return; // unsupported language
+		
+		var $cont = this.div.find('#d_job_data');
+		$cont.show();
+		
+		var code = this.getJobJSON();
+		var $pre = $cont.find('pre');
+		$pre.empty().addClass( (app.getPref('theme') == 'light') ? "cm-s-default" : "cm-s-shadowfox" );
+		
+		CodeMirror.runMode(code, info.mime, $pre.get(0));
+	}
+	
+	onThemeChange(theme) {
+		// theme change, so we have to update codemirror
+		var old_class = (theme == 'light') ? "cm-s-shadowfox" : "cm-s-default";
+		var new_class = (theme == 'light') ? "cm-s-default" : "cm-s-shadowfox";
+		this.div.find('#d_job_data pre.' + old_class).removeClass(old_class).addClass(new_class);
 	}
 	
 	onStatusUpdate(data) {
