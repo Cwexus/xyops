@@ -56,18 +56,19 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		var html = '';
 		
 		// build opt groups for server props like OS, CPU, etc.
-		var opt_groups = { os_platform: {}, os_distro: {}, os_release: {}, os_arch: {}, cpu_manufacturer: {}, cpu_brand: {}, cpu_cores: {} };
+		var opt_groups = { os_platform: {}, os_distro: {}, os_release: {}, os_arch: {}, cpu_virt: {}, cpu_brand: {}, cpu_cores: {} };
 		
 		resp.rows.forEach( function(server) {
 			var info = server.info || {};
 			if (!info.os) info.os = {};
 			if (!info.cpu) info.cpu = {};
+			if (!info.virt) info.virt = {};
 			
 			if (info.os.platform) opt_groups.os_platform[ info.os.platform ] = 1;
 			if (info.os.distro) opt_groups.os_distro[ info.os.distro ] = 1;
 			if (info.os.release) opt_groups.os_release[ info.os.release ] = 1;
 			if (info.os.arch) opt_groups.os_arch[ info.os.arch ] = 1;
-			if (info.cpu.manufacturer) opt_groups.cpu_manufacturer[ info.cpu.manufacturer ] = 1;
+			if (info.virt.vendor) opt_groups.cpu_virt[ info.virt.vendor ] = 1;
 			if (info.cpu.brand) opt_groups.cpu_brand[ info.cpu.brand ] = 1;
 			if (info.cpu.cores) opt_groups.cpu_cores[ info.cpu.cores ] = 1;
 		} );
@@ -91,9 +92,9 @@ Page.Servers = class Servers extends Page.ServerUtils {
 			this.buildOptGroup( opt_groups.os_distro, "OS Distro:", '', 'osd_' ),
 			this.buildOptGroup( opt_groups.os_release, "OS Release:", '', 'osr_' ),
 			this.buildOptGroup( opt_groups.os_arch, "OS Arch:", '', 'osa_' ),
-			this.buildOptGroup( opt_groups.cpu_manufacturer, "CPU Type:", '', 'cput_' ),
 			this.buildOptGroup( opt_groups.cpu_brand, "CPU Brand:", '', 'cpub_' ),
 			this.buildOptGroup( opt_groups.cpu_cores, "CPU Cores:", '', 'cpuc_' ),
+			this.buildOptGroup( opt_groups.cpu_virt, "Virtualization:", '', 'virt_' )
 		);
 		
 		// sort servers by hostname ascending
@@ -236,6 +237,12 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		if (('filter' in args) && args.filter.match && args.filter.match(/^(\w)_(.+)$/)) {
 			var mode = RegExp.$1;
 			var value = RegExp.$2;
+			
+			if (!item.info) item.info = {};
+			if (!item.info.os) item.info.os = {};
+			if (!item.info.cpu) item.info.cpu = {};
+			if (!item.info.virt) item.info.virt = {};
+			
 			switch (mode) {
 				case 'z':
 					if ((value == 'online') && item.offline) return false; // hide
@@ -261,8 +268,8 @@ Page.Servers = class Servers extends Page.ServerUtils {
 					if (item.info.os.arch != value) return false; // hide
 				break;
 				
-				case 'cput_':
-					if (item.info.cpu.manufacturer != value) return false; // hide
+				case 'virt_':
+					if (item.info.virt.vendor != value) return false; // hide
 				break;
 				
 				case 'cpub_':
@@ -294,7 +301,9 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		} );
 	}
 	
+	//
 	// Server Search Page:
+	//
 	
 	gosub_search(args) {
 		// search server db
@@ -434,22 +443,6 @@ Page.Servers = class Servers extends Page.ServerUtils {
 					});
 				html += '</div>';
 				
-				// cpu_manufacturer -- domain
-				html += '<div class="form_cell">';
-					html += this.getFormRow({
-						label: '<i class="icon mdi mdi-domain">&nbsp;</i>CPU Manufacturer:',
-						content: this.getFormMenuSingle({
-							id: 'fe_ss_cpu_manufacturer',
-							title: 'Select Manufacturer',
-							placeholder: 'All Manufacturers',
-							options: [['', 'Any Manufacturer']].concat( field_menus.cpu_manufacturer ),
-							value: args.cpu_manufacturer || '',
-							default_icon: 'domain',
-							'data-shrinkwrap': 1
-						})
-					});
-				html += '</div>';
-				
 				// cpu_brand -- chip
 				html += '<div class="form_cell">';
 					html += this.getFormRow({
@@ -477,6 +470,22 @@ Page.Servers = class Servers extends Page.ServerUtils {
 							options: [['', 'Any Core Count']].concat( field_menus.cpu_cores ),
 							value: args.cpu_cores || '',
 							default_icon: 'pound',
+							'data-shrinkwrap': 1
+						})
+					});
+				html += '</div>';
+				
+				// cpu_virt -- layers-outline
+				html += '<div class="form_cell">';
+					html += this.getFormRow({
+						label: '<i class="icon mdi mdi-layers-outline">&nbsp;</i>Virtualization:',
+						content: this.getFormMenuSingle({
+							id: 'fe_ss_cpu_virt',
+							title: 'Select Vendor',
+							placeholder: 'All Vendors',
+							options: [['', 'Any Vendor']].concat( field_menus.cpu_virt ),
+							value: args.cpu_virt || '',
+							default_icon: 'layers-outline',
 							'data-shrinkwrap': 1
 						})
 					});
@@ -536,10 +545,10 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		// if (!sargs) this.div.find('#btn_s_save').addClass('disabled');
 		
 		// MultiSelect.init( this.div.find('#fe_s_tags') );
-		SingleSelect.init( this.div.find('#fe_ss_group, #fe_ss_os_platform, #fe_ss_os_distro, #fe_ss_os_release, #fe_ss_os_arch, #fe_ss_cpu_manufacturer, #fe_ss_cpu_brand, #fe_ss_cpu_cores, #fe_ss_created, #fe_ss_modified') );
+		SingleSelect.init( this.div.find('#fe_ss_group, #fe_ss_os_platform, #fe_ss_os_distro, #fe_ss_os_release, #fe_ss_os_arch, #fe_ss_cpu_virt, #fe_ss_cpu_brand, #fe_ss_cpu_cores, #fe_ss_created, #fe_ss_modified') );
 		// $('.header_search_widget').hide();
 		
-		this.div.find('#fe_ss_group, #fe_ss_os_platform, #fe_ss_os_distro, #fe_ss_os_release, #fe_ss_os_arch, #fe_ss_cpu_manufacturer, #fe_ss_cpu_brand, #fe_ss_cpu_cores, #fe_ss_created, #fe_ss_modified').on('change', function() {
+		this.div.find('#fe_ss_group, #fe_ss_os_platform, #fe_ss_os_distro, #fe_ss_os_release, #fe_ss_os_arch, #fe_ss_cpu_virt, #fe_ss_cpu_brand, #fe_ss_cpu_cores, #fe_ss_created, #fe_ss_modified').on('change', function() {
 			self.navSearch();
 		});
 		
@@ -563,7 +572,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		var query = this.div.find('#fe_ss_query').val().trim()
 		if (query.length) args.query = query;
 		
-		['group', 'os_platform', 'os_distro', 'os_release', 'os_arch', 'cpu_manufacturer', 'cpu_brand', 'cpu_cores', 'created', 'modified'].forEach( function(key) {
+		['group', 'os_platform', 'os_distro', 'os_release', 'os_arch', 'cpu_virt', 'cpu_brand', 'cpu_cores', 'created', 'modified'].forEach( function(key) {
 			var value = self.div.find('#fe_ss_' + key).val();
 			if (value) args[key] = value;
 		} );
@@ -593,7 +602,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		var self = this;
 		var query = args.query ? args.query.toString().toLowerCase().trim() : '';
 		
-		['group', 'os_platform', 'os_distro', 'os_release', 'os_arch', 'cpu_manufacturer', 'cpu_brand', 'cpu_cores'].forEach( function(key) {
+		['group', 'os_platform', 'os_distro', 'os_release', 'os_arch', 'cpu_virt', 'cpu_brand', 'cpu_cores'].forEach( function(key) {
 			if (args[key]) query += ' ' + key + ':' + args[key];
 		} );
 		
@@ -681,6 +690,10 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		this.div.find('#d_search_results .box_content').addClass('loading');
 		this.doSearch();
 	}
+	
+	//
+	// View Page
+	//
 	
 	gosub_view(args) {
 		// page activation
@@ -1061,7 +1074,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 				'<div id="d_vs_jt_progress_' + job.id + '">' + self.getNiceJobProgressBar(job) + '</div>',
 				'<div id="d_vs_jt_remaining_' + job.id + '">' + self.getNiceJobRemainingTime(job, false) + '</div>',
 				
-				'<span class="link" onClick="$P().doAbortJob(\'' + job.id + '\')"><b>Abort Job</b></a>'
+				'<span class="link danger" onClick="$P().doAbortJob(\'' + job.id + '\')"><b>Abort Job</b></a>'
 			];
 		} );
 		
