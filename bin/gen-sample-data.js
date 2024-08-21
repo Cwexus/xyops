@@ -63,7 +63,7 @@ request.json( 'https://random-data-api.com/api/company/random_company?size=100',
 			case 0:
 				event.plugin = 'shellplug';
 				event.params = {
-					script: "#!/bin/bash\n\nsleep " + Math.floor(Math.random() * 60) + ";\necho HELLO;\n",
+					script: "#!/bin/bash\n\nsleep " + Math.floor(Math.random() * 60) + ";\necho \"HELLO.\";\n",
 					annotate: false,
 					json: false
 				};
