@@ -72,7 +72,7 @@ Page.Tags = class Tags extends Page.Base {
 		html += '</div>'; // box_content
 		
 		html += '<div class="box_buttons">';
-			html += '<div class="button primary" onMouseUp="$P().edit_tag(-1)"><i class="mdi mdi-tag-plus-outline">&nbsp;</i>Add Tag...</div>';
+			html += '<div class="button secondary" onMouseUp="$P().edit_tag(-1)"><i class="mdi mdi-tag-plus-outline">&nbsp;</i>Add Tag...</div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
