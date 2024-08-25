@@ -1453,20 +1453,20 @@ Page.Events = class Events extends Page.Base {
 			label: 'Actions:',
 			content: this.getFormCheckbox({
 				id: 'fe_ete_actions',
-				label: 'Disable All Actions',
-				checked: true
+				label: 'Enable All Actions',
+				checked: false
 			}),
-			caption: 'Disable all event actions for the test run.'
+			caption: 'Enable all event actions for the test run.'
 		});
 		
 		html += this.getFormRow({
 			label: 'Limits:',
 			content: this.getFormCheckbox({
 				id: 'fe_ete_limits',
-				label: 'Disable All Limits',
+				label: 'Enable All Limits',
 				checked: false
 			}),
-			caption: 'Disable all resource limits for the test run.'
+			caption: 'Enable all resource limits for the test run.'
 		});
 		
 		html += this.getFormRow({
@@ -1491,10 +1491,10 @@ Page.Events = class Events extends Page.Base {
 			var job = deep_copy_object(event);
 			job.enabled = true; // override event disabled, so test actually runs
 			
-			if ($('#fe_ete_actions').is(':checked')) {
+			if (!$('#fe_ete_actions').is(':checked')) {
 				job.actions = [];
 			}
-			if ($('#fe_ete_limits').is(':checked')) {
+			if (!$('#fe_ete_limits').is(':checked')) {
 				job.limits = [];
 			}
 			
