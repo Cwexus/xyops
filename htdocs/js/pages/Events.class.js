@@ -128,7 +128,7 @@ Page.Events = class Events extends Page.Base {
 			// action_html += '</div>';
 			
 			var actions = [];
-			actions.push( '<span class="link" onMouseUp="$P().run_event('+idx+')"><b>Run Now</b></span>' );
+			actions.push( '<span class="link" onMouseUp="$P().do_confirm_run_event('+idx+')"><b>Run Now</b></span>' );
 			// actions.push( '<span class="link" onMouseUp="$P().edit_event('+idx+')"><b>Edit</b></span>' );
 			// actions.push( '<span class="link" onMouseUp="$P().go_event_stats('+idx+')"><b>Stats</b></span>' );
 			// actions.push( '<span class="link" onMouseUp="$P().go_event_history('+idx+')"><b>History</b></span>' );
@@ -375,6 +375,18 @@ Page.Events = class Events extends Page.Base {
 			
 			app.showMessage('success', item.title + " was " + (item.enabled ? 'enabled' : 'disabled') + " successfully.");
 		} );
+	}
+	
+	do_confirm_run_event(idx) {
+		// confirm user wants to run job
+		var self = this;
+		this.event = this.events[idx];
+		app.clearError();
+		
+		Dialog.confirm( 'Run Event', "Are you sure you want to manually run the event &ldquo;" + this.event.title + "&rdquo;?", 'Run Now', function(result) {
+			if (!result) return;
+			self.run_event(idx);
+		} ); // confirm
 	}
 	
 	run_event(idx) {
@@ -861,6 +873,9 @@ Page.Events = class Events extends Page.Base {
 				case 'z_warning': args.query += ' code:warning'; break;
 				case 'z_critical': args.query += ' code:critical'; break;
 				case 'z_abort': args.query += ' code:abort'; break;
+				
+				case 'z_retried': args.query += ' tags:_retried'; break;
+				case 'z_last': args.query += ' tags:_last'; break;
 				
 				default:
 					if (args.filter.match(/^t_(.+)$/)) args.query += ' tags:' + RegExp.$1;
@@ -1524,27 +1539,6 @@ Page.Events = class Events extends Page.Base {
 		}); // Dialog.confirm
 		
 		this.updateAddRemoveMe('#fe_ete_email');
-	}
-	
-	do_run_event() {
-		// run event on-demand
-		// Note: This may include unsaved changes, which are included in the on-demand run now job, by design
-		app.clearError();
-		var self = this;
-		var event = this.get_event_form_json();
-		if (!event) return; // error
-		
-		Dialog.showProgress( 1.0, "Launching Job..." );
-		
-		app.api.post( 'app/run_event', event, function(resp) {
-			Dialog.hideProgress();
-			app.showMessage('success', "The job was started successfully.");
-			
-			if (!self.active) return; // sanity
-			
-			// jump immediately to live details page
-			Nav.go('Job?id=' + resp.id);
-		} );
 	}
 	
 	do_save_event() {
