@@ -2492,6 +2492,10 @@
 		"tag_update": "Tag updated: [description] ([tag.id])",
 		"tag_delete": "Tag deleted: [description] ([tag.id])",
 		
+		"web_hook_create": "Web Hook created: [description] ([web_hook.id])",
+		"web_hook_update": "Web Hook updated: [description] ([web_hook.id])",
+		"web_hook_delete": "Web Hook deleted: [description] ([web_hook.id])",
+		
 		"user_update": "User updated: [description]",
 		
 		"state_update": "Master state updated: [description]"

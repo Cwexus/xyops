@@ -119,6 +119,26 @@
 			"shell_exec": ""
 		} ],
 		
+		[ "listCreate", "global/web_hooks", {} ],
+		[ "listPush", "global/web_hooks", {
+			"id": "example_hook",
+			"title": "Example Hook",
+			"enabled": true,
+			"url": "https://httpbin.org/post",
+			"method": "POST",
+			"headers": "Content-Type: application/json\nUser-Agent: Orchestra/WebHook",
+			"body": "{\n\t\"content\": \"[content]\",\n\t\"text\": \"[text]\"\n}",
+			"timeout": 30,
+			"retries": 0,
+			"follow": false,
+			"ssl_cert_bypass": false,
+			"notes": "An example web hook for demonstration purposes.",
+			"icon": "",
+			"username": "admin",
+			"modified": 1434125333,
+			"created": 1434125333
+		} ],
+		
 		[ "listCreate", "global/events", {} ],
 		
 		[ "listCreate", "global/tags", { "page_size": 100 } ],
@@ -451,6 +471,7 @@
 			[ "symlinkFile", "node_modules/codemirror", "htdocs/codemirror" ],
 			
 			[ "symlinkCompress", "node_modules/@highlightjs/cdn-assets/highlight.min.js", "htdocs/js/external/" ],
+			[ "symlinkCompress", "node_modules/@highlightjs/cdn-assets/languages/http.min.js", "htdocs/js/external/" ],
 			[ "symlinkCompress", "node_modules/@highlightjs/cdn-assets/styles/atom-one-light.css", "htdocs/css/" ],
 			[ "symlinkCompress", "node_modules/@highlightjs/cdn-assets/styles/atom-one-dark.css", "htdocs/css/" ],
 			
