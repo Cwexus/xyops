@@ -164,6 +164,7 @@ Page.WebHooks = class WebHooks extends Page.Base {
 		// buttons at bottom
 		html += '<div class="box_buttons">';
 			html += '<div class="button" onMouseUp="$P().cancel_web_hook_edit()">Cancel</div>';
+			html += '<div class="button secondary" onMouseUp="$P().do_test_web_hook()"><i class="mdi mdi-test-tube">&nbsp;</i>Test Web Hook...</div>';
 			html += '<div class="button primary" onMouseUp="$P().do_new_web_hook()"><i class="mdi mdi-floppy">&nbsp;</i>Create Web Hook</div>';
 		html += '</div>'; // box_buttons
 		
@@ -238,6 +239,7 @@ Page.WebHooks = class WebHooks extends Page.Base {
 		html += '<div class="box_buttons">';
 			html += '<div class="button" onMouseUp="$P().cancel_web_hook_edit()">Cancel</div>';
 			html += '<div class="button danger" onMouseUp="$P().show_delete_web_hook_dialog()">Delete Web Hook...</div>';
+			html += '<div class="button secondary" onMouseUp="$P().do_test_web_hook()"><i class="mdi mdi-test-tube">&nbsp;</i>Test Web Hook...</div>';
 			html += '<div class="button primary" onMouseUp="$P().do_save_web_hook()"><i class="mdi mdi-floppy">&nbsp;</i>Save Changes</div>';
 		html += '</div>'; // box_buttons
 		
@@ -250,6 +252,35 @@ Page.WebHooks = class WebHooks extends Page.Base {
 		SingleSelect.init( this.div.find('#fe_ewh_icon') );
 		// this.updateAddRemoveMe('#fe_ewh_email');
 		this.setupBoxButtonFloater();
+	}
+	
+	do_test_web_hook() {
+		// test web hook and display markdown result
+		var self = this;
+		
+		app.clearError();
+		var web_hook = this.get_web_hook_form_json();
+		if (!web_hook) return; // error
+		
+		this.web_hook = web_hook;
+		
+		Dialog.showProgress( 1.0, "Testing Web Hook..." );
+		
+		app.api.post( 'app/test_web_hook', web_hook, function(resp) {
+			Dialog.hideProgress();
+			if (!self.active) return; // sanity
+			
+			var { code, description, details } = resp.result;
+			
+			if (description) {
+				details = "**Result:** " + description + "\n\n" + details;
+			}
+			
+			var title = "Web Hook Test Results";
+			if (code) title = '<span style="color:var(--red);">' + title + '</span>';
+			
+			self.viewMarkdownAuto( title, details.trim() );
+		} ); // api.post
 	}
 	
 	do_save_web_hook() {
@@ -489,6 +520,9 @@ Page.WebHooks = class WebHooks extends Page.Base {
 		}
 		if (!web_hook.title.length) {
 			return app.badField('#fe_ewh_title', "Please enter a title for the web hook.");
+		}
+		if (!web_hook.url.match(/^https?:\/\/\S+$/i)) {
+			return app.badField('#fe_ewh_url', "Please enter a fully-qualified URL for the web hook.");
 		}
 		
 		return web_hook;
