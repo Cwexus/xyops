@@ -182,8 +182,15 @@ Page.Base = class Base extends Page {
 	
 	getNiceSnapshotSource(item) {
 		// get formatted snap source
-		// sources: alert, user, watch
-		var html = '<i class="mdi mdi-palette-swatch-outline">&nbsp;</i>';
+		// sources: alert, user, watch, job
+		var icon = 'palette-swatch-outline';
+		switch (item.source) {
+			case 'alert': icon = 'bell-outline'; break;
+			case 'user': icon = 'account'; break;
+			case 'watch': icon = 'binoculars'; break;
+			case 'job': icon = 'timer-outline'; break;
+		}
+		var html = '<i class="mdi mdi-' + icon + '">&nbsp;</i>';
 		html += ucfirst(item.source);
 		if ((item.source == 'user') && item.username) html += ' (' + item.username + ')';
 		return html;
@@ -330,7 +337,7 @@ Page.Base = class Base extends Page {
 		// get formatted server with icon, plus optional link
 		if (!item) return '(None)';
 		if (typeof(item) == 'string') {
-			// assume id
+			// assume id (fallback to hostname, then fallback to "offline" server)
 			var orig_item = item;
 			item = find_object(app.servers, { id: item }) || find_object(app.servers, { hostname: item });
 			if (!item) {
@@ -2254,7 +2261,15 @@ Page.Base = class Base extends Page {
 		rows.forEach( function(row) {
 			if (row.date && row.totals) {
 				var item = { x: row.date, y: (row.totals[id] || 0) / (row.count || 1) };
-				if (row.alerts) item.label = { "text": "Alert", "color": "red", "tooltip": true };
+				if (row.alerts) {
+					// check for alert overlays
+					for (var alert_id in row.alerts) {
+						var alert_def = find_object( app.alerts, { id: alert_id } );
+						if (alert_def && alert_def.monitor_id && (alert_def.monitor_id == id)) {
+							item.label = { "text": "Alert", "color": "red", "tooltip": true };
+						}
+					}
+				} // row.alerts
 				data.push(item);
 			}
 		} );
