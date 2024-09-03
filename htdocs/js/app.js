@@ -255,7 +255,7 @@ app.extend({
 		var num_alerts = num_keys( this.activeAlerts || {} );
 		
 		if (num_alerts) {
-			this.$alertCounter.show().html( '<i class="mdi mdi-bell-ring-outline"></i><span><b>' + commify(num_alerts) + ' ' + pluraluze('Alert', num_alerts) + '</b></span>' );
+			this.$alertCounter.show().html( '<i class="mdi mdi-bell-ring-outline"></i><span><b>' + commify(num_alerts) + ' ' + pluralize('Alert', num_alerts) + '</b></span>' );
 		}
 		else {
 			this.$alertCounter.hide();
