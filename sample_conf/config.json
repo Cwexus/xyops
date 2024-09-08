@@ -1,9 +1,12 @@
 {
 	"base_app_url": "http://localhost:5522",
 	"email_from": "admin@localhost",
-	"smtp_hostname": "localhost",
-	"smtp_port": 25,
 	"secret_key": "CHANGE_ME",
+	
+	"mail_settings": {
+		"host": "localhost",
+		"port": 25
+	},
 	
 	"log_dir": "logs",
 	"log_filename": "[component].log",
