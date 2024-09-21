@@ -16,22 +16,18 @@
 	"pid_file": "logs/orchestra.pid",
 	"debug_level": 9,
 	"maintenance": "04:00",
-	"list_row_max": 10000,
-	
-	"expiration": "5 years",
-	"file_expiration": "5 years",
-	
 	"ttl": 300,
+	
+	"file_expiration": "5 years",
+	"timeline_expiration": "10 years",
 	
 	"ping_freq_sec": 10,
 	"ping_timeout_sec": 20,
 	
-	"job_data_expire_days": 180,
 	"child_kill_timeout": 10,
 	"dead_job_timeout": 120,
 	"track_manual_jobs": false,
 	"copy_job_logs_to": "",
-	"queue_dir": "queue",
 	
 	"job_memory_max": 1073741824,
 	"job_memory_sustain": 0,
@@ -43,12 +39,12 @@
 	"job_universal_actions": [
 		{
 			"enabled": true,
+			"hidden": true,
 			"trigger": "error",
 			"type": "snapshot"
 		}
 	],
 	
-	"new_server_stale_threshold": 3600,
 	"hostname_display_strip": "\\.[\\w\\-]+\\.\\w+$",
 	"tick_precision_ms": 50,
 	
@@ -96,6 +92,24 @@
 		"num_format": "",
 		"hour_cycle": "h12",
 		"timezone": ""
+	},
+	
+	"db_maint": {
+		"jobs": {
+			"max_rows": 1000000
+		},
+		"alerts": {
+			"max_rows": 100000
+		},
+		"snapshots": {
+			"max_rows": 100000
+		},
+		"activity": {
+			"max_rows": 100000
+		},
+		"servers": {
+			"max_rows": 10000
+		}
 	},
 	
 	"client": {
@@ -174,6 +188,23 @@
 				"enabled": true,
 				"maxItems": 100000,
 				"maxBytes": 104857600
+			}
+		},
+		
+		"SQLite": {
+			"base_dir": "data",
+			"filename": "sqlite.db",
+			"pragmas": {
+				"auto_vacuum": 0,
+				"cache_size": -100000,
+				"journal_mode": "WAL"
+			},
+			"backups": {
+				"enabled": true,
+				"dir": "backups",
+				"filename": "backup-[yyyy]-[mm]-[dd]-[hh]-[mi]-[ss].db",
+				"compress": true,
+				"keep": 7
 			}
 		}
 	},
