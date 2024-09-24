@@ -444,6 +444,14 @@ Page.System = class System extends Page.Base {
 			var dbs = $('#fe_sys_ex_dbs').val();
 			var extras = $('#fe_sys_ex_extras').val();
 			
+			lists.forEach( function(list) {
+				items.push({ type: 'list', key: 'global/' + list });
+			} );
+			
+			dbs.forEach( function(db) {
+				items.push({ type: 'index', index: db });
+			} );
+			
 			if (lists.includes('users')) {
 				items.push({ type: 'users', avatars: extras.includes('user_avatars') });
 			}
@@ -453,14 +461,6 @@ Page.System = class System extends Page.Base {
 			if (extras.includes('monitor_data')) {
 				items.push({ type: 'monitorData' });
 			}
-			
-			lists.forEach( function(list) {
-				items.push({ type: 'list', key: 'global/' + list });
-			} );
-			
-			dbs.forEach( function(db) {
-				items.push({ type: 'index', index: db });
-			} );
 			
 			if (!items.length) return app.doError("Please select at least one item to export.");
 			Dialog.hide();
