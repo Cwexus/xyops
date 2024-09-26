@@ -1384,6 +1384,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 				// update progress bar without redrawing it (so animation doesn't jitter)
 				var counter = job.progress || 1;
 				var cx = Math.floor( counter * bar_width );
+				var label = '' + Math.floor( (counter / 1.0) * 100 ) + '%';
 				var $cont = div.find('#d_vs_jt_progress_' + job.id + ' > div.progress_bar_container');
 				
 				if ((counter == 1.0) && !$cont.hasClass('indeterminate')) {
@@ -1396,6 +1397,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 				if (counter < 1.0) $cont.attr('title', '' + Math.floor( (counter / 1.0) * 100 ) + '%');
 				
 				$cont.find('> div.progress_bar_inner').css( 'width', '' + cx + 'px' );
+				$cont.find('div.progress_bar_label').html( label );
 			} ); // foreach job
 		}
 	}

@@ -944,13 +944,14 @@ Page.Base = class Base extends Page {
 		var counter = Math.min(1, Math.max(0, job.progress || 1));
 		var bar_width = this.bar_width || 100;
 		var cx = Math.floor( counter * bar_width );
-		var extra_classes = '';
-		var extra_attribs = '';
-		if (counter == 1.0) extra_classes = 'indeterminate';
-		else extra_attribs = 'title="'+Math.floor( (counter / 1.0) * 100 )+'%"';
+		var label = '' + Math.floor( (counter / 1.0) * 100 ) + '%';
+		var extra_classes = (counter == 1.0) ? 'indeterminate' : '';
 		
-		html += '<div class="progress_bar_container ' + extra_classes + '" style="width:' + bar_width + 'px; margin:0;" ' + extra_attribs + '>';
-			html += '<div class="progress_bar_inner" style="width:' + cx + 'px;"></div>';
+		html += '<div class="progress_bar_container ' + extra_classes + '" style="width:' + bar_width + 'px; margin:0;">';
+			html += '<div class="progress_bar_label first_half" style="width:' + bar_width + 'px;">' + label + '</div>';
+			html += '<div class="progress_bar_inner" style="width:' + cx + 'px;">';
+				html += '<div class="progress_bar_label second_half" style="width:' + bar_width + 'px;">' + label + '</div>';
+			html += '</div>';
 		html += '</div>';
 		
 		return html;
