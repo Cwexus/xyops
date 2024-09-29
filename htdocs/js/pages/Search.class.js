@@ -438,7 +438,7 @@ Page.Search = class Search extends Page.Base {
 		
 		var grid_args = {
 			resp: resp,
-			cols: ['Job ID', 'Event', 'Category', 'Server', 'Source', 'Started', 'Elapsed', 'Result'],
+			cols: ['Job ID', 'Event', 'Category', 'Server', 'Source', 'Completed', 'Elapsed', 'Result'],
 			data_type: 'job',
 			offset: this.args.offset || 0,
 			limit: this.args.limit,
@@ -462,7 +462,7 @@ Page.Search = class Search extends Page.Base {
 				self.getNiceCategory(job.category, true),
 				self.getNiceServer(job.server, true),
 				self.getNiceJobSource(job),
-				self.getShortDateTime( job.started ),
+				self.getShortDateTime( job.completed ),
 				self.getNiceJobElapsedTime(job, true, false),
 				self.getNiceJobResult(job)
 			];
