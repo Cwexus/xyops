@@ -204,6 +204,11 @@
 				"cache_size": -100000,
 				"journal_mode": "WAL"
 			},
+			"cache": {
+				"enabled": true,
+				"maxItems": 100000,
+				"maxBytes": 104857600
+			},
 			"backups": {
 				"enabled": true,
 				"dir": "data/backups",
