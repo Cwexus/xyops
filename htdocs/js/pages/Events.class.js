@@ -627,6 +627,16 @@ Page.Events = class Events extends Page.Base {
 			html += '</div>'; // box_content
 		html += '</div>'; // box
 		
+		// revision history
+		html += '<div class="box" id="d_ve_revisions">';
+			html += '<div class="box_title">';
+				html += 'Revision History';
+			html += '</div>';
+			html += '<div class="box_content table">';
+				html += '<div class="loading_container"><div class="loading"></div></div>';
+			html += '</div>'; // box_content
+		html += '</div>'; // box
+		
 		this.div.html(html);
 		SingleSelect.init( this.div.find('#fe_ve_filter') );
 		this.setupHistoryCharts();
@@ -636,6 +646,7 @@ Page.Events = class Events extends Page.Base {
 		this.getQueuedJobs();
 		this.renderPluginParams('#d_ve_params');
 		this.setupToggleBoxes();
+		this.fetchRevisionHistory();
 	}
 	
 	do_edit_from_view() {
@@ -898,7 +909,7 @@ Page.Events = class Events extends Page.Base {
 			}
 		}
 		
-		app.api.get( 'app/search_jobs', args, this.receiveJobHistory.bind(this), this.fullPageError.bind(this) );
+		app.api.get( 'app/search_jobs', args, this.receiveJobHistory.bind(this) );
 	}
 	
 	receiveJobHistory(resp) {
@@ -1301,6 +1312,153 @@ Page.Events = class Events extends Page.Base {
 		}
 	}
 	
+	fetchRevisionHistory() {
+		// fetch revision history from activity db using dedicated api
+		var self = this;
+		if (!this.revisionOffset) this.revisionOffset = 0;
+		
+		var opts = {
+			id: this.event.id,
+			offset: this.revisionOffset,
+			limit: config.alt_items_per_page + 1 // for diff'ing across pages
+		};
+		
+		app.api.get( 'app/get_event_history', opts, this.renderRevisionHistory.bind(this) );
+	}
+	
+	renderRevisionHistory(resp) {
+		// show revision history and add links to detail diff dialogs
+		var self = this;
+		var $cont = this.div.find('#d_ve_revisions');
+		var html = '';
+		
+		if (!this.active) return; // sanity
+		
+		// massage results for diff'ing across pages
+		// revisions always contains a shallow copy (which may have limit+1 items)
+		// resp.rows will be chopped to exactly limit, for display
+		this.revisions = [...resp.rows];
+		if (resp.rows.length > config.alt_items_per_page) resp.rows.pop();
+		
+		var grid_args = {
+			resp: resp,
+			cols: ['Revision', 'Description', 'User', 'Date/Time', 'Actions'],
+			data_type: 'item',
+			offset: this.revisionOffset || 0,
+			limit: config.alt_items_per_page,
+			class: 'data_grid event_revision_grid',
+			pagination_link: '$P().revisionNav'
+		};
+		
+		html += this.getPaginatedGrid( grid_args, function(item, idx) {
+			// figure out icon first
+			if (!item.action) item.action = 'unknown';
+			
+			var item_type = '';
+			for (var key in config.activity_types) {
+				var regexp = new RegExp(key);
+				if (item.action.match(regexp)) {
+					item_type = config.activity_types[key];
+					break;
+				}
+			}
+			item._type = item_type;
+			
+			// compose nice description
+			var desc = item.description;
+			var actions = [];
+			var click = '';
+			var nice_rev = 'n/a';
+			
+			// description template
+			var template = config.activity_descriptions[item.action];
+			if (template) desc = substitute(template, item, false);
+			else if (!desc) desc = '(No description provided)';
+			item._desc = desc;
+			
+			if (item.event) {
+				click = `$P().showActionReport(${idx})`;
+				actions.push(`<span class="link" onClick="${click}"><b>Details...</b></span>`);
+			}
+			
+			if (click) {
+				desc = `<span class="link" onClick="${click}">${desc}</span>`;
+				if (item.event.revision) {
+					nice_rev = `<span class="link" onClick="${click}"><i class="mdi mdi-file-compare">&nbsp;</i><b>${item.event.revision}</b></span>`;
+				}
+			}
+			
+			return [
+				nice_rev,
+				'<div class="activity_desc"><i class="mdi mdi-' + item_type.icon + '">&nbsp;</i>' + desc + '</div>',
+				'<div style="white-space:nowrap;">' + self.getNiceUser(item.username, true) + '</div>',
+				'<div class="wrap_mobile">' + self.getRelativeDateTime( item.epoch ) + '</div>',
+				'<div style="white-space:nowrap;">' + actions.join(' | ') + '</div>'
+			];
+		}); // getPaginatedGrid
+		
+		$cont.find('> .box_content').html( html );
+	}
+	
+	revisionNav(offset) {
+		// paginate through revision history
+		this.revisionOffset = offset;
+		this.div.find('#d_ve_revisions > .box_content').addClass('loading');
+		this.fetchRevisionHistory();
+	}
+	
+	showActionReport(idx) {
+		// pop dialog for any action
+		var item = this.revisions[idx];
+		var template = config.activity_descriptions[item.action];
+		var is_cur_rev = (item.event.revision === this.event.revision);
+		
+		// massage a title out of description template (ugh)
+		var title = template.replace(/\:\s+.+$/, '').replace(/\s+\(.+$/, '');
+		var btn = '<div class="button danger" onClick="$P().prepRollback(' + idx + ')">Rollback...</div>';
+		if (is_cur_rev) btn = '&nbsp;';
+		var md = '';
+		
+		// summary
+		md += "### Summary\n\n";
+		md += '- **Description:** <i class="mdi mdi-' + item._type.icon + '">&nbsp;</i>' + item._desc + "\n";
+		md += '- **Date/Time:** ' + this.getRelativeDateTime(item.epoch) + "\n";
+		md += '- **User:** ' + this.getNiceUser(item.username, true) + "\n";
+		md += '- **Revision:** <i class="mdi mdi-file-compare">&nbsp;</i>' + (item.event.revision || 'n/a') + (is_cur_rev ? ' (Current)' : '') + "\n";
+		
+		// diff
+		if (this.revisions[idx + 1] && this.revisions[idx + 1].event) {
+			var old_event = copy_object( this.revisions[idx + 1].event );
+			delete old_event.revision;
+			delete old_event.modified;
+			
+			var new_event = copy_object( item.event );
+			delete new_event.revision;
+			delete new_event.modified;
+			
+			var diff_html = this.getDiffHTML( old_event, new_event );
+			md += "\n### Diff to Previous\n\n";
+			md += '<div class="diff_content">' + diff_html + '</div>' + "\n";
+		}
+		
+		// the thing itself
+		md += "\n### Event JSON\n\n";
+		md += '```json' + "\n";
+		md += JSON.stringify( item.event, null, "\t" ) + "\n";
+		md += '```' + "\n";
+		
+		this.viewMarkdownAuto( title, md, btn );
+	}
+	
+	prepRollback(idx) {
+		// prep rollback to specified revision
+		var item = this.revisions[idx];
+		Dialog.hide();
+		
+		this.rollbackEvent = item.event;
+		Nav.go('Events?sub=edit&id=' + this.event.id + '&rollback=1');
+	}
+	
 	gosub_new(args) {
 		// create new event
 		var html = '';
@@ -1406,6 +1564,13 @@ Page.Events = class Events extends Page.Base {
 		// app.api.post( 'app/get_event', { id: args.id }, this.receive_event.bind(this), this.fullPageError.bind(this) );
 		var event = find_object( app.events, { id: args.id } );
 		if (!event) return this.doFullPageError("Event not found: " + args.id);
+		
+		if (args.rollback && this.rollbackEvent) {
+			event = this.rollbackEvent;
+			delete this.rollbackEvent;
+			app.showMessage('info', `Revision ${event.revision} has been loaded as a draft edit.  Click 'Save Changes' to complete the rollback.  Note that a new revision number will be assigned.`);
+		}
+		
 		this.receive_event({ code: 0, event: deep_copy_object(event) });
 	}
 	
@@ -1570,6 +1735,7 @@ Page.Events = class Events extends Page.Base {
 	
 	save_event_finish(resp) {
 		// new event saved successfully
+		app.cacheBust = hires_time_now();
 		Dialog.hideProgress();
 		if (!this.active) return; // sanity
 		
@@ -2966,6 +3132,8 @@ Page.Events = class Events extends Page.Base {
 		delete this.upcomingOffset;
 		delete this.activeOffset;
 		delete this.queueOffset;
+		delete this.revisionOffset;
+		delete this.revisions;
 		
 		// destroy charts if applicable (view page)
 		if (this.charts) {
