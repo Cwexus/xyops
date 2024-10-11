@@ -28,10 +28,6 @@
 		{ "id": "edit_channels", "title": "Edit Channels", "icon": "bullhorn-outline" },
 		{ "id": "delete_channels", "title": "Delete Channels", "icon": "bullhorn-outline" },
 		
-		{ "id": "create_commands", "title": "Create Commands", "icon": "console" },
-		{ "id": "edit_commands", "title": "Edit Commands", "icon": "console" },
-		{ "id": "delete_commands", "title": "Delete Commands", "icon": "console" },
-		
 		{ "id": "create_monitors", "title": "Create Monitors", "icon": "chart-areaspline" },
 		{ "id": "edit_monitors", "title": "Edit Monitors", "icon": "chart-areaspline" },
 		{ "id": "delete_monitors", "title": "Delete Monitors", "icon": "chart-areaspline" },
@@ -56,7 +52,6 @@
 		{ "id": "api_keys", "title": "API Keys", "icon": "key-chain" },
 		{ "id": "categories", "title": "Categories", "icon": "folder-open-outline" },
 		{ "id": "channels", "title": "Channels", "icon": "bullhorn-outline" },
-		{ "id": "commands", "title": "Commands", "icon": "console" },
 		{ "id": "events", "title": "Events", "icon": "calendar-clock" },
 		{ "id": "groups", "title": "Groups", "icon": "server-network" },
 		{ "id": "monitors", "title": "Monitors", "icon": "chart-areaspline" },
@@ -92,10 +87,6 @@
 		"channel_create": "Channel created: [description] ([channel.id])",
 		"channel_update": "Channel updated: [description] ([channel.id])",
 		"channel_delete": "Channel deleted: [description] ([channel.id])",
-		
-		"command_create": "Command created: [description] ([command.id])",
-		"command_update": "Command updated: [description] ([command.id])",
-		"command_delete": "Command deleted: [description] ([command.id])",
 		
 		"event_create": "Event created: [description] ([event.id])",
 		"event_update": "Event updated: [description] ([event.id])",
@@ -153,7 +144,6 @@
 		"api_keys": "^(apikey_.+)$",
 		"categories": "^(category_.+)$",
 		"channels": "^(channel_.+)$",
-		"commands": "^(command_.+)$",
 		"events": "^(event_.+)$",
 		"jobs": "^(job_.+|queue_.+)$",
 		"groups": "^(group_.+)$",
@@ -180,7 +170,6 @@
 		"^warning": { "icon": "alert-circle", "label": "Warning" },
 		"^notice": { "icon": "information-outline", "label": "Notice" },
 		"^group": { "icon": "server-network", "label": "Group" },
-		"^command": { "icon": "console", "label": "Command" },
 		"^server": { "icon": "server", "label": "Server" },
 		"^master": { "icon": "database", "label": "Master" },
 		"^peer": { "icon": "database", "label": "Master" },
@@ -202,5 +191,25 @@
 		
 		"^state": { "icon": "database-outline", "label": "State" },
 		"^internal": { "icon": "desktop-classic", "label": "System" }
+	},
+	
+	"plugin_type_descriptions": {
+		"event": "**Event Plugins** contain the code that runs your actual jobs.  They run on the target server for the event, and are expected to consume JSON on STDIN and output JSON on STDOUT, to communicate with Orchestra regarding the job, and to denote the completion and status.  For more information see [Event Plugins](#Docs/plugins/event-plugins).",
+		"monitor": "**Monitor Plugins** run the specified code every minute on every targeted server to graph custom data.  For example, you can use this to monitor your own application status, and produce output that feeds multiple graphs.  For more information see [Monitor Plugins](#Docs/plugins/monitor-plugins).",
+		"action": "**Action Plugins** can run custom code in response to job triggers such as completion, success, error, and other cases.  The action code runs on the current conductor server, and is designed to call your own notification system.  For more information see [Action Plugins](#Docs/plugins/action-plugins).",
+		"schduler": "**Scheduler Plugins** allow you to define your own event scheduling systems.  Every minute, your plugin code will execute and be passed a JSON document containing all the events currently assigned, plus the date/time in the event's timezone, and you can decide which events run at which times.  For more information see [Scheduler Plugins](#Docs/plugins/scheduler-plugins)."
+	},
+	
+	"marked_config": {
+		"gfm": true,
+		"tables": true,
+		"breaks": false,
+		"pedantic": false,
+		"sanitize": false,
+		"smartLists": true,
+		"smartypants": false,
+		"silent": true,
+		"headerIds": false,
+		"mangle": false
 	}
 }
