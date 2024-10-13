@@ -8,6 +8,7 @@ var path = require('path');
 var cp = require('child_process');
 var os = require('os');
 var fs = require('fs');
+var zlib = require('zlib');
 var async = require('async');
 var bcrypt = require('bcrypt-node');
 
@@ -246,7 +247,10 @@ var storage = new StandaloneStorage(config.Storage, function(err) {
 			var key = commands.shift();
 			storage.get( key, function(err, data) {
 				if (err) throw err;
-				if (storage.isBinaryKey(key)) print( data.toString() + "\n" );
+				if (storage.isBinaryKey(key)) {
+					if (key.match(/\.gz$/)) print( zlib.gunzipSync(data).toString() + "\n" );
+					else print( data.toString() + "\n" );
+				}
 				else print( ((typeof(data) == 'object') ? JSON.stringify(data, null, "\t") : data) + "\n" );
 				print("\n");
 				
