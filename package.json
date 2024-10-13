@@ -39,6 +39,7 @@
 		"jquery": "3.6.0",
 		"marked": "2.0.3",
 		"mime": "2.5.2",
+		"sanitize-html": "2.13.1",
 		"orchestra-theme": "^2.0.0",
 		"pixl-args": "^1.0.3",
 		"pixl-boot": "^2.0.0",
