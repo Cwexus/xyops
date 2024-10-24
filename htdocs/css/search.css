@@ -114,6 +114,26 @@ div.search_help a:hover i {
 	grid-template-columns: 1fr;
 }
 
+.form_grid .multiselect > .single {
+	max-width: 12vw;
+}
+.form_grid.four .multiselect > .single {
+	max-width: 15vw;
+}
+
+/* Smaller Screens */
+
+@media only screen and (min-width: 1025px) and (max-width: 1280px) {
+	
+	.form_grid .multiselect > .single {
+		max-width: 10vw;
+	}
+	.form_grid.four .multiselect > .single {
+		max-width: 15vw;
+	}
+	
+}
+
 /* Tablets */
 
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
@@ -123,6 +143,13 @@ div.search_help a:hover i {
 	}
 	.form_grid.four {
 		grid-template-columns: 1fr 1fr;
+	}
+	
+	.form_grid .multiselect > .single {
+		max-width: 30vw;
+	}
+	.form_grid.four .multiselect > .single {
+		max-width: 30vw;
 	}
 	
 	#btn_s_download {
@@ -139,6 +166,13 @@ div.search_help a:hover i {
 	}
 	.form_grid.four {
 		grid-template-columns: 1fr;
+	}
+	
+	.form_grid .multiselect > .single {
+		max-width: 80vw;
+	}
+	.form_grid.four .multiselect > .single {
+		max-width: 80vw;
 	}
 	
 	#btn_s_download {
