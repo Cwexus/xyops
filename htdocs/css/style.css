@@ -1205,10 +1205,6 @@ div.box.toggle.expanded > div.box_title > div {
 		padding-right: 60px;
 	}
 	
-	div.box_title div.box_title_widget {
-		display: none;
-	}
-	
 	.wrap_mobile {
 		white-space: normal;
 	}
