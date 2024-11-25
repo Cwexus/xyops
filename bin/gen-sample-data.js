@@ -109,7 +109,8 @@ request.json( 'https://random-data-api.com/api/company/random_company?size=100',
 					success_match: '',
 					error_match: '',
 					follow: true,
-					ssl_cert_bypass: false
+					ssl_cert_bypass: false,
+					download: true
 				};
 			break;
 		}
