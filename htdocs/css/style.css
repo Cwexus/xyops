@@ -24,7 +24,7 @@ div.header > div.header_title > i {
 	color: var(--theme-color);
 } */
  
-div.header_widget.marquee, div.box.marquee {
+div.header_widget.marquee, div.box.marquee, div.button.marquee {
 	border: 1px solid transparent !important;
 	background: linear-gradient(var(--box-background-color), var(--box-background-color)) padding-box, linear-gradient(-45deg, rgba(128, 128, 128, 0.4) 25%, transparent 25%, transparent 50%, rgba(128, 128, 128, 0.4) 50%, rgba(128, 128, 128, 0.4) 75%, transparent 75%, transparent) 0 / 31px 31px;
 	animation: kfmarquee 2s linear infinite;
@@ -100,6 +100,10 @@ body.dark .button.secondary {
 .button.secondary:hover {
 	color: var(--green);
 	border: 1px solid var(--green-highlight);
+}
+.button.secondary.marquee:hover {
+	color: var(--green);
+	background: linear-gradient(var(--box-background-color), var(--box-background-color)) padding-box, linear-gradient(-45deg, var(--green) 25%, transparent 25%, transparent 50%, var(--green) 50%, var(--green) 75%, transparent 75%, transparent) 0 / 31px 31px;
 }
 
 .button.default {
@@ -737,7 +741,7 @@ div.td_big {
 }
 
 .dialog_box_content.maximize .form_row {
-	grid-template-columns: 1fr;
+	grid-template-columns: 1fr !important;
 	
 	grid-template-areas:
 		"a"
@@ -753,6 +757,13 @@ div.td_big {
 }
 .dialog_box_content.maximize .form_row > div.fr_suffix {
 	display: none;
+}
+
+.dialog_intro {
+	width: 560px;
+	margin-top: 6px;
+	font-size: 13px;
+	color: var(--label-color);
 }
 
 .table_menu_container {
