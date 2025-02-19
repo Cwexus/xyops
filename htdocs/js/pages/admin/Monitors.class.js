@@ -190,7 +190,8 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 			"data_type": "float",
 			"suffix": "",
 			"groups": [],
-			"display": true
+			"display": true,
+			"min_vert_scale": 0
 		};
 		
 		html += this.get_monitor_edit_html();
@@ -493,6 +494,21 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 			caption: 'Optionally interpret the data value as a delta, and optionally divided by time.  This is mainly for values that continually count upwards, but we want to graph the difference over time, instead of the absolute value.'
 		});
 		
+		// min_vert_scale
+		html += this.getFormRow({
+			label: 'Min Vert Range:',
+			content: this.getFormText({
+				id: 'fe_em_min_vert_scale',
+				type: 'number',
+				spellcheck: 'false',
+				maxlength: 32,
+				min: 0,
+				step: 0.1,
+				value: monitor.min_vert_scale || 0
+			}),
+			caption: 'Optionally limit the vertical range of the monitor graph to the specified minimum value.  For example, a CPU % monitor may benefit from having a minimum range of <code>100</code>.  When set to <code>0</code>, the graph will automatically zoom to fit the current visible range.'
+		});
+		
 		// suffix
 		html += this.getFormRow({
 			label: 'Data Suffix:',
@@ -530,6 +546,7 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 		monitor.source = $('#fe_em_source').val();
 		monitor.data_match = $('#fe_em_data_match').val();
 		monitor.data_type = $('#fe_em_data_type').val();
+		monitor.min_vert_scale = parseFloat( $('#fe_em_min_vert_scale').val() );
 		monitor.suffix = $('#fe_em_suffix').val();
 		monitor.notes = $('#fe_em_notes').val();
 		
