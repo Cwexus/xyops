@@ -477,7 +477,7 @@ Page.Alerts = class Alerts extends Page.Base {
 				self.getNiceSnapshotSource(item),
 				self.getNiceServer(item.server || alert.server, true),
 				get_text_from_seconds(item.data.uptime_sec || 0, true, true),
-				item.data.load.join(', '),
+				item.data.load.map( function(value) { return short_float(value); } ).join(', '),
 				get_text_from_bytes(item.data.memory.available || 0),
 				self.getRelativeDateTime(item.date)
 			];
