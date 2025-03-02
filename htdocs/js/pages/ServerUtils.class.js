@@ -274,19 +274,15 @@ Page.ServerUtils = class ServerUtils extends Page.Base {
 		html += this.getBasicGrid( grid_args, function(item, idx) {
 			return [
 				'#' + Math.floor(idx + 1),
-				short_float(item.user) + '%',
-				short_float(item.system) + '%',
-				short_float(item.nice) + '%',
-				short_float(item.iowait) + '%',
-				short_float(item.irq) + '%',
-				short_float(item.softirq) + '%',
+				Math.floor(item.user) + '%',
+				Math.floor(item.system) + '%',
+				Math.floor(item.nice) + '%',
+				Math.floor(item.iowait) + '%',
+				Math.floor(item.irq) + '%',
+				Math.floor(item.softirq) + '%',
 				self.getNiceProgressBar( (100 - item.idle) / 100, 'static wider', true )
 			];
 		}); // grid
-		
-		// piggybacking onto this for storing bar animation state
-		if (!this.donutDashUnits) this.donutDashUnits = {};
-		this.donutDashUnits._bars = rows;
 		
 		return html;
 	}

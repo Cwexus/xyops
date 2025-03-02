@@ -1139,14 +1139,14 @@ Page.Job = class Job extends Page.Base {
 			// indeterminate
 			if (!$prog_cont.hasClass('indeterminate')) {
 				$prog_cont.addClass('indeterminate');
-				$prog_bar.css('width', bwidth);
+				$prog_bar.css('width', '' + bwidth + 'px');
 				$prog_pct.html('');
 			}
 		}
 		else if ((job.progress > 0) && (job.progress < 1.0)) {
 			if ($prog_cont.hasClass('indeterminate')) $prog_cont.removeClass('indeterminate');
 			var cx = Math.floor( job.progress * bwidth );
-			$prog_bar.css('width', cx);
+			$prog_bar.css('width', '' + cx + 'px');
 			$prog_pct.html( pct(job.progress, 1.0, true) );
 		}
 		

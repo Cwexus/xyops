@@ -1395,8 +1395,6 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		
 		// also update mem and cpu details
 		if (data.data && this.donutDashUnits) {
-			// this.div.find('#d_vs_mem > .box_content').html( this.getMemDetails(data) );
-			// this.div.find('#d_vs_cpus > .box_content').html( this.getCPUDetails(data) );
 			this.resetDetailAnimation();
 			this.updateMemDetails(data);
 			this.updateCPUDetails(data);
@@ -1407,7 +1405,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 	resetDetailAnimation() {
 		// reset detail animation
 		var raf = !!(this.detailAnimation && this.detailAnimation.raf);
-		this.detailAnimation = { raf, start: Date.now(), duration: 500, donuts: [], bars: [] };
+		this.detailAnimation = { raf, start: Date.now(), duration: 500, donuts: [] };
 	}
 	
 	startDetailAnimation() {
@@ -1433,12 +1431,6 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		anim.donuts.forEach( function(donut) {
 			var pct = short_float( donut.from + ((donut.to - donut.from) * eased), 3 );
 			donut.elem.css('background-image', 'conic-gradient( ' + donut.color + ' ' + pct + '%, var(--border-color) 0)');
-		} );
-		
-		// bars just need their width changed
-		anim.bars.forEach( function(bar) {
-			var cx = Math.floor( bar.from + ((bar.to - bar.from) * eased) );
-			bar.elem.css( 'width', '' + cx + 'px' );
 		} );
 		
 		if (progress < 1.0) {
@@ -1524,22 +1516,20 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		// grid and bars
 		var bar_width = 150;
 		var rows = (data.cpu && data.cpu.cpus) ? data.cpu.cpus : [];
-		var old_rows = this.donutDashUnits._bars;
 		var $grid_rows = $cont.find('div.data_grid.cpu_grid ul.grid_row');
 		
 		$grid_rows.each( function(idx) {
 			var item = rows[idx];
-			var old_item = old_rows[idx];
 			var $row = $(this);
 			var $cols = $row.find('> div');
 			
 			// $cols[0] is the numerical index label (#1, #2, etc.)
-			$cols[1].innerHTML = short_float(item.user) + '%';
-			$cols[2].innerHTML = short_float(item.system) + '%';
-			$cols[3].innerHTML = short_float(item.nice) + '%';
-			$cols[4].innerHTML = short_float(item.iowait) + '%';
-			$cols[5].innerHTML = short_float(item.irq) + '%';
-			$cols[6].innerHTML = short_float(item.softirq) + '%';
+			$cols[1].innerHTML = Math.floor(item.user) + '%';
+			$cols[2].innerHTML = Math.floor(item.system) + '%';
+			$cols[3].innerHTML = Math.floor(item.nice) + '%';
+			$cols[4].innerHTML = Math.floor(item.iowait) + '%';
+			$cols[5].innerHTML = Math.floor(item.irq) + '%';
+			$cols[6].innerHTML = Math.floor(item.softirq) + '%';
 			
 			var $bar = $cols.eq(7).find('div.progress_bar_container');
 			var amount = (100 - item.idle) / 100;
@@ -1548,20 +1538,8 @@ Page.Servers = class Servers extends Page.ServerUtils {
 			var label = '' + Math.floor( (counter / 1.0) * 100 ) + '%';
 			
 			$bar.find('div.progress_bar_label').html( label ); // should update 2 elements
-			
-			var old_amount = (100 - old_item.idle) / 100;
-			var old_counter = Math.min(1, Math.max(0, old_amount || 0));
-			var old_cx = Math.floor( old_counter * bar_width );
-			
-			// add animation controller for bar change
-			if (cx != old_cx) self.detailAnimation.bars.push({
-				elem: $bar.find('div.progress_bar_inner'),
-				from: old_cx,
-				to: cx
-			});
+			$bar.find('div.progress_bar_inner').css('width', '' + cx + 'px'); // should auto-animate
 		} );
-		
-		this.donutDashUnits._bars = rows;
 	}
 	
 	applyQuickMonitorFilter(elem) {
