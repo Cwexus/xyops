@@ -98,9 +98,9 @@ Page.Servers = class Servers extends Page.ServerUtils {
 			this.buildOptGroup( opt_groups.cpu_virt, "Virtualization:", '', 'virt_' )
 		);
 		
-		// sort servers by hostname ascending
+		// sort servers by label/hostname ascending
 		this.servers = resp.rows.sort( function(a, b) {
-			return a.hostname.localeCompare( b.hostname );
+			return (a.title || a.hostname).toLowerCase().localeCompare( (b.title || b.hostname).toLowerCase() );
 		} );
 		
 		// NOTE: Don't change these columns without also changing the responsive css column collapse rules in style.css
@@ -156,7 +156,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 				item.info.os.distro + ' ' + item.info.os.release,
 				item.info.booted ? self.getNiceUptime( now - item.info.booted ) : 'n/a',
 				'<div id="d_es_server_jobs_' + item.id + '">' + nice_jobs + '</div>',
-				nice_alerts
+				nice_alerts // no need for div here: alert change redraws entire table
 			];
 			
 			if (item.offline) classes.push('disabled');
@@ -169,7 +169,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		
 		html += '<div class="box_buttons">';
 			html += '<div class="button secondary" onMouseUp="$P().go_server_search()"><i class="mdi mdi-magnify">&nbsp;</i>Search History...</div>';
-			html += '<div class="button default" onMouseUp="$P().go_add_server()"><i class="mdi mdi-plus-circle-outline">&nbsp;</i>Add Server...</div>';
+			html += '<div class="button default" onMouseUp="$P().showAddServerDialog()"><i class="mdi mdi-plus-circle-outline">&nbsp;</i>Add Server...</div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -181,10 +181,6 @@ Page.Servers = class Servers extends Page.ServerUtils {
 	
 	go_server_search() {
 		Nav.go('#Servers?sub=search');
-	}
-	
-	go_add_server() {
-		// TODO: this (one-liner installation for orchestra-satellite)
 	}
 	
 	applyTableFilters() {
@@ -221,7 +217,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		Nav.loc = url;
 		
 		// magic trick: replace link in sidebar for Events
-		$('#tab_Servers').attr( 'href', url );
+		// $('#tab_Servers').attr( 'href', url );
 	}
 	
 	isRowVisible(item) {
@@ -231,7 +227,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		if (!is_filtered) return true; // show
 		
 		if (('search' in args) && args.search.length) {
-			var words = [item.hostname, item.ip, item.info.os.distro, item.info.os.release].join(' ').toLowerCase();
+			var words = [item.title || '', item.hostname, item.ip, item.info.os.distro, item.info.os.release].join(' ').toLowerCase();
 			if (words.indexOf(args.search.toLowerCase()) == -1) return false; // hide
 		}
 		
@@ -309,7 +305,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 	gosub_search(args) {
 		// search server db
 		if (!args.offset) args.offset = 0;
-		if (!args.limit) args.limit = 25;
+		if (!args.limit) args.limit = config.items_per_page;
 		
 		app.setWindowTitle('Server Search');
 		app.setHeaderTitle( '<i class="mdi mdi-cloud-search-outline">&nbsp;</i>Server Search' );
@@ -698,7 +694,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		
 		if (!args) args = {};
 		this.args = args;
-		this.args.limit = 25;
+		this.args.limit = config.items_per_page;
 		
 		app.showSidebar(true);
 		app.setHeaderTitle( '...' );
@@ -791,6 +787,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 				html += 'Server Summary';
 				if (!online) html += ' &mdash; As of ' + this.getShortDateTimeText(snapshot.date);
 				
+				html += '<div class="button icon right danger" title="Delete Server..." onClick="$P().goDeleteServer()"><i class="mdi mdi-trash-can-outline"></i></div>';
 				html += '<div class="button icon right secondary" title="Job History..." onClick="$P().goJobHistory()"><i class="mdi mdi-cloud-search-outline"></i></div>';
 				html += '<div class="button icon right secondary" title="Alert History..." onClick="$P().goAlertHistory()"><i class="mdi mdi-restore-alert"></i></div>';
 				html += '<div class="button icon right secondary" title="Server History..." onClick="$P().goServerHistory()"><i class="mdi mdi-script-text-outline"></i></div>';
@@ -834,12 +831,12 @@ Page.Servers = class Servers extends Page.ServerUtils {
 					
 					html += '<div>';
 						html += '<div class="info_label">Architecture</div>';
-						html += '<div class="info_value">' + this.getNiceArch(snapshot.data.arch) + '</div>';
+						html += '<div class="info_value">' + this.getNiceArch(server.info.arch) + '</div>';
 					html += '</div>';
 					
 					html += '<div>';
 						html += '<div class="info_label">Operating System</div>';
-						html += '<div class="info_value">' + this.getNiceOS(snapshot.data.os) + '</div>';
+						html += '<div class="info_value">' + this.getNiceOS(server.info.os) + '</div>';
 					html += '</div>';
 					
 					html += '<div>';
@@ -850,17 +847,17 @@ Page.Servers = class Servers extends Page.ServerUtils {
 					// row 3
 					html += '<div>';
 						html += '<div class="info_label">Total RAM</div>';
-						html += '<div class="info_value">' + this.getNiceMemory(snapshot.data.memory.total || 0) + '</div>';
+						html += '<div class="info_value">' + this.getNiceMemory(server.info.memory.total || 0) + '</div>';
 					html += '</div>';
 					
 					html += '<div>';
 						html += '<div class="info_label">CPU Cores</div>';
-						html += '<div class="info_value">' + snapshot.data.cpu.physicalCores + ' physical, ' + snapshot.data.cpu.cores + ' virtual</div>';
+						html += '<div class="info_value">' + server.info.cpu.physicalCores + ' physical, ' + server.info.cpu.cores + ' virtual</div>';
 					html += '</div>';
 					
 					html += '<div>';
 						html += '<div class="info_label">CPU Type</div>';
-						html += '<div class="info_value">' + this.getNiceCPUType(snapshot.data.cpu) + '</div>';
+						html += '<div class="info_value">' + this.getNiceCPUType(server.info.cpu) + '</div>';
 					html += '</div>';
 					
 					html += '<div>';
@@ -1194,6 +1191,53 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		Nav.go('Search?server=' + this.server.id);
 	}
 	
+	goDeleteServer() {
+		// show delete server dialog
+		var self = this;
+		var server = this.server;
+		var title = "Delete Server";
+		var btn = ['trash-can', "Confirm Delete"];
+		var nice_server = this.getNiceServer(this.server, false);
+		var html = '';
+		
+		if (this.online) {
+			// server is online
+			html += `<div class="dialog_intro">Are you sure you want to permanently delete the server <b>${nice_server}</b>?  Note that this will <b>shut down</b> and <b>uninstall</b> Orchestra Satellite from the server.</div>`;
+			html += '<div class="dialog_box_content">';
+			
+			html += this.getFormRow({
+				label: 'Options:',
+				content: this.getFormCheckbox({
+					id: 'fe_ds_history',
+					label: 'Delete Server History',
+					checked: false
+				}),
+				caption: 'Check this box to also delete the server\'s history, including all monitoring data and snapshots.'
+			});
+			
+			html += '</div>';
+		}
+		else {
+			// server is offline
+			html += `Are you sure you want to permanently delete the server <b>${nice_server}</b>, including its history and monitoring data?  This operation cannot be undone.`;
+		}
+		
+		Dialog.confirmDanger( title, html, btn, function(result) {
+			if (!result) return;
+			app.clearError();
+			
+			var del_hist = self.online ? $('#fe_ds_history').is(':checked') : true;
+			
+			Dialog.showProgress( 1.0, "Deleting Server..." );
+			app.api.post( 'app/delete_server', { id: server.id, history: del_hist }, function(resp) {
+				// delete started in background
+				Dialog.hideProgress();
+				app.showMessage('success', "The server is being deleted in the background.");
+				if (del_hist) Nav.go('Servers');
+			}); // api.post
+		}); // Dialog.confirm
+	}
+	
 	createSnapshot() {
 		// take snapshot of current server
 		app.clearError();
@@ -1238,7 +1282,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		if (!this.activeOffset) this.activeOffset = 0;
 		
 		var resp = {
-			rows: rows.slice( this.activeOffset, this.activeOffset + this.args.limit ),
+			rows: rows.slice( this.activeOffset, this.activeOffset + config.alt_items_per_page ),
 			list: { length: rows.length }
 		};
 		
@@ -1247,7 +1291,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 			cols: ['Job ID', 'Event', 'Category', 'Server', 'State', 'Progress', 'Remaining', 'Actions'],
 			data_type: 'job',
 			offset: this.activeOffset,
-			limit: this.args.limit,
+			limit: config.alt_items_per_page,
 			class: 'data_grid dash_active_grid',
 			pagination_link: '$P().jobActiveNav',
 			empty_msg: 'No active jobs on this server.'
@@ -1331,7 +1375,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 				'<div class="chart_toolbar ct_' + key + '">' + 
 					'<div class="chart_icon ci_di" title="Download Image" onClick="$P().chartDownload(\'' + key + '\')"><i class="mdi mdi-cloud-download-outline"></i></div>' + 
 					'<div class="chart_icon ci_cl" title="Copy Image Link" onClick="$P().chartCopyLink(\'' + key + '\',this)"><i class="mdi mdi-clipboard-pulse-outline"></i></div>' + 
-					'<div class="chart_icon ci_cj" style="display:none" title="Copy JSON Data" onClick="$P().chartCopyJSON(\'' + key + '\',this)"><i class="mdi mdi-code-json"></i></div>' + 
+					'<div class="chart_icon ci_cj" title="Copy JSON Data" onClick="$P().chartCopyJSON(\'' + key + '\',this)"><i class="mdi mdi-code-json"></i></div>' + 
 				'</div>' 
 			);
 		};
@@ -1344,6 +1388,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 				"dataSuffix": def.suffix,
 				"minVertScale": def.min_vert_scale || 0,
 				"delta": def.delta || false,
+				"deltaMinValue": def.delta_min_value ?? false,
 				"divideByDelta": def.divide_by_delta || false,
 				"legend": false, // single layer, no legend needed
 				"_quick": true
@@ -1363,7 +1408,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 				
 				chart.addLayer({
 					id: server.id,
-					title: app.formatHostname(server.hostname),
+					title: self.getNiceServerText(server),
 					data: self.getQuickMonChartData(rows, def.id),
 					color: app.colors[ idx % app.colors.length ]
 				});
@@ -1422,6 +1467,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		
 		var now = Date.now();
 		var anim = this.detailAnimation;
+		if (!anim) return; // sanity
 		anim.raf = false;
 		
 		var progress = Math.min(1.0, (now - anim.start) / anim.duration ); // linear
@@ -1562,6 +1608,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		var self = this;
 		var server = this.server;
 		var monitors = this.monitors = [];
+		var min_epoch = app.epoch - 3600;
 		var html = '';
 		html += '<div class="chart_grid_horiz">';
 		
@@ -1598,6 +1645,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 				"dataType": def.data_type,
 				"dataSuffix": def.suffix,
 				"delta": def.delta || false,
+				"deltaMinValue": def.delta_min_value ?? false,
 				"divideByDelta": def.divide_by_delta || false,
 				"minVertScale": def.min_vert_scale || 0,
 				"showDataGaps": true,
@@ -1611,13 +1659,16 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		app.api.post( 'app/get_latest_monitor_data', { server: server.id, sys: 'hourly', limit: 60 }, function(resp) {
 			if (!self.active) return; // sanity
 			
+			// prune all data older than 1 hour
+			resp.rows = resp.rows.filter( function(row) { return row.date >= min_epoch; } );
+			
 			// now iterate over all our monitors
 			monitors.forEach( function(def, idx) {
 				var chart = self.charts[def.id];
 				
 				chart.addLayer({
 					id: server.id,
-					title: app.formatHostname(server.hostname),
+					title: self.getNiceServerText(server),
 					data: self.getMonitorChartData(resp.rows, def.id),
 					color: app.colors[ idx % app.colors.length ]
 				});
@@ -1811,6 +1862,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		delete this.online;
 		delete this.donutDashUnits;
 		delete this.detailAnimation;
+		delete this.serverInstallArgs;
 		
 		// destroy charts if applicable (view page)
 		if (this.charts) {
