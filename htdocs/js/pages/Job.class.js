@@ -1,6 +1,6 @@
 // Job Details Pages
 
-Page.Job = class Job extends Page.Base {
+Page.Job = class Job extends Page.PageUtils {
 	
 	onInit() {
 		// called once at page load
@@ -388,8 +388,12 @@ Page.Job = class Job extends Page.Base {
 		
 		// charts
 		html += '<div class="box" id="d_job_graphs" >';
-			html += '<div class="box_content">';
-				html += '<div class="chart_grid_horiz">';
+			html += '<div class="box_title">';
+				html += this.getChartSizeSelector();
+				html += 'Job Monitors';
+			html += '</div>';
+			html += '<div class="box_content table">';
+				html += '<div class="chart_grid_horiz ' + (app.getPref('chart_size') || 'medium') + '">';
 				
 					html += '<div><canvas id="c_live_cpu" class="chart"></canvas></div>';
 					html += '<div><canvas id="c_live_mem" class="chart"></canvas></div>';
@@ -436,6 +440,8 @@ Page.Job = class Job extends Page.Base {
 		html += '</div>'; // box
 		
 		this.div.html(html);
+		
+		SingleSelect.init( this.div.find('select.sel_chart_size') );
 		
 		if (!job.final) {
 			// in progress
@@ -1289,7 +1295,7 @@ Page.Job = class Job extends Page.Base {
 					'<div class="chart_icon ci_tl" title="Toggle Layers" onClick="$P().chartToggleLayers(\'' + key + '\')"><i class="mdi mdi-layers-outline"></i></div>' + 
 					toggle_zoom_html + 
 					'<div class="chart_icon ci_di" title="Download Image" onClick="$P().chartDownload(\'' + key + '\')"><i class="mdi mdi-cloud-download-outline"></i></div>' + 
-					'<div class="chart_icon ci_cl" title="Copy Image Link" onClick="$P().chartCopyLink(\'' + key + '\',this)"><i class="mdi mdi-clipboard-pulse-outline"></i></div>' + 
+					'<div class="chart_icon ci_cl" title="Copy Image Link" onClick="$P().chartCopyLink(\'' + key + '\',this,event)"><i class="mdi mdi-clipboard-pulse-outline"></i></div>' + 
 				'</div>' 
 			);
 		};
