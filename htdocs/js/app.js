@@ -651,6 +651,15 @@ app.extend({
 		return (new Date( epoch * 1000 )).toLocaleString( opts.locale, opts );
 	},
 	
+	formatDateRange(start, end, opts) {
+		// format date range based on user locale settings
+		// start and end should both be epoch seconds
+		if (!opts) opts = { dateStyle: 'long', timeStyle: 'short' };
+		opts = this.getDateOptions(opts);
+		var formatter = new Intl.DateTimeFormat(opts.locale, opts);
+		return formatter.formatRange( new Date(start * 1000), new Date(end * 1000) );
+	},
+	
 	pruneData: function() {
 		// prune data affected by user privs
 		this.pruneEvents();
