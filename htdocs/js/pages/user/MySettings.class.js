@@ -30,7 +30,7 @@ Page.MySettings = class MySettings extends Page.Base {
 		var reg = ropts.locale.split(/\-/).pop();
 		
 		html += '<div class="box">';
-		html += '<div class="box_title">Preferences</div>';
+		html += '<div class="box_title">Localization Settings</div>';
 		html += '<div class="box_content">';
 		
 		// Language
@@ -130,9 +130,108 @@ Page.MySettings = class MySettings extends Page.Base {
 		
 		html += '</div>'; // box
 		
+		html += '<div class="box">';
+		html += '<div class="box_title">User Interface Settings</div>';
+		html += '<div class="box_content">';
+		
+		// sound volume
+		html += this.getFormRow({
+			label: 'Sound Volume:',
+			content: this.getFormRange({
+				id: 'fe_ms_volume',
+				min: 0,
+				max: 10,
+				step: 1,
+				value: user.volume || 0
+			}),
+			suffix: '<div class="form_suffix_icon mdi mdi-play-circle-outline" title="Preview Volume..." onClick="$P().playPreviewSound()" onMouseDown="event.preventDefault();"></div>',
+			caption: 'Select your desired audio volume level for notifications.'
+		});
+		
+		// motion preference
+		html += this.getFormRow({
+			label: 'Motion:',
+			content: this.getFormMenuSingle({
+				id: 'fe_ms_motion',
+				title: 'Select Motion Preference',
+				options: [ 
+					{ id: 'auto', title: 'Auto (System)', icon: 'creation' }, 
+					{ id: 'full', title: 'Full Motion', icon: 'run-fast' }, 
+					{ id: 'reduced', title: 'Reduced Motion', icon: 'walk' } 
+				],
+				value: user.motion || 'auto'
+			}),
+			caption: 'Select your desired preference for motion.  Reduced motion disables certain animations which may be sensitive to some people.'
+		});
+		
+		// contrast preference
+		html += this.getFormRow({
+			label: 'Contrast:',
+			content: this.getFormMenuSingle({
+				id: 'fe_ms_contrast',
+				title: 'Select Contrast Level',
+				options: [ 
+					{ id: 'auto', title: 'Auto (System)', icon: 'creation' }, 
+					{ id: 'low', title: 'Low Contrast', icon: 'circle' },
+					{ id: 'normal', title: 'Normal Contrast', icon: 'circle-half-full' }, 
+					{ id: 'high', title: 'High Contrast', icon: 'circle-outline' },
+				],
+				value: user.contrast || 'auto'
+			}),
+			caption: 'Select your desired preference for contrast.  This affects the brightness range between the text and background colors.'
+		});
+		
+		// color blind mode
+		html += this.getFormRow({
+			label: 'Vision:',
+			content: this.getFormCheckbox({
+				id: 'fe_ms_colorblind',
+				label: 'Color Accessibility Mode',
+				checked: !!user.color_blind
+			}),
+			caption: 'Enable or disable color assistance, which uses indicators other than color for differentiation.'
+		});
+		
+		// show page descriptions
+		html += this.getFormRow({
+			label: 'Assistance:',
+			content: this.getFormCheckbox({
+				id: 'fe_ms_pageinfo',
+				label: 'Show Page Descriptions',
+				checked: !!user.page_info
+			}),
+			caption: 'Enable or disable page descriptions, which introduce each page in the app.  This can be helpful for new users.'
+		});
+		
+		// whimsy (effects)
+		html += this.getFormRow({
+			label: 'Whimsy:',
+			content: this.getFormCheckbox({
+				id: 'fe_ms_effects',
+				label: 'Visual Effects',
+				checked: !!user.effects
+			}),
+			caption: 'Who doesn\'t need a little whimsy in their life?  This adds playful animations for certain app events.'
+		});
+		
+		html += '</div>'; // box_content
+		
+		// buttons at bottom
+		html += '<div class="box_buttons">';
+			html += '<div class="button primary" onMouseUp="$P().saveChanges()"><i class="mdi mdi-floppy">&nbsp;</i>Save Changes</div>';
+		html += '</div>'; // box_buttons
+		
+		html += '</div>'; // box
+		
 		this.div.html( html );
-		SingleSelect.init( this.div.find('#fe_ms_language, #fe_ms_region, #fe_ms_tz, #fe_ms_numformat, #fe_ms_hrcycle') );
+		SingleSelect.init( this.div.find('#fe_ms_language, #fe_ms_region, #fe_ms_tz, #fe_ms_numformat, #fe_ms_hrcycle, #fe_ms_motion, #fe_ms_contrast') );
 		this.update_date_time_preview();
+	}
+	
+	playPreviewSound() {
+		// play preview sound at new volume level (unless zero)
+		var volume = parseInt( this.div.find('#fe_ms_volume').val() );
+		if (volume > 0) app.playSound('success-2.mp3', volume);
 	}
 	
 	update_date_time_preview() {
@@ -168,7 +267,13 @@ Page.MySettings = class MySettings extends Page.Base {
 			region: this.div.find('#fe_ms_region').val(),
 			timezone: this.div.find('#fe_ms_tz').val(),
 			num_format: this.div.find('#fe_ms_numformat').val(),
-			hour_cycle: this.div.find('#fe_ms_hrcycle').val()
+			hour_cycle: this.div.find('#fe_ms_hrcycle').val(),
+			volume: parseInt( this.div.find('#fe_ms_volume').val() ),
+			motion: this.div.find('#fe_ms_motion').val(),
+			contrast: this.div.find('#fe_ms_contrast').val(),
+			color_blind: this.div.find('#fe_ms_colorblind').is(':checked'),
+			page_info: this.div.find('#fe_ms_pageinfo').is(':checked'),
+			effects: this.div.find('#fe_ms_effects').is(':checked')
 		};
 	}
 	
@@ -184,6 +289,12 @@ Page.MySettings = class MySettings extends Page.Base {
 		if (json.timezone != user.timezone) return true;
 		if (json.num_format != user.num_format) return true;
 		if (json.hour_cycle != user.hour_cycle) return true;
+		if (json.volume != user.volume) return true;
+		if (json.motion != user.motion) return true;
+		if (json.contrast != user.contrast) return true;
+		if (json.color_blind != user.color_blind) return true;
+		if (json.page_info != user.page_info) return true;
+		if (json.effects != user.effects) return true;
 		
 		return false;
 	}
@@ -203,9 +314,10 @@ Page.MySettings = class MySettings extends Page.Base {
 			
 			app.user = resp.user;
 			
-			app.prepUser();
+			// app.prepUser();
 			app.initSidebarTabs();
 			app.updateHeaderInfo();
+			app.updateAccessibility();
 		} );
 	}
 	
@@ -216,8 +328,10 @@ Page.MySettings = class MySettings extends Page.Base {
 		if (this.is_dirty()) {
 			var json = this.get_settings_form_json();
 			merge_hash_into( app.user, json );
-			app.prepUser();
+			// app.prepUser();
 			app.initSidebarTabs();
+			app.updateHeaderInfo();
+			app.updateAccessibility();
 			
 			app.api.post( 'app/user_settings', json, function(resp) {
 				app.showMessage('success', "Your settings were saved successfully.");
