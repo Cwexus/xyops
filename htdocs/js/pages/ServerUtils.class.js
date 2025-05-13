@@ -180,6 +180,9 @@ Page.ServerUtils = class ServerUtils extends Page.PageUtils {
 				rows: rows,
 				cols: ['Command', 'User', 'PID'],
 				data_type: 'process',
+				attribs: {
+					class: 'data_grid dialog_proc_grid'
+				},
 				hide_pagination: true
 			};
 			html += this.getBasicGrid( opts, function(item, idx) {
@@ -296,6 +299,49 @@ Page.ServerUtils = class ServerUtils extends Page.PageUtils {
 		return html;
 	}
 	
+	resetDetailAnimation() {
+		// reset detail animation
+		var raf = !!(this.detailAnimation && this.detailAnimation.raf);
+		this.detailAnimation = { raf, start: performance.now(), duration: app.reducedMotion() ? 1 : 500, donuts: [] };
+	}
+	
+	startDetailAnimation() {
+		// start animation frames
+		if (!this.detailAnimation.raf) {
+			this.detailAnimation.raf = true;
+			requestAnimationFrame( this.renderDetailAnimation.bind(this) );
+		}
+	}
+	
+	renderDetailAnimation() {
+		// update animation in progress
+		if (!this.active) return; // sanity
+		
+		var now = performance.now();
+		var anim = this.detailAnimation;
+		if (!anim) return; // sanity
+		anim.raf = false;
+		
+		var progress = Math.min(1.0, (now - anim.start) / anim.duration ); // linear
+		var eased = progress * progress * (3 - 2 * progress); // ease-in-out
+		
+		// donuts need their conic-gradient redrawn
+		anim.donuts.forEach( function(donut) {
+			var pct = short_float( donut.from + ((donut.to - donut.from) * eased), 3 );
+			donut.elem.css('background-image', 'conic-gradient( ' + donut.color + ' ' + pct + '%, ' + donut.bg + ' 0)');
+		} );
+		
+		if (progress < 1.0) {
+			// more frames still needed
+			anim.raf = true;
+			requestAnimationFrame( this.renderDetailAnimation.bind(this) );
+		}
+		else {
+			// done, cleanup
+			delete this.detailAnimation;
+		}
+	}
+	
 	getMonitorGrid(server) {
 		// get grid of monitor dash units, sorted
 		var self = this;
@@ -356,8 +402,19 @@ Page.ServerUtils = class ServerUtils extends Page.PageUtils {
 		var pct = short_float( amount * 100, 3 );
 		var value_disp = this.getDashValue(opts.value, opts.type, opts.suffix);
 		
+		if (!opts.bg && opts.color.match(/^\#?([0-9a-f]{6})$/i)) {
+			var hex = RegExp.$1;
+			var color = {
+				r: parseInt(hex.substring(0, 2), 16),
+				g: parseInt(hex.substring(2, 4), 16),
+				b: parseInt(hex.substring(4, 6), 16)
+			};
+			opts.bg = `rgba(${color.r},${color.g},${color.b},0.15)`;
+		}
+		else if (!opts.bg) opts.bg = 'var(--border-color)';
+		
 		html += '<div class="dash_donut_container" id="ddc_' + opts.id + '">';
-			html += '<div class="dash_donut_image" style="background-image:conic-gradient( ' + opts.color + ' ' + pct + '%, var(--border-color) 0);">';
+			html += '<div class="dash_donut_image" style="background-image:conic-gradient( ' + opts.color + ' ' + pct + '%, ' + opts.bg + ' 0);">';
 				html += '<div class="dash_donut_overlay"></div>';
 				html += '<div class="dash_donut_value">' + value_disp + '</div>';
 				html += '<div class="dash_donut_label">' + opts.label + '</div>';
