@@ -515,6 +515,8 @@ Page.Base = class Base extends Page {
 	
 	getNiceIP(ip) {
 		// get nice ip address for display
+		if (!ip) return 'n/a';
+		ip = ('' + ip).replace(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/, '$1');
 		return '<i class="mdi mdi-earth">&nbsp;</i>' + ip;
 	}
 	
@@ -562,7 +564,8 @@ Page.Base = class Base extends Page {
 	getNiceUptime(secs) {
 		// get nice server uptime
 		var nice_date = this.getNiceDateTimeText( time_now() - secs );
-		return '<span title="' + nice_date + '"><i class="mdi mdi-battery-clock-outline">&nbsp;</i>' + get_text_from_seconds(secs, false, false) + '</span>';
+		secs -= (secs % 60); // floor to minute
+		return '<span title="' + nice_date + '"><i class="mdi mdi-battery-clock-outline">&nbsp;</i>' + get_text_from_seconds(secs || 60, false, false) + '</span>';
 	}
 	
 	getNiceInternalJobType(type) {
@@ -2477,11 +2480,13 @@ Page.Base = class Base extends Page {
 		// merge opts with overrides and add user locale, return new chart
 		opts.locale = this.getUserLocale();
 		opts.timeZone = this.getUserTimezone();
-		return new Chart( merge_objects(config.chart_defaults, opts) );
+		opts.reducedMotion = true; // app.reducedMotion();
+		return new Chart( Object.assign({ dirty: true }, config.ui.chart_defaults, config.chart_defaults, opts) );
 	}
 	
 	setupChartHover(key) {
 		// setup chart hover overlay system, with custom actions
+		var self = this;
 		var chart = this.charts[key];
 		var max_zoom = 300; // 5 minutes
 		
@@ -2494,8 +2499,8 @@ Page.Base = class Base extends Page {
 			}
 			
 			if (chart._allow_zoom) {
-				zoom_html = '<div class="chart_icon ci_zo ' + (chart._zoom_mode ? 'selected' : '') + '" title="Toggle Zoom Mode" onClick="$P().chartToggleZoom(\'' + key + '\',this)"><i class="mdi mdi-magnify"></i></div>';
-				if (chart._zoom_mode) $('.pxc_tt_overlay').css('cursor', 'zoom-in');
+				zoom_html = '<div class="chart_icon ci_zo ' + (self.chartZoom ? 'selected' : '') + '" title="Disable Zoom Mode" onClick="$P().chartDisableZoom(\'' + key + '\',this)"><i class="mdi mdi-magnify"></i></div>';
+				$('.pxc_tt_overlay').css('cursor', 'zoom-in');
 			}
 			
 			$('.pxc_tt_overlay').html(
@@ -2506,33 +2511,160 @@ Page.Base = class Base extends Page {
 			);
 		}); // mouseover
 		
-		chart.on('click', function(event) {
+		chart.on('mousedown', function(event) {
 			// only process click if inside canvas area (if tooltip is present)
-			if (!chart.tooltip || !chart._allow_zoom || !chart._zoom_mode) return;
+			if (!chart.tooltip || !chart._allow_zoom) return;
 			
-			// get current data limits
+			// get current data limits (also affected by prev zooms)
 			var limits = chart.dataLimits;
-			
-			// setup chart.zoom object if first zoom
-			if (!chart.zoom) chart.zoom = Object.assign({}, limits);
 			
 			// abort if zoomed in too far
 			if (limits.width <= max_zoom) return;
 			
+			// setup state if first zoom
+			if (!self.chartZoom) {
+				self.chartZoom = {
+					orig_limits: Object.assign({}, chart.dataLimits),
+					orig_zoom: chart.zoom ? Object.assign({}, chart.zoom) : null,
+					charts: Object.values(self.charts).filter( function(chart) { return !!chart._allow_zoom; } )
+				};
+				self.chartZoom.charts.forEach( function(chart) { chart.clip = true; } );
+				$('.pxc_tt_overlay .chart_icon.ci_zo').addClass('selected');
+			}
+			
+			if (self.chartZoom.animation) {
+				// zoom animation already in progress
+				if (self.chartZoom.animation.final) return; // do not interrupt final animation
+				cancelAnimationFrame( self.chartZoom.animation.raf ); // takeover
+			}
+			
+			// setup zoom animation
+			var anim = self.chartZoom.animation = {
+				start: performance.now(),
+				duration: app.reducedMotion() ? 1 : 400,
+				
+				xMinCurrent: limits.xMin,
+				xMaxCurrent: limits.xMax
+			};
+			
 			// center new zoom area around mouse cursor (tooltip epoch)
 			var amt = Math.floor(limits.width / 4);
-			if (event.altKey) amt = Math.floor(limits.width * 2);
+			if (event.altKey) amt = Math.floor(limits.width * 2); // zoom out
 			
-			chart.zoom.xMin = chart.tooltip.epoch - amt;
-			chart.zoom.xMax = chart.tooltip.epoch + amt;
+			anim.xMinTarget = chart.tooltip.epoch - amt;
+			anim.xMaxTarget = chart.tooltip.epoch + amt;
 			
 			// constrain
-			if (chart.zoom.xMin < chart._zoom_mode.orig_zoom.xMin) chart.zoom.xMin = chart._zoom_mode.orig_zoom.xMin;
-			if (chart.zoom.xMax > chart._zoom_mode.orig_zoom.xMax) chart.zoom.xMax = chart._zoom_mode.orig_zoom.xMax;
+			if (anim.xMinTarget < self.chartZoom.orig_limits.xMin) anim.xMinTarget = self.chartZoom.orig_limits.xMin;
+			if (anim.xMaxTarget > self.chartZoom.orig_limits.xMax) anim.xMaxTarget = self.chartZoom.orig_limits.xMax;
 			
-			// update chart with new zoom level
-			chart.update();
+			// if we're going to end up all zoomed out, set final flag
+			if ((anim.xMinTarget == self.chartZoom.orig_limits.xMin) && (anim.xMaxTarget == self.chartZoom.orig_limits.xMax)) {
+				anim.final = true;
+			}
+			
+			// start ze frame ticker
+			anim.raf = requestAnimationFrame( self.animateChartZoom.bind(self) );
 		});
+	}
+	
+	animateChartZoom() {
+		// render frame of chart zoom animation, schedule next frame
+		if (!this.active || !this.charts || !this.chartZoom || !this.chartZoom.animation) return; // sanity
+		
+		var self = this;
+		var anim = this.chartZoom.animation;
+		var now = performance.now();
+		
+		var progress = Math.min(1.0, (now - anim.start) / anim.duration ); // linear
+		var eased = progress * progress * (3 - 2 * progress); // ease-in-out
+		
+		var xmin = anim.xMinCurrent + ((anim.xMinTarget - anim.xMinCurrent) * eased);
+		var xmax = anim.xMaxCurrent + ((anim.xMaxTarget - anim.xMaxCurrent) * eased);
+		
+		this.chartZoom.charts.forEach( function(chart) {
+			if (!chart.zoom) chart.zoom = {};
+			chart.zoom.xMin = xmin;
+			chart.zoom.xMax = xmax;
+			chart.dirty = true;
+		} );
+		
+		ChartManager.check();
+		
+		if (progress < 1.0) {
+			// more frames still needed
+			anim.raf = requestAnimationFrame( this.animateChartZoom.bind(this) );
+		}
+		else {
+			// done, cleanup
+			delete this.chartZoom.animation;
+			
+			if (anim.final) {
+				// disable zoom mode as well
+				this.chartZoom.charts.forEach( function(chart) { 
+					chart.zoom = self.chartZoom.orig_zoom ? Object.assign({}, self.chartZoom.orig_zoom) : null;
+					chart.clip = false;
+					chart.dirty = true;
+				} );
+				$('.pxc_tt_overlay .chart_icon.ci_zo').removeClass('selected');
+				delete this.chartZoom;
+			}
+		}
+	}
+	
+	chartDisableZoom(key, elem) {
+		// disable zoom mode, from user click
+		var chart = this.charts[key];
+		var $elem = $(elem);
+		
+		if (!this.chartZoom) return; // sanity
+		if (this.chartZoom.animation) return; // zoom animation already in progress
+		
+		// setup final zoom-out animation
+		var anim = this.chartZoom.animation = {
+			start: performance.now(),
+			duration: app.reducedMotion() ? 1 : 400,
+			
+			xMinCurrent: chart.dataLimits.xMin,
+			xMaxCurrent: chart.dataLimits.xMax,
+			
+			xMinTarget: this.chartZoom.orig_limits.xMin,
+			xMaxTarget: this.chartZoom.orig_limits.xMax,
+			
+			final: true // cleanup when animation completes
+		};
+		
+		// if we're already really close, just skip animation
+		if ((Math.abs(anim.xMinTarget - anim.xMinCurrent) < 1.0) && (Math.abs(anim.xMaxTarget - anim.xMaxCurrent) < 1.0)) anim.duration = 1;
+		
+		// start ze frame ticker
+		anim.raf = requestAnimationFrame( this.animateChartZoom.bind(this) );
+		
+		// immediate user feedback (cosmetic)
+		$('.pxc_tt_overlay .chart_icon.ci_zo').removeClass('selected');
+	}
+	
+	setupCustomHeadroom(id) {
+		// add custom function for smoothly animating headroom (yMax)
+		var chart = this.charts[id];
+		if (!chart) return;
+		
+		if (app.reducedMotion()) return;
+		
+		var yMaxTarget = false;
+		var yMaxCurrent = false;
+		
+		chart.customHeadroom = function() {
+			// called during draw cycle, just after calculating limits
+			var limits = chart.dataLimits;
+			if (yMaxTarget === false) { yMaxTarget = yMaxCurrent = limits.yMax; return; }
+			
+			yMaxTarget = limits.yMax;
+			yMaxCurrent = yMaxCurrent + ((yMaxTarget - yMaxCurrent) / 8);
+			if (Math.abs(yMaxTarget - yMaxCurrent) < 1.0) yMaxCurrent = yMaxTarget;
+			
+			limits.yMax = Math.floor( yMaxCurrent );
+		};
 	}
 	
 	updateChartFlatten(id) {
@@ -2565,33 +2697,6 @@ Page.Base = class Base extends Page {
 		
 		this.updateChartFlatten(id);
 		chart.update();
-	}
-	
-	chartToggleZoom(key, elem) {
-		// toggle zoom mode on/off
-		var chart = this.charts[key];
-		var $elem = $(elem);
-		
-		if (!chart._zoom_mode) {
-			// enable zoom mode
-			chart._zoom_mode = {
-				orig_zoom: chart.zoom ? Object.assign({}, chart.zoom) : null
-			};
-			chart.clip = true;
-			$elem.addClass('selected');
-			$('.pxc_tt_overlay').css('cursor', 'zoom-in');
-		}
-		else {
-			// disable, also zoom out here!
-			chart.zoom = chart._zoom_mode.orig_zoom;
-			delete chart._zoom_mode;
-			chart.clip = false;
-			$elem.removeClass('selected');
-			$('.pxc_tt_overlay').css('cursor', 'crosshair');
-			
-			// update chart with orig zoom level
-			chart.update();
-		}
 	}
 	
 	chartDownload(key) {
