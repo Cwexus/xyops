@@ -2771,7 +2771,7 @@ Page.Base = class Base extends Page {
 		// copy chart JSON to clipboard
 		var chart = this.charts[key];
 		var $elem = $(elem);
-		var json = JSON.stringify( { title: chart.title, layers: chart.layers } );
+		var json = JSON.stringify( { title: chart.title, layers: chart.flatten ? [chart.flatten] : chart.layers } );
 		copyToClipboard(json);
 		$elem.find('i').removeClass().addClass('mdi mdi-clipboard-check-outline success');
 	}
