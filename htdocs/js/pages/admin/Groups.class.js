@@ -604,6 +604,9 @@ Page.Groups = class Groups extends Page.ServerUtils {
 		this.snapshots = {};
 		this.servers = [];
 		
+		// give hint for behavior in components (like the server table)
+		this.groupMode = 'live';
+		
 		// grab initial server list -- this may change later
 		this.setupServers();
 		
