@@ -330,7 +330,7 @@ Page.System = class System extends Page.Base {
 			return [
 				self.getNiceUser(socket.username, true),
 				'<span class="monospace">' + socket.id + '</span>',
-				'<span>' + socket.ip + '</span>',
+				'<span>' + self.getNiceIP(socket.ip) + '</span>',
 				socket.loc ? ('<a href="#' + socket.loc.loc + '">#' + socket.loc.loc + '</a>') : 'n/a',
 				get_text_from_seconds(app.epoch - socket.timeStart, true, true),
 				socket.ping + ' ms'
