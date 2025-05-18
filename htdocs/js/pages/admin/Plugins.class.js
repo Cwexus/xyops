@@ -224,7 +224,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		
 		this.div.html( html );
 		
-		SingleSelect.init( this.div.find('#fe_ep_icon, #fe_ep_type') );
+		SingleSelect.init( this.div.find('#fe_ep_icon, #fe_ep_type, #fe_ep_format') );
 		MultiSelect.init( this.div.find('select[multiple]') );
 		// this.updateAddRemoveMe('#fe_ep_email');
 		$('#fe_ep_title').focus();
@@ -322,7 +322,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		
 		// lock ID for editing
 		$('#fe_ep_id').attr('disabled', true);
-		SingleSelect.init( this.div.find('#fe_ep_icon, #fe_ep_type') );
+		SingleSelect.init( this.div.find('#fe_ep_icon, #fe_ep_type, #fe_ep_format') );
 		MultiSelect.init( this.div.find('select[multiple]') );
 		// this.updateAddRemoveMe('#fe_ep_email');
 		this.setPluginType();
@@ -537,8 +537,9 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		html += this.getFormRow({
 			id: 'd_ep_format',
 			label: 'Format:',
-			content: this.getFormMenu({
+			content: this.getFormMenuSingle({
 				id: 'fe_ep_format',
+				title: 'Select Format',
 				options: [['text','Text'], ['json','JSON'], ['xml', 'XML']],
 				value: plugin.format || ''
 			}),
@@ -648,7 +649,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 			class: 'data_grid',
 			empty_msg: add_link,
 			always_append_empty_msg: true,
-			grid_template_columns: 'min-content auto auto auto auto'
+			grid_template_columns: '40px auto auto auto auto'
 		};
 		
 		html += this.getCompactGrid(targs, function(item, idx) {
@@ -763,8 +764,9 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		// type
 		html += this.getFormRow({
 			label: 'Control Type:',
-			content: this.getFormMenu({
+			content: this.getFormMenuSingle({
 				id: 'fe_epa_type',
+				title: 'Select Control Type',
 				options: ctypes,
 				value: param.type
 			}),
@@ -906,6 +908,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		
 		if (idx == -1) $('#fe_epa_id').focus();
 		
+		SingleSelect.init( $('#fe_epa_type') );
 		Dialog.autoResize();
 	}
 	
