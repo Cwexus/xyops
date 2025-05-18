@@ -210,7 +210,7 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 		
 		this.div.html( html );
 		
-		SingleSelect.init( this.div.find('#fe_em_icon') );
+		SingleSelect.init( this.div.find('#fe_em_icon, #fe_em_data_type') );
 		MultiSelect.init( this.div.find('select[multiple]') );
 		$('#fe_em_title').focus();
 		this.setupBoxButtonFloater();
@@ -294,7 +294,7 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 		
 		// lock ID for editing
 		$('#fe_em_id').attr('disabled', true);
-		SingleSelect.init( this.div.find('#fe_em_icon') );
+		SingleSelect.init( this.div.find('#fe_em_icon, #fe_em_data_type') );
 		MultiSelect.init( this.div.find('select[multiple]') );
 		this.setupBoxButtonFloater();
 	}
@@ -468,8 +468,9 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 		];
 		html += this.getFormRow({
 			label: 'Data Type:',
-			content: this.getFormMenu({
+			content: this.getFormMenuSingle({
 				id: 'fe_em_data_type',
+				title: 'Select Data Type',
 				options: type_items,
 				value: monitor.data_type
 			}),
