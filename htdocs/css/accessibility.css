@@ -141,14 +141,21 @@ body.dark.lowcon {
 /* Color Accessibility Mode */
 
 body.coloracc a, body.coloracc span.link {
+	-webkit-text-decoration: dashed underline;
 	text-decoration: dashed underline;
 }
 body.coloracc a:hover, body.coloracc span.link:hover {
-	text-decoration: underline !important;
+	-webkit-text-decoration: solid underline !important;
+	text-decoration: solid underline !important;
 }
 
+body.coloracc .checkbox_container > input ~ label {
+	-webkit-text-decoration: dashed underline;
+	text-decoration: dashed underline;
+}
 body.coloracc .checkbox_container > input:hover ~ label {
-	text-decoration: underline !important;
+	-webkit-text-decoration: solid underline !important;
+	text-decoration: solid underline !important;
 }
 
 body.coloracc .button:hover {
@@ -161,6 +168,7 @@ body.coloracc .diff_removed {
 }
 
 body.coloracc .diff_added {
+	-webkit-text-decoration: dotted underline;
 	text-decoration: dotted underline;
 }
 
