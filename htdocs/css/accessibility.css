@@ -168,8 +168,8 @@ body.coloracc .diff_removed {
 }
 
 body.coloracc .diff_added {
-	-webkit-text-decoration: dotted underline;
-	text-decoration: dotted underline;
+	-webkit-text-decoration: dashed underline;
+	text-decoration: dashed underline;
 }
 
 body.coloracc .header_widget:hover {
