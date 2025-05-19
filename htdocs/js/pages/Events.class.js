@@ -2267,6 +2267,8 @@ Page.Events = class Events extends Page.PageUtils {
 				id: 'fe_ecd_title',
 				spellcheck: 'false',
 				autocomplete: 'off',
+				readonly: 'readonly', // safari hack for stupid autofill nonsense
+				onFocus: "this.removeAttribute('readonly')",
 				value: ''
 			}),
 			caption: 'Enter the name of the new category.'
@@ -2315,6 +2317,8 @@ Page.Events = class Events extends Page.PageUtils {
 				id: 'fe_etd_title',
 				spellcheck: 'false',
 				autocomplete: 'off',
+				readonly: 'readonly', // safari hack for stupid autofill nonsense
+				onFocus: "this.removeAttribute('readonly')",
 				value: ''
 			}),
 			caption: 'Enter the name of the new tag.'
