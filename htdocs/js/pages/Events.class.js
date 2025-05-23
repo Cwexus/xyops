@@ -704,8 +704,8 @@ Page.Events = class Events extends Page.PageUtils {
 					html += '</div>';
 				
 					html += '<div>';
-						html += '<div class="info_label">Timing</div>';
-						html += '<div class="info_value"><i class="mdi mdi-calendar-multiselect">&nbsp;</i>' + summarize_event_timings(event) + '</div>';
+						html += '<div class="info_label">Tags</div>';
+						html += '<div class="info_value">' + this.getNiceTagList(event.tags, true, ', ') + '</div>';
 					html += '</div>';
 					
 					// row 2
@@ -725,8 +725,8 @@ Page.Events = class Events extends Page.PageUtils {
 					html += '</div>';
 					
 					html += '<div>';
-						html += '<div class="info_label">Tags</div>';
-						html += '<div class="info_value">' + this.getNiceTagList(event.tags, true, ', ') + '</div>';
+						html += '<div class="info_label">Algorithm</div>';
+						html += '<div class="info_value">' + this.getNiceAlgo(event.algo) + '</div>';
 					html += '</div>';
 					
 					// row 3
@@ -781,6 +781,13 @@ Page.Events = class Events extends Page.PageUtils {
 				}
 			html += '</div>'; // box content
 		html += '</div>'; // box
+		
+		// event details
+		html += '<div class="box_grid">';
+			html += '<div class="box_unity">' + this.getTimingDetails() + '</div>';
+			html += '<div class="box_unity">' + this.getActionDetails() + '</div>';
+			html += '<div class="box_unity">' + this.getLimitDetails() + '</div>';
+		html += '</div>';
 		
 		// plugin parameters
 		html += '<div class="box toggle" id="d_ve_params" style="display:none">';
@@ -839,7 +846,7 @@ Page.Events = class Events extends Page.PageUtils {
 				
 				html += '<div style="margin-bottom:20px"><canvas id="c_ve_perf" class="chart" style="width:100%; height:250px;"></canvas></div>';
 				
-				html += '<div class="chart_grid_horiz">';
+				html += '<div class="chart_grid_horiz medium">';
 					html += '<div><canvas id="c_ve_cpu" class="chart"></canvas></div>';
 					html += '<div><canvas id="c_ve_mem" class="chart"></canvas></div>';
 					html += '<div><canvas id="c_ve_disk" class="chart"></canvas></div>';
@@ -869,7 +876,9 @@ Page.Events = class Events extends Page.PageUtils {
 		html += '</div>'; // box
 		
 		this.div.html(html);
+		
 		SingleSelect.init( this.div.find('#fe_ve_filter') );
+		
 		this.setupHistoryCharts();
 		this.fetchJobHistory();
 		this.getUpcomingJobs();
@@ -878,6 +887,106 @@ Page.Events = class Events extends Page.PageUtils {
 		this.renderPluginParams('#d_ve_params');
 		this.setupToggleBoxes();
 		this.fetchRevisionHistory();
+	}
+	
+	getTimingDetails() {
+		// get timing details in compact table (read-only)
+		var self = this;
+		var html = '';
+		var cols = ['Type', 'Description'];
+		
+		html += '<div class="box_unit_title">Timing Rules</div>';
+		
+		// custom sort, and only enabled ones
+		var rows = this.getSortedTimings().filter( function(timing) { return timing.enabled; } );
+		
+		var targs = {
+			rows: rows,
+			cols: cols,
+			data_type: 'item',
+			class: 'data_grid',
+			empty_msg: "On-demand only",
+			grid_template_columns: 'auto auto'
+		};
+		
+		html += this.getCompactGrid(targs, function(item, idx) {
+			var { nice_icon, nice_type, nice_desc } = self.prepTimingDisplay(item);
+			
+			var tds = [
+				'<div class="td_big nowrap">' + nice_icon + nice_type + '</div>',
+				'<div class="ellip">' + nice_desc + '</div>'
+			];
+			
+			if (!item.enabled) tds.className = 'disabled';
+			return tds;
+		} ); // getCompactGrid
+		
+		return html;
+	}
+	
+	getActionDetails() {
+		// get action details in compact table (read-only)
+		var self = this;
+		var html = '';
+		var rows = this.event.actions.filter( function(action) { return action.enabled; } );
+		var cols = ['Trigger', 'Type', 'Description'];
+		
+		html += '<div class="box_unit_title">Job Actions</div>';
+		
+		var targs = {
+			rows: rows,
+			cols: cols,
+			data_type: 'action',
+			class: 'data_grid',
+			grid_template_columns: 'auto auto auto'
+		};
+		
+		html += this.getCompactGrid(targs, function(item, idx) {
+			var disp = self.getJobActionDisplayArgs(item);
+			
+			var tds = [
+				'<div class="td_big nowrap"><i class="mdi mdi-eye-outline"></i>' + disp.trigger + '</div>',
+				'<div class="td_big ellip"><i class="mdi mdi-' + disp.icon + '">&nbsp;</i>' + disp.type + '</div>',
+				'<div class="ellip">' + disp.desc + '</div>'
+			];
+			
+			if (!item.enabled) tds.className = 'disabled';
+			return tds;
+		} ); // getCompactGrid
+		
+		return html;
+	}
+	
+	getLimitDetails() {
+		// get resource limit details in comact table (read-only)
+		var self = this;
+		var html = '';
+		var rows = this.event.limits.filter( function(limit) { return limit.enabled; } );
+		var cols = ['Limit', 'Description'];
+		
+		html += '<div class="box_unit_title">Resource Limits</div>';
+		
+		var targs = {
+			rows: rows,
+			cols: cols,
+			data_type: 'limit',
+			class: 'data_grid',
+			grid_template_columns: 'auto auto'
+		};
+		
+		html += this.getCompactGrid(targs, function(item, idx) {
+			var { nice_title, nice_desc, icon } = self.getResLimitDisplayArgs(item);
+			
+			var tds = [
+				'<div class="td_big nowrap"><i class="mdi mdi-' + icon + '"></i>' + nice_title + '</div>',
+				'<div class="ellip">' + nice_desc + '</div>'
+			];
+			
+			if (!item.enabled) tds.className = 'disabled';
+			return tds;
+		} ); // getCompactGrid
+		
+		return html;
 	}
 	
 	do_edit_from_view() {
@@ -2171,15 +2280,7 @@ Page.Events = class Events extends Page.PageUtils {
 		});
 		
 		// algo
-		var algo_items = [
-			{ id:'random', title:"Random", icon:"dice-5-outline" },
-			{ id:'round_robin', title:"Round Robin", icon:"radius-outline" },
-			{ id:'prefer_first', title:"Prefer First (Alphabetically)", icon:"sort-ascending" },
-			{ id:'prefer_last', title:"Prefer Last (Alphabetically)", icon:"sort-descending" },
-			{ id:'least_cpu', title:"Least CPU Usage", icon:"chip" },
-			{ id:'least_mem', title:"Least Memory Usage", icon:"memory" }
-		].
-		concat(
+		var algo_items = config.ui.event_target_algo_menu.concat(
 			this.buildOptGroup( app.monitors, "Least Monitor Value:", 'chart-line', 'monitor:' )
 		);
 		
@@ -2378,7 +2479,7 @@ Page.Events = class Events extends Page.PageUtils {
 			case 'schedule':
 				nice_icon = '<i class="mdi mdi-calendar-clock"></i>';
 				nice_type = 'Schedule';
-				nice_desc = '<i class="mdi mdi-update">&nbsp;</i>' + summarize_event_timing(item);
+				nice_desc = '<i class="mdi mdi-update">&nbsp;</i><b>Recurring:</b> ' + summarize_event_timing(item);
 			break;
 			
 			case 'continuous':
@@ -3318,6 +3419,11 @@ Page.Events = class Events extends Page.PageUtils {
 	onDataUpdate(key, data) {
 		// refresh list if events were updated
 		if ((key == 'events') && (this.args.sub == 'list')) this.gosub_list(this.args);
+		else if ((key == 'stats') && (this.args.sub == 'view')) {
+			// recompute upcoming jobs every minute
+			this.autoExpireUpcomingJobs();
+			this.renderUpcomingJobs();
+		}
 	}
 	
 	onDeactivate() {
