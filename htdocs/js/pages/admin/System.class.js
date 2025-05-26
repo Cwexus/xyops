@@ -398,7 +398,7 @@ Page.System = class System extends Page.Base {
 				id: 'fe_sys_ex_lists',
 				title: 'Select Lists',
 				placeholder: '(None)',
-				options: config.ui.list_list,
+				options: sort_by( config.ui.list_list, 'title', { copy: true } ),
 				values: config.ui.list_list.map( function(item) { return item.id; } ),
 				'data-hold': 1,
 				'data-shrinkwrap': 1,
@@ -415,7 +415,7 @@ Page.System = class System extends Page.Base {
 				id: 'fe_sys_ex_dbs',
 				title: 'Select Tables',
 				placeholder: '(None)',
-				options: config.ui.database_list,
+				options: sort_by( config.ui.database_list, 'title', { copy: true } ),
 				values: [],
 				'data-hold': 1,
 				'data-shrinkwrap': 1,
@@ -435,7 +435,8 @@ Page.System = class System extends Page.Base {
 				options: [
 					{ id: 'job_files', title: "Job Files", icon: 'file-image-outline' },
 					{ id: 'job_logs', title: "Job Logs", icon: 'file-document-outline' },
-					{ id: 'monitor_data', title: "Monitor History", icon: 'chart-timeline' },
+					{ id: 'monitor_data', title: "Monitor History", icon: 'chart-timeline-variant' },
+					{ id: 'stat_data', title: "Stat History", icon: 'chart-scatter-plot' },
 					{ id: 'user_avatars', title: 'User Avatars', icon: 'account-circle' }
 				],
 				values: [],
@@ -475,6 +476,9 @@ Page.System = class System extends Page.Base {
 			if (extras.includes('monitor_data')) {
 				items.push({ type: 'monitorData' });
 			}
+			if (extras.includes('stat_data')) {
+				items.push({ type: 'list', key: 'global/stats' });
+			}
 			
 			if (!items.length) return app.doError("Please select at least one item to export.");
 			Dialog.hide();
@@ -506,7 +510,7 @@ Page.System = class System extends Page.Base {
 				id: 'fe_sys_ex_lists',
 				title: 'Select Lists',
 				placeholder: '(None)',
-				options: config.ui.list_list,
+				options: sort_by( config.ui.list_list.concat([ { id: 'stats', title: "Stat History", icon: 'chart-scatter-plot' } ]), 'title', { copy: true } ),
 				values: [],
 				'data-hold': 1,
 				'data-shrinkwrap': 1,
@@ -523,7 +527,7 @@ Page.System = class System extends Page.Base {
 				id: 'fe_sys_ex_dbs',
 				title: 'Select Tables',
 				placeholder: '(None)',
-				options: config.ui.database_list,
+				options: sort_by( config.ui.database_list, 'title', { copy: true } ),
 				values: [],
 				'data-hold': 1,
 				'data-shrinkwrap': 1,
