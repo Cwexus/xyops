@@ -729,6 +729,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		if (!$swatch.length) return; // sanity
 		if ($swatch.data('date') != day_code) {
 			// day changed, need full refresh
+			// FUTURE: if we implement paging in the day graph, then this needs to bail out if we're not looking at the current year
 			this.setupJobHistoryDayGraph();
 			return;
 		}
