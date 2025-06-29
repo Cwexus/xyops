@@ -196,12 +196,11 @@ Page.Base = class Base extends Page {
 		return html;
 	}
 	
-	getNiceCopyableID(id) {
+	getNiceCopyableID(id, icon = 'clipboard-text-outline') {
 		// show nice ID with copy-to-clipboard
 		var html = '<span class="nowrap">';
-		var icon = '<i class="mdi mdi-clipboard-text-outline"></i>';
 		html += '<span class="link" onClick="$P().copyID(this)" title="Copy ID to Clipboard">';
-		html += icon + '<span>' + id + '</span></span>';
+		html += '<i class="mdi mdi-' + icon + '"></i><span>' + id + '</span></span>';
 		html += '</span>';
 		return html;
 	}
@@ -373,7 +372,7 @@ Page.Base = class Base extends Page {
 	}
 	
 	getNiceWorkflowJob(id, link) {
-		// get formatted workflow job ID with icon, plus optional link
+		// get formatted workflow job ID with icon, plus optional link -- TODO: is this still used?
 		if (!id) return '(None)';
 		
 		var html = '<span class="nowrap">';
@@ -424,24 +423,19 @@ Page.Base = class Base extends Page {
 		return item.title || app.formatHostname(item.hostname);
 	}
 	
-	getNiceTarget(target) {
+	getNiceTarget(target, link) {
 		// get formatted target, which may be a group or a server
-		if (find_object(app.groups, { id: target })) return this.getNiceGroup(target, true);
-		if (find_object(app.servers, { id: target })) return this.getNiceServer(target, true);
+		if (find_object(app.groups, { id: target })) return this.getNiceGroup(target, link);
+		if (find_object(app.servers, { id: target })) return this.getNiceServer(target, link);
 		return target;
 	}
 	
-	getNiceTargetList(targets, glue, max) {
+	getNiceTargetList(targets, link, glue) {
 		// get formatted target list
 		var self = this;
 		if (!glue) glue = ', ';
 		if (!targets || !targets.length) return '(None)';
-		if (max && (targets.length > max)) {
-			var extras = targets.length - max;
-			targets = targets.slice(0, max);
-			return targets.map( function(target) { return self.getNiceTarget(target); } ).join(glue) + glue + ' and ' + extras + ' more';
-		}
-		return targets.map( function(target) { return self.getNiceTarget(target); } ).join(glue);
+		return targets.map( function(target) { return self.getNiceTarget(target, link); } ).join(glue);
 	}
 	
 	getNiceTagList(tags, link, glue) {
@@ -488,6 +482,7 @@ Page.Base = class Base extends Page {
 	
 	getNiceAlgo(id) {
 		// get nice event target algorithm
+		if (!id) return '(None)';
 		var default_icon = 'arrow-decision';
 		var algo = find_object( config.ui.event_target_algo_menu, { id: id } );
 		if (!algo && id.match(/^monitor\:(\w+)$/)) {
@@ -1346,6 +1341,7 @@ Page.Base = class Base extends Page {
 	
 	getCategorizedEvents() {
 		// get list of categorized events for menu
+		// sorted by category, then by title
 		var last_cat_id = '';
 		var cat_map = obj_array_to_hash( app.categories, 'id' );
 		
@@ -1408,52 +1404,74 @@ Page.Base = class Base extends Page {
 		// get nice title and description for resource limit
 		var nice_title = '';
 		var nice_desc = '';
+		var short_desc = '';
 		var icon = 'gauge';
 		
 		switch (item.type) {
 			case 'mem':
 				nice_title = "Max Memory";
 				nice_desc = get_text_from_bytes(item.amount) + " for " + get_text_from_seconds(item.duration, false, true);
+				short_desc = get_text_from_bytes(item.amount);
+				icon = 'memory';
 			break;
 			
 			case 'cpu':
 				nice_title = "Max CPU %";
 				nice_desc = item.amount + "% for " + get_text_from_seconds(item.duration, false, true);
+				short_desc = item.amount + '%';
+				icon = 'chip';
 			break;
 			
 			case 'log':
 				nice_title = "Max Log Size";
-				nice_desc = get_text_from_bytes(item.amount);
+				nice_desc = short_desc = get_text_from_bytes(item.amount);
+				icon = 'file-remove-outline';
 			break;
 			
 			case 'time':
 				nice_title = "Max Run Time";
-				nice_desc = get_text_from_seconds(item.duration, false, true);
+				nice_desc = short_desc = get_text_from_seconds(item.duration, false, true);
+				icon = 'timer-remove-outline';
 			break;
 			
 			case 'job':
 				nice_title = "Max Jobs";
-				if (!item.amount) nice_desc = "None";
-				else nice_desc = "Up to " + commify(item.amount) + " concurrent " + pluralize("job", item.amount);
+				if (!item.amount) nice_desc = short_desc = "Unlimited";
+				else {
+					nice_desc = "Up to " + commify(item.amount) + " concurrent " + pluralize("job", item.amount);
+					short_desc = commify(item.amount) + ' ' + pluralize("job", item.amount);
+				}
+				icon = 'traffic-light-outline';
 			break;
 			
 			case 'retry':
 				nice_title = "Max Retries";
-				if (!item.amount) nice_desc = "No retries will be attempted";
+				if (!item.amount) {
+					nice_desc = "No retries will be attempted";
+					short_desc = "None";
+				}
 				else {
-					nice_desc = "Up to " + commify(item.amount);
+					nice_desc = short_desc = "Up to " + commify(item.amount);
 					if (item.duration) nice_desc += " (" + get_text_from_seconds(item.duration, false, true) + " delay)";
 				}
+				icon = 'redo-variant';
 			break;
 			
 			case 'queue':
 				nice_title = "Max Queue";
-				if (!item.amount) nice_desc = "No jobs allowed in queue";
-				else nice_desc = "Up to " + commify(item.amount) + " " + pluralize("job", item.amount) + " allowed in queue";
+				if (!item.amount) {
+					nice_desc = "No jobs allowed in queue";
+					short_desc = "None";
+				}
+				else {
+					nice_desc = "Up to " + commify(item.amount) + " " + pluralize("job", item.amount) + " allowed in queue";
+					short_desc = commify(item.amount) + ' ' + pluralize("job", item.amount);
+				}
+				icon = 'tray-full';
 			break;
 		} // switch item.type
 		
-		return { nice_title, nice_desc, icon };
+		return { nice_title, nice_desc, short_desc, icon };
 	}
 	
 	getResLimitTable() {
@@ -1462,8 +1480,9 @@ Page.Base = class Base extends Page {
 		var html = '';
 		var rows = this.limits;
 		var cols = ['<i class="mdi mdi-checkbox-marked-outline"></i>', 'Limit', 'Description', 'Actions'];
-		// var add_link = '<span class="link" onMouseUp="$P().editResLimit(-1)"><b>Add New Limit...</b></span>';
 		var add_link = '<div class="button small secondary" onMouseUp="$P().editResLimit(-1)"><i class="mdi mdi-plus-circle-outline">&nbsp;</i>New Limit...</div>';
+		
+		if (!rows.length) return add_link;
 		
 		var targs = {
 			rows: rows,
@@ -1512,12 +1531,12 @@ Page.Base = class Base extends Page {
 	}
 	
 	editResLimit(idx) {
-		// show dialog to select res limit
+		// show dialog to select res limit for event
 		// limit: { type, amount?, duration? }
 		var self = this;
 		var limit = (idx > -1) ? this.limits[idx] : null;
 		var title = (idx > -1) ? "Editing Resource Limit" : "New Resource Limit";
-		var btn = (idx > -1) ? ['check-circle', "Apply Changes"] : ['plus-circle', "Add Limit"];
+		var btn = (idx > -1) ? ['check-circle', "Apply"] : ['plus-circle', "Add Limit"];
 		
 		if (!limit) {
 			if (!find_object(this.limits, { type: 'time' })) limit = { type: 'time' };
@@ -1529,6 +1548,30 @@ Page.Base = class Base extends Page {
 			else if (!find_object(this.limits, { type: 'queue' })) limit = { type: 'queue' };
 			limit.enabled = true;
 		}
+		
+		this.showEditResLimitDialog({
+			limit: limit,
+			title: title,
+			btn: btn,
+			
+			callback: function(limit) {
+				// see if we need to add or replace
+				if (idx == -1) {
+					var dupe_idx = find_object_idx(self.limits, { type: limit.type });
+					if (dupe_idx > -1) self.limits[dupe_idx] = limit;
+					else self.limits.push(limit);
+				}
+				
+				// self.dirty = true;
+				self.renderResLimitEditor();
+			}
+		});
+	}
+	
+	showEditResLimitDialog(opts) {
+		// show dialog to select res limit
+		var self = this;
+		var { limit, title, btn, callback } = opts;
 		
 		var html = '<div class="dialog_box_content">';
 		
@@ -1547,15 +1590,7 @@ Page.Base = class Base extends Page {
 			content: this.getFormMenuSingle({
 				id: 'fe_erl_type',
 				title: 'Select Limit Type',
-				options: [ 
-					['time', "Max Run Time"], 
-					['job', "Max Concurrent Jobs"],
-					['log', "Max Log Size"],
-					['mem', "Memory Limit"], 
-					['cpu', "CPU % Limit"],
-					['retry', "Max Retry Limit"],
-					['queue', "Max Queue Limit"]
-				],
+				options: config.ui.limit_type_menu,
 				value: limit.type
 			}),
 			caption: 'Select the desired limit type.'
@@ -1638,16 +1673,8 @@ Page.Base = class Base extends Page {
 				break;
 			} // switch limit.type
 			
-			// see if we need to add or replace
-			if (idx == -1) {
-				var dupe_idx = find_object_idx(self.limits, { type: limit.type });
-				if (dupe_idx > -1) self.limits[dupe_idx] = limit;
-				else self.limits.push(limit);
-			}
-			
-			// self.dirty = true;
-			self.renderResLimitEditor();
 			Dialog.hide();
+			callback(limit);
 		} ); // Dialog.confirm
 		
 		var change_limit_type = function(new_type) {
@@ -1708,6 +1735,11 @@ Page.Base = class Base extends Page {
 		
 		$('#fe_erl_type').on('change', function() {
 			change_limit_type( $(this).val() );
+			
+			// zero out the amount fields on change, as they do not translate between types
+			$('#fe_erl_raw_amount').val(0);
+			$('#fe_erl_byte_amount').val(0);
+			$('#fe_erl_byte_amount_val').val(0);
 		}); // type change
 		
 		SingleSelect.init( $('#fe_erl_type') );
@@ -1737,23 +1769,15 @@ Page.Base = class Base extends Page {
 	getJobActionDisplayArgs(action, link) {
 		// get display args for job action
 		// returns: { trigger, type, text, desc, icon }
-		var trigger_titles = {
-			'start': "On Start",
-			'complete': "On Completion",
-			'success': "On Success",
-			'warning': "On Warning",
-			'error': "On Error",
-			'critical': "On Critical",
-			'abort': "On Abort"
-		};
-		
 		var disp = {
-			trigger: trigger_titles[ action.trigger ]
+			trigger: find_object( config.ui.action_trigger_menu, { id: action.trigger } )
 		};
 		
 		if (!disp.trigger && action.trigger.match(/^tag:(\w+)$/)) {
 			var tag_id = RegExp.$1;
-			disp.trigger = "On Tag: " + this.getNiceTag(tag_id, link);
+			var tag = find_object( app.tags, { id: tag_id } ) || { title: tag_id };
+			disp.trigger = { title: "On " + tag.title };
+			disp.trigger.icon = tag.icon || 'tag-outline';
 		}
 		
 		switch (action.type) {
@@ -1829,6 +1853,8 @@ Page.Base = class Base extends Page {
 		var cols = ['<i class="mdi mdi-checkbox-marked-outline"></i>', 'Trigger', 'Type', 'Description', 'Actions'];
 		var add_link = '<div class="button small secondary" onMouseUp="$P().editJobAction(-1)"><i class="mdi mdi-plus-circle-outline">&nbsp;</i>New Action...</div>';
 		
+		if (!rows.length) return add_link;
+		
 		var targs = {
 			rows: rows,
 			cols: cols,
@@ -1851,7 +1877,7 @@ Page.Base = class Base extends Page {
 					checked: item.enabled,
 					onChange: '$P().toggleJobActionEnabled(this,' + idx + ')'
 				}) + '</div>',
-				'<div class="td_big nowrap"><span class="link" onClick="$P().editJobAction('+idx+')"><i class="mdi mdi-eye-outline"></i>' + disp.trigger + '</span></div>',
+				'<div class="td_big nowrap"><span class="link" onClick="$P().editJobAction('+idx+')"><i class="mdi mdi-' + disp.trigger.icon + '"></i>' + disp.trigger.title + '</span></div>',
 				'<div class="td_big ellip"><i class="mdi mdi-' + disp.icon + '">&nbsp;</i>' + disp.type + '</div>',
 				'<div class="ellip">' + disp.desc + '</div>',
 				'<div class="">' + links.join(' | ') + '</div>'
@@ -1874,14 +1900,42 @@ Page.Base = class Base extends Page {
 	}
 	
 	editJobAction(idx) {
-		// show dialog to select job action
+		// show dialog to select job action for event
 		// action: { trigger, type, email?, url? }
 		var self = this;
 		var action = (idx > -1) ? this.actions[idx] : { trigger: 'error', type: 'email', email: '', enabled: true };
 		var title = (idx > -1) ? "Editing Job Action" : "New Job Action";
-		var btn = (idx > -1) ? ['check-circle', "Apply Changes"] : ['plus-circle', "Add Action"];
+		var btn = (idx > -1) ? ['check-circle', "Apply"] : ['plus-circle', "Add Action"];
 		
-		var html = '<div class="dialog_box_content scroll">';
+		this.showEditJobActionDialog({
+			action: action,
+			title: title,
+			btn: btn,
+			show_trigger: true,
+			
+			callback: function(action) {
+				// see if we need to add or replace
+				if (idx == -1) {
+					self.actions.push(action);
+				}
+				else self.actions[idx] = action;
+				
+				// keep list sorted
+				sort_by(self.actions, 'trigger');
+				
+				// self.dirty = true;
+				self.renderJobActionEditor();
+			}
+		});
+	}
+	
+	showEditJobActionDialog(opts) {
+		// show dialog to select job action
+		var self = this;
+		var { action, title, btn, callback } = opts;
+		var action_types = opts.action_type_filter ? config.ui.action_type_menu.filter(opts.action_type_filter) : config.ui.action_type_menu;
+		
+		var html = '<div class="dialog_box_content scroll maximize">';
 		
 		html += this.getFormRow({
 			label: 'Status:',
@@ -1893,43 +1947,30 @@ Page.Base = class Base extends Page {
 			caption: 'Enable or disable the job action.'
 		});
 		
-		html += this.getFormRow({
-			label: 'Action Trigger:',
-			content: this.getFormMenuSingle({
-				id: 'fe_eja_trigger',
-				title: 'Select Action Trigger',
-				options: [ 
-					{ id: 'start', title: "On Start", icon: 'play-circle' },
-					{ id: 'complete', title: "On Completion", icon: 'stop-circle' },
-					{ id: 'success', title: "On Success", icon: 'check-circle-outline', group: "On Result:" },
-					{ id: 'error', title: "On Error", icon: 'alert-decagram-outline' },
-					{ id: 'warning', title: "On Warning", icon: 'alert-outline' },
-					{ id: 'critical', title: "On Critical", icon: 'fire-alert' },
-					{ id: 'abort', title: "On Abort", icon: 'cancel' }
-				].concat(
-					this.buildOptGroup( app.tags, "On Custom Tag:", 'tag-outline', 'tag:' )
-				),
-				value: action.trigger,
-				'data-nudgeheight': 1
-			}),
-			caption: 'Select the desired action trigger.'
-		});
+		if (opts.show_trigger) {
+			html += this.getFormRow({
+				label: 'Action Trigger:',
+				content: this.getFormMenuSingle({
+					id: 'fe_eja_trigger',
+					title: 'Select Action Trigger',
+					options: [ 
+						...config.ui.action_trigger_menu.filter( function(item) { return item.id != 'continue'; } )
+					].concat(
+						this.buildOptGroup( app.tags, "On Custom Tag:", 'tag-outline', 'tag:' )
+					),
+					value: action.trigger,
+					'data-nudgeheight': 1
+				}),
+				caption: 'Select the desired action trigger.'
+			});
+		}
 		
 		html += this.getFormRow({
 			label: 'Action Type:',
 			content: this.getFormMenuSingle({
 				id: 'fe_eja_type',
 				title: 'Select Action Type',
-				options: [ 
-					{ id: 'email', title: "Send Email", icon: 'email-send-outline' },
-					{ id: 'web_hook', title: "Web Hook", icon: 'webhook' },
-					{ id: 'run_event', title: "Run Event", icon: 'calendar-clock' },
-					{ id: 'channel', title: "Notify Channel", icon: 'bullhorn-outline' },
-					{ id: 'snapshot', title: "Take Snapshot", icon: 'monitor-screenshot' },
-					{ id: 'disable', title: "Disable Event", icon: 'cancel' },
-					{ id: 'delete', title: "Delete Event", icon: 'trash-can-outline' },
-					{ id: 'plugin', title: "Plugin", icon: 'power-plug' }
-				],
+				options: action_types,
 				value: action.type
 			}),
 			caption: 'Select the desired action type.'
@@ -1963,10 +2004,8 @@ Page.Base = class Base extends Page {
 				spellcheck: 'false',
 				maxlength: 8192,
 				placeholder: 'email@sample.com',
-				value: action.email || '',
-				onChange: '$P().updateAddRemoveMe(this)'
+				value: action.email || ''
 			}),
-			suffix: '<div class="form_suffix_icon mdi" title="" onMouseUp="$P().addRemoveMe(this)"></div>',
 			caption: 'Enter one or more email addresses for the action.'
 		});
 		
@@ -2038,9 +2077,10 @@ Page.Base = class Base extends Page {
 			
 			action = {
 				enabled: $('#fe_eja_enabled').is(':checked'),
-				trigger: $('#fe_eja_trigger').val(),
 				type: $('#fe_eja_type').val()
 			};
+			if (opts.show_trigger) action.trigger = $('#fe_eja_trigger').val();
+			
 			switch (action.type) {
 				case 'email':
 					action.users = $('#fe_eja_users').val();
@@ -2073,18 +2113,8 @@ Page.Base = class Base extends Page {
 				break;
 			} // switch action.type
 			
-			// see if we need to add or replace
-			if (idx == -1) {
-				self.actions.push(action);
-			}
-			else self.actions[idx] = action;
-			
-			// keep list sorted
-			sort_by(self.actions, 'trigger');
-			
-			// self.dirty = true;
-			self.renderJobActionEditor();
 			Dialog.hide();
+			callback( action );
 		} ); // Dialog.confirm
 		
 		var change_action_type = function(new_type) {
@@ -2126,6 +2156,8 @@ Page.Base = class Base extends Page {
 					$('#d_eja_param_editor').html( self.getPluginParamEditor( $('#fe_eja_plugin').val(), action.params || {} ) );
 				break;
 			} // switch new_type
+			
+			Dialog.autoResize();
 		}; // change_action_type
 		
 		change_action_type(action.type);
@@ -2136,11 +2168,11 @@ Page.Base = class Base extends Page {
 		
 		$('#fe_eja_plugin').on('change', function() {
 			$('#d_eja_param_editor').html( self.getPluginParamEditor( $(this).val(), action.params || {} ) );
+			Dialog.autoResize();
 		}); // type change
 		
 		MultiSelect.init( $('#fe_eja_users') );
 		SingleSelect.init( $('#fe_eja_trigger, #fe_eja_type, #fe_eja_event, #fe_eja_channel, #fe_eja_web_hook, #fe_eja_plugin') );
-		this.updateAddRemoveMe('#fe_eja_email');
 		
 		Dialog.autoResize();
 	}
@@ -2165,7 +2197,7 @@ Page.Base = class Base extends Page {
 		if (!plugin.params.length) return '(The selected Plugin has no configurable parameters defined.)';
 		
 		plugin.params.forEach( function(param) {
-			var elem_id = 'fe_pp_' + param.id;
+			var elem_id = 'fe_pp_' + plugin_id + '_' + param.id;
 			var elem_value = (param.id in params) ? params[param.id] : param.value;
 			var elem_dis = (param.locked && !app.isAdmin()) ? 'disabled' : undefined; 
 			if (param.type == 'hidden') return;
@@ -2180,8 +2212,9 @@ Page.Base = class Base extends Page {
 				
 				case 'code':
 					// limit code editor to event plugins, as it uses a dialog
-					if (plugin.type == 'event') {
-						html += self.getFormTextarea({ id: elem_id, value: elem_value, rows: 5, disabled: elem_dis, style: 'display:none' });
+					// JH 2025-06-22 We now support code editing from dialogs, so let's try this always enabled
+					if (1 || (plugin.type == 'event')) {
+						html += self.getFormTextarea({ id: elem_id, value: elem_value, rows: 1, disabled: elem_dis, style: 'display:none' });
 						if (elem_dis) {
 							html += '<div class="button small secondary" onClick="$P().viewPluginParamCode(\'' + plugin_id + '\',\'' + param.id + '\')">View Code...</div>';
 						}
@@ -2217,7 +2250,7 @@ Page.Base = class Base extends Page {
 	
 	viewPluginParamCode(plugin_id, param_id) {
 		// show plugin param code (no editing)
-		var elem_id = 'fe_pp_' + param_id;
+		var elem_id = 'fe_pp_' + plugin_id + '_' + param_id;
 		var elem_value = $('#' + elem_id).val();
 		
 		var plugin = find_object( app.plugins, { id: plugin_id } );
@@ -2231,7 +2264,7 @@ Page.Base = class Base extends Page {
 	
 	editPluginParamCode(plugin_id, param_id) {
 		// open editor for code plugin param
-		var elem_id = 'fe_pp_' + param_id;
+		var elem_id = 'fe_pp_' + plugin_id + '_' + param_id;
 		var elem_value = $('#' + elem_id).val();
 		
 		var plugin = find_object( app.plugins, { id: plugin_id } );
@@ -2253,8 +2286,8 @@ Page.Base = class Base extends Page {
 		
 		plugin.params.forEach( function(param) {
 			if (param.type == 'hidden') params[ param.id ] = param.value;
-			else if (param.type == 'checkbox') params[ param.id ] = !!$('#fe_pp_' + param.id).is(':checked');
-			else params[ param.id ] = $('#fe_pp_' + param.id).val();
+			else if (param.type == 'checkbox') params[ param.id ] = !!$('#fe_pp_' + plugin_id + '_' + param.id).is(':checked');
+			else params[ param.id ] = $('#fe_pp_' + plugin_id + '_' + param.id).val();
 		});
 		
 		return params;
@@ -2951,21 +2984,13 @@ Page.Base = class Base extends Page {
 			return;
 		}
 		
-		var ctype_icons = {
-			text: "form-textbox",
-			textarea: "form-textarea",
-			code: "code-json",
-			checkbox: "checkbox-marked-outline",
-			select: "form-dropdown",
-			hidden: "eye-off-outline"
-		};
 		var none = '<span>(None)</span>';
 		
 		html += '<div class="summary_grid">';
 		
 		plugin.params.forEach( function(param, idx) {
 			var elem_value = (param.id in params) ? params[param.id] : param.value;
-			var elem_icon = ctype_icons[param.type];
+			var elem_icon = config.ui.control_type_icons[param.type];
 			if (param.type == 'hidden') return;
 			
 			html += '<div>'; // grid unit
@@ -2991,7 +3016,6 @@ Page.Base = class Base extends Page {
 				break;
 				
 				case 'checkbox':
-					// html += self.getFormCheckbox({ id: elem_id, label: param.title, checked: !!elem_value, disabled: elem_dis });
 					elem_icon = elem_value ? 'checkbox-marked-outline' : 'checkbox-blank-outline';
 					html += '<i class="mdi mdi-' + elem_icon + '">&nbsp;</i>';
 					if (elem_value) html += 'Yes';
@@ -3000,7 +3024,7 @@ Page.Base = class Base extends Page {
 				
 				case 'select':
 					html += '<i class="link mdi mdi-' + elem_icon + '" onClick="$P().copyPluginParamValue(' + idx + ')" title="Copy to Clipboard">&nbsp;</i>';
-					html += elem_value;
+					html += elem_value.toString().replace(/\,.*$/, '');
 				break;
 			} // switch type
 			
@@ -3048,17 +3072,12 @@ Page.Base = class Base extends Page {
 		html += '</div>';
 		
 		var buttons_html = "";
-		buttons_html += '<div class="button" onMouseUp="$P().copyCodeToClipboard()"><i class="mdi mdi-clipboard-text-outline">&nbsp;</i>Copy to Clipboard</div>';
-		buttons_html += '<div class="button primary" onMouseUp="Dialog.confirm_click(true)"><i class="mdi mdi-close-circle-outline">&nbsp;</i>Close</div>';
+		buttons_html += '<div class="button" onClick="$P().copyCodeToClipboard()"><i class="mdi mdi-clipboard-text-outline">&nbsp;</i>Copy to Clipboard</div>';
+		buttons_html += '<div class="button primary" onClick="CodeEditor.hide()"><i class="mdi mdi-close-circle-outline">&nbsp;</i>Close</div>';
 		
-		Dialog.showSimpleDialog(title, html, buttons_html);
+		CodeEditor.showSimpleDialog(title, html, buttons_html);
 		
-		// special mode for key capture
-		Dialog.active = 'confirmation';
-		Dialog.confirm_callback = function(result) { 
-			if (result) Dialog.hide(); 
-		};
-		Dialog.onHide = function() {
+		CodeEditor.onHide = function() {
 			delete self._temp_code;
 		};
 	}
@@ -3079,8 +3098,8 @@ Page.Base = class Base extends Page {
 		
 		var buttons_html = "";
 		if (btn) buttons_html += btn;
-		else buttons_html += '<div class="button" onMouseUp="$P().copyCodeToClipboard()"><i class="mdi mdi-clipboard-text-outline">&nbsp;</i>Copy to Clipboard</div>';
-		buttons_html += '<div class="button primary" onMouseUp="Dialog.confirm_click(true)"><i class="mdi mdi-close-circle-outline">&nbsp;</i>Close</div>';
+		else buttons_html += '<div class="button" onClick="$P().copyCodeToClipboard()"><i class="mdi mdi-clipboard-text-outline">&nbsp;</i>Copy to Clipboard</div>';
+		buttons_html += '<div class="button primary" onClick="Dialog.confirm_click(true)"><i class="mdi mdi-close-circle-outline">&nbsp;</i>Close</div>';
 		
 		Dialog.showSimpleDialog(title, html, buttons_html);
 		
@@ -3255,18 +3274,15 @@ Page.Base = class Base extends Page {
 		html += '<div id="fe_dialog_editor"><div class="CodeMirror"></div></div>';
 		
 		var buttons_html = "";
-		buttons_html += '<div id="btn_dialog_cancel" class="button" onClick="Dialog.hide()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Cancel</span></div>';
+		buttons_html += '<div class="button" onClick="CodeEditor.hide()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Cancel</span></div>';
 		buttons_html += '<div class="button" onMouseUp="$P().copyCodeToClipboard()"><i class="mdi mdi-clipboard-text-outline">&nbsp;</i><span>Copy to Clipboard</span></div>';
-		buttons_html += '<div id="btn_dialog_confirm" class="button primary"><i class="mdi mdi-check-circle">&nbsp;</i>Apply Changes</div>';
+		buttons_html += '<div id="btn_ceditor_confirm" class="button primary"><i class="mdi mdi-check-circle">&nbsp;</i>Apply</div>';
 		
 		title += ' <div class="dialog_title_widget mobile_hide"><span class="link" onClick="$P().toggleDialogCodeEditorSize(this)">Maximize<i style="padding-left:3px" class="mdi mdi-arrow-top-right-thick"></i></span></div>';
 		
-		Dialog.showSimpleDialog(title, html, buttons_html);
+		CodeEditor.showSimpleDialog(title, html, buttons_html);
 		
-		// special mode for key capture (esc only)
-		Dialog.active = 'editor';
-		
-		Dialog.onHide = function() {
+		CodeEditor.onHide = function() {
 			// clean shutdown of codemirror
 			self.editor.setOption('mode', 'text');
 			delete self.editor;
@@ -3297,9 +3313,9 @@ Page.Base = class Base extends Page {
 		this.setupEditorAutoDetect();
 		
 		// handle apply button
-		$('#btn_dialog_confirm').on('click', function() {
+		$('#btn_ceditor_confirm').on('click', function() {
 			var value = self.editor.getValue();
-			Dialog.hide();
+			CodeEditor.hide();
 			callback(value);
 		});
 	}
@@ -3317,7 +3333,7 @@ Page.Base = class Base extends Page {
 			$(span).html( 'Minimize<i style="padding-left:3px" class="mdi mdi-arrow-bottom-left-thick"></i>' );
 		}
 		
-		Dialog.autoResize();
+		CodeEditor.autoResize();
 	}
 	
 	doPrepImportFile(file) {
