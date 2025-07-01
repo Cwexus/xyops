@@ -1780,6 +1780,7 @@ Page.Workflows = class Workflows extends Page.Events {
 	
 	addState() {
 		// add copy of current state to undo buffer
+		var $cont = this.wfGetContainer();
 		
 		// if we are currently in a historical state, we need to fork the history just after the current point
 		if ((this.wfSnapIdx > -1) && (this.wfSnapIdx < this.wfSnapshots.length - 1)) {
@@ -1796,26 +1797,40 @@ Page.Workflows = class Workflows extends Page.Events {
 		
 		if (this.wfSnapshots.length > 100) this.wfSnapshots.shift();
 		this.wfSnapIdx = this.wfSnapshots.length - 1;
+		
+		// update undo/redo button classes
+		$cont.find('#d_btn_wf_undo').toggleClass('disabled', (this.wfSnapIdx <= 0));
+		$cont.find('#d_btn_wf_redo').toggleClass('disabled', (this.wfSnapIdx >= this.wfSnapshots.length - 1));
+	}
+	
+	setCurrentState() {
+		// set the current state index, and update the workflow to match
+		var $cont = this.wfGetContainer();
+		var snapshot = deep_copy_object( this.wfSnapshots[this.wfSnapIdx] );
+		
+		this.event.workflow = this.workflow = snapshot.workflow;
+		this.wfScroll = snapshot.scroll;
+		this.wfZoom = snapshot.zoom;
+		this.wfSelection = snapshot.selection;
+		this.event.triggers = snapshot.triggers;
+		
+		this.drawWorkflow(true);
+		this.afterDraw();
+		this.renderTriggerTable();
+		
+		// prevent scroll jump due to trigger table redraw
+		app.scrollToBottom();
+		
+		// update undo/redo button classes
+		$cont.find('#d_btn_wf_undo').toggleClass('disabled', (this.wfSnapIdx <= 0));
+		$cont.find('#d_btn_wf_redo').toggleClass('disabled', (this.wfSnapIdx >= this.wfSnapshots.length - 1));
 	}
 	
 	doUndo() {
 		// revert to previous state
 		if (this.wfSnapIdx > 0) {
 			this.wfSnapIdx--;
-			
-			var snapshot = deep_copy_object( this.wfSnapshots[this.wfSnapIdx] );
-			this.event.workflow = this.workflow = snapshot.workflow;
-			this.wfScroll = snapshot.scroll;
-			this.wfZoom = snapshot.zoom;
-			this.wfSelection = snapshot.selection;
-			this.event.triggers = snapshot.triggers;
-			
-			this.drawWorkflow(true);
-			this.afterDraw();
-			this.renderTriggerTable();
-			
-			// prevent scroll jump due to trigger table redraw
-			app.scrollToBottom();
+			this.setCurrentState();
 		}
 	}
 	
@@ -1823,20 +1838,7 @@ Page.Workflows = class Workflows extends Page.Events {
 		// redo to next state
 		if (this.wfSnapIdx < this.wfSnapshots.length - 1) {
 			this.wfSnapIdx++;
-			
-			var snapshot = deep_copy_object( this.wfSnapshots[this.wfSnapIdx] );
-			this.event.workflow = this.workflow = snapshot.workflow;
-			this.wfScroll = snapshot.scroll;
-			this.wfZoom = snapshot.zoom;
-			this.wfSelection = snapshot.selection;
-			this.event.triggers = snapshot.triggers;
-			
-			this.drawWorkflow(true);
-			this.afterDraw();
-			this.renderTriggerTable();
-			
-			// prevent scroll jump due to trigger table redraw
-			app.scrollToBottom();
+			this.setCurrentState();
 		}
 	}
 	
@@ -1999,12 +2001,12 @@ Page.Workflows = class Workflows extends Page.Events {
 		</div>`;
 		
 		html += `<div class="wf_grid_footer">
-			<div class="button icon left" onClick="$P().doUndo()" title="Undo"><i class="mdi mdi-undo"></i></div>
-			<div class="button icon left" onClick="$P().doRedo()" title="Redo"><i class="mdi mdi-redo"></i></div>
+			<div class="button icon left disabled" id="d_btn_wf_undo" onClick="$P().doUndo()" title="Undo"><i class="mdi mdi-undo"></i></div>
+			<div class="button icon left disabled" id="d_btn_wf_redo" onClick="$P().doRedo()" title="Redo"><i class="mdi mdi-redo"></i></div>
 			<div class="wf_button_separator left"></div>
 			<div class="button icon left" onClick="$P().wfZoomAuto()" title="Auto-fit workflow"><i class="mdi mdi-home"></i></div>
-			<div class="button icon left" onClick="$P().wfZoomOut()" title="Zoom out"><i class="mdi mdi-magnify-minus"></i></div>
-			<div class="button icon left" onClick="$P().wfZoomIn()" title="Zoom in"><i class="mdi mdi-magnify-plus"></i></div>
+			<div class="button icon left" id="d_btn_wf_zoom_out" onClick="$P().wfZoomOut()" title="Zoom out"><i class="mdi mdi-magnify-minus"></i></div>
+			<div class="button icon left" id="d_btn_wf_zoom_in" onClick="$P().wfZoomIn()" title="Zoom in"><i class="mdi mdi-magnify-plus"></i></div>
 			<div class="wf_zoom_msg left tablet_hide"></div>
 			<div class="wf_button_separator left"></div>
 			

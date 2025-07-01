@@ -876,6 +876,10 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		// show zoom percentage
 		var zoom_pct = Math.round( this.wfZoom * 100 );
 		$cont.find('.wf_zoom_msg').html( zoom_pct + '%' );
+		
+		// update zoom button classes
+		$cont.find('#d_btn_wf_zoom_in').toggleClass('disabled', (this.wfZoom >= 3));
+		$cont.find('#d_btn_wf_zoom_out').toggleClass('disabled', (this.wfZoom <= 0.25));
 	}
 	
 	wfZoomAuto() {
