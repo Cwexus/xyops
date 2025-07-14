@@ -909,6 +909,10 @@ div.td_big {
 	background: transparent !important;
 }
 
+.data_grid > ul.grid_row > div > code {
+	font-size: 12px;
+}
+
 /* Box Button Floater */
 
 .box_buttons.floater {
@@ -1188,8 +1192,8 @@ body.dark .pxc_tt_content {
 	word-break: break-word;
 	
 	font-family: var(--font-family-monospace);
-	font-size: 12px;
-	line-height: 15px;
+	font-size: 13px;
+	line-height: 16px;
 }
 
 #d_live_job_log > div.log_message {
