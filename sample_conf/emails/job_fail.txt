@@ -4,7 +4,6 @@ Subject: ⚠️ Orchestra Job Failed: [event/title]
 
 Date/Time: [display/date_time]
 Event: [event/title]
-Workflow: [workflow/title]
 Category: [category/title]
 Plugin: [plugin/title]
 
