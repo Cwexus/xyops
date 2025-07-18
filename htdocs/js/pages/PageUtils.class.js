@@ -485,6 +485,20 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		var self = this;
 		if (!events) events = app.events;
 		
+		// pre-scan events for plugin-based scheduling
+		var plugin_rows = [];
+		
+		events.forEach( function(event) {
+			var plugin_trigger = find_object( event.triggers, { type: 'plugin', enabled: true } );
+			if (plugin_trigger) {
+				plugin_rows.push({
+					event: event.id,
+					type: 'plugin',
+					plugin: plugin_trigger.plugin_id
+				});
+			}
+		} ); // foreach event
+		
 		var opts = {
 			events: events,
 			duration: 86400 * 32,
@@ -492,7 +506,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			max: 1000,
 			progress: null,
 			callback: function(jobs) {
-				self.upcomingJobs = jobs;
+				self.upcomingJobs = [ ...plugin_rows, ...jobs ];
 				self.renderUpcomingJobs();
 			}
 		};
@@ -523,24 +537,53 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		};
 		
 		html += this.getPaginatedGrid( grid_args, function(job, idx) {
-			var countdown = Math.max( 60, Math.abs(job.epoch - app.epoch) );
 			var nice_source = (job.type == 'single') ? '<i class="mdi mdi-alarm-check">&nbsp;</i>Single Shot' : '<i class="mdi mdi-update">&nbsp;</i>Scheduler';
 			var event = find_object( app.events, { id: job.event } ) || {};
+			var precision = event.triggers ? find_object(event.triggers, { type: 'precision', enabled: true }) : null;
+			var nice_date_time = '';
+			var nice_countdown = '';
+			var nice_skip = '';
+			
+			if (job.type == 'plugin') {
+				// special phantom row, for plugin-based schedules
+				var plugin = find_object( app.plugins, { id: job.plugin } ) || { title: job.plugin };
+				nice_source = `<i class="mdi mdi-${plugin.icon || 'power-plug'}">&nbsp;</i>${plugin.title}`;
+				nice_date_time = '(Unknown)';
+				nice_countdown = '(Unknown)';
+				nice_skip = 'n/a';
+			}
+			else {
+				// vary date/time prediction display based on precision
+				if (precision && precision.seconds && precision.seconds.length) {
+					job.precision = precision.seconds;
+					nice_date_time = self.getRelativeDateTime( job.epoch + job.precision[0], true );
+					if (job.precision.length > 1) nice_date_time += ' (+' + Math.floor(job.precision.length - 1) + ')';
+				}
+				else {
+					nice_date_time = self.getRelativeDateTime( job.epoch );
+				}
+				
+				var countdown = Math.max( 60, Math.abs(job.epoch - app.epoch) );
+				nice_countdown = '<i class="mdi mdi-clock-outline">&nbsp;</i>' + get_text_from_seconds_round( countdown );
+				
+				nice_skip = '<span class="link danger" onClick="$P().doSkipUpcomingJob(' + idx + ')"><b>Skip Job...</b></span>';
+			}
 			
 			return [
 				'<b>' + self.getNiceEvent(job.event, true) + '</b>',
 				self.getNiceCategory(event.category, true),
-				// self.getNicePlugin(event.plugin, true),
 				self.getNiceTargetList(event.targets),
 				nice_source,
-				self.getRelativeDateTime( job.epoch ),
-				'<i class="mdi mdi-clock-outline">&nbsp;</i>' + get_text_from_seconds_round( countdown ),
-				'<span class="link danger" onClick="$P().doSkipUpcomingJob(' + idx + ')"><b>Skip Job...</b></span>'
-				// '<a href="#Job?id=' + job.id + '">Details</a>'
+				nice_date_time,
+				nice_countdown,
+				nice_skip
 			];
 		} );
 		
 		this.div.find('#d_upcoming_jobs > .box_content').removeClass('loading').html(html);
+		
+		// fire hook for pages to intercept and render additional UI (i.e. event view page)
+		if (this.onAfterRenderUpcomingJobs) this.onAfterRenderUpcomingJobs();
 	}
 	
 	jobUpcomingNav(offset) {
@@ -554,6 +597,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		// add blackout range for upcoming job
 		var self = this;
 		var job = this.upcomingJobs[idx];
+		
 		var event = find_object( app.events, { id: job.event } );
 		if (!event) return app.doError("Event not found: " + job.event);
 		
@@ -587,6 +631,9 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				
 				self.upcomingJobs.splice( idx, 1 );
 				self.renderUpcomingJobs();
+				
+				// fire hook for pages to intercept and render additional UI (i.e. event view page)
+				if (self.onAfterSkipUpcomingJob) self.onAfterSkipUpcomingJob();
 			} ); // api.post
 		} ); // confirm
 	}

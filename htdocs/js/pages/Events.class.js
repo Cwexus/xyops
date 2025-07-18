@@ -817,7 +817,7 @@ Page.Events = class Events extends Page.PageUtils {
 		
 		// event details
 		html += '<div class="box_grid">';
-			html += '<div class="box_unity">' + this.getTriggerDetails() + '</div>';
+			html += '<div class="box_unity" id="d_ve_trigger_summary">' + this.getTriggerDetails() + '</div>';
 			html += '<div class="box_unity">' + this.getActionDetails() + '</div>';
 			html += '<div class="box_unity">' + this.getLimitDetails() + '</div>';
 		html += '</div>';
@@ -924,7 +924,7 @@ Page.Events = class Events extends Page.PageUtils {
 		html += '</div>'; // box
 		
 		// upcoming jobs
-		html += '<div class="box" id="d_ve_upcoming">';
+		html += '<div class="box" id="d_upcoming_jobs">';
 			html += '<div class="box_title">';
 				html += 'Upcoming Jobs';
 			html += '</div>';
@@ -949,7 +949,7 @@ Page.Events = class Events extends Page.PageUtils {
 		
 		this.setupHistoryCharts();
 		this.fetchJobHistory();
-		this.getUpcomingJobs();
+		this.getUpcomingJobs([ this.event ]);
 		this.renderActiveJobs();
 		this.getQueuedJobs();
 		this.renderPluginParams('#d_ve_params');
@@ -1585,124 +1585,36 @@ Page.Events = class Events extends Page.PageUtils {
 		this.fetchJobHistory();
 	}
 	
-	getUpcomingJobs() {
-		// predict and render upcoming jobs
-		var self = this;
-		var opts = {
-			events: [ this.event ],
-			duration: 86400 * 32,
-			burn: 16,
-			max: 1000,
-			progress: null,
-			callback: function(jobs) {
-				self.upcomingJobs = jobs;
-				self.renderUpcomingJobs();
-			}
-		};
-		this.predictUpcomingJobs(opts);
-	}
-	
-	renderUpcomingJobs() {
-		// got jobs from prediction engine, so render them!
-		var self = this;
-		var html = '';
-		
-		// make sure page is still active (API may be slow)
-		if (!this.active) return;
+	onAfterRenderUpcomingJobs() {
+		// render additional upcoming job info, if upcoming pagination is on the first page
+		// (this hook is fired by renderUpcomingJobs)
 		if (!this.upcomingOffset) {
-			this.upcomingOffset = 0;
+			// show next run in summary header
+			var html = 'n/a';
+			var job = this.upcomingJobs[0];
 			
-			// show next run in summary
-			if (this.upcomingJobs[0]) {
-				this.div.find('#d_ve_next_run').html( this.getRelativeDateTime( this.upcomingJobs[0].epoch ) );
+			if (job) {
+				if (job.type == 'plugin') {
+					var plugin = find_object( app.plugins, { id: job.plugin } ) || { title: job.plugin };
+					html = `<i class="mdi mdi-${plugin.icon || 'power-plug'}">&nbsp;</i>${plugin.title}`;
+				}
+				else {
+					if (job.precision) {
+						html = this.getRelativeDateTime( job.epoch + job.precision[0], true );
+						if (job.precision.length > 1) html += ' (+' + Math.floor(job.precision.length - 1) + ')';
+					}
+					else html = this.getRelativeDateTime( job.epoch );
+				}
 			}
-			else {
-				this.div.find('#d_ve_next_run').html('n/a');
-			}
-		}
-		
-		var grid_args = {
-			resp: {
-				rows: this.upcomingJobs.slice( this.upcomingOffset, this.upcomingOffset + this.args.limit ),
-				list: { length: this.upcomingJobs.length }
-			},
-			cols: ['Event', 'Source', 'Scheduled Time', 'Countdown', 'Actions'],
-			data_type: 'job',
-			offset: this.upcomingOffset,
-			limit: this.args.limit,
-			class: 'data_grid event_job_upcoming_grid',
-			pagination_link: '$P().jobUpcomingNav'
-		};
-		
-		html += this.getPaginatedGrid( grid_args, function(job, idx) {
-			var countdown = Math.max( 60, Math.abs(job.epoch - app.epoch) );
-			var nice_source = (job.type == 'single') ? '<i class="mdi mdi-alarm-check">&nbsp;</i>Single Shot' : '<i class="mdi mdi-update">&nbsp;</i>Scheduler';
 			
-			return [
-				self.getNiceEvent(job.event, false),
-				nice_source,
-				self.getShortDateTime( job.epoch ),
-				'<i class="mdi mdi-clock-outline">&nbsp;</i>' + get_text_from_seconds( countdown, false, true ),
-				'<span class="link danger" onClick="$P().doSkipUpcomingJob(' + idx + ')"><b>Skip Job...</b></span>'
-				// '<a href="#Job?id=' + job.id + '">Details</a>'
-			];
-		} );
-		
-		this.div.find('#d_ve_upcoming > .box_content').removeClass('loading').html(html);
+			this.div.find('#d_ve_next_run').html(html);
+		}
 	}
 	
-	jobUpcomingNav(offset) {
-		// user clicked on upcoming job pagination nav
-		this.upcomingOffset = offset;
-		this.div.find('#d_ve_upcoming > .box_content').addClass('loading');
-		this.renderUpcomingJobs();
-	}
-	
-	doSkipUpcomingJob(idx) {
-		// add blackout range for upcoming job
-		var self = this;
-		var job = this.upcomingJobs[idx];
-		var msg = 'Are you sure you want to skip the upcoming job at "' + self.getShortDateTimeText( job.epoch ) + '"?';
-		
-		switch (job.type) {
-			case 'single': msg += '  Since this is a "Single Shot" trigger, it will simply be disabled.'; break;
-			case 'schedule': msg += '  Since this is a scheduled trigger, a new "Blackout" range will be added to disable it.'; break;
-		}
-		
-		Dialog.confirmDanger( 'Skip Upcoming Job', msg, ['alert-decagram', 'Skip Job'], function(result) {
-			if (!result) return;
-			app.clearError();
-			Dialog.showProgress( 1.0, "Skipping Job..." );
-			
-			switch (job.type) {
-				case 'single':
-					delete_object( self.event.triggers, { type: 'single', enabled: true, epoch: job.epoch } );
-				break;
-				
-				case 'schedule':
-					self.event.triggers.push({ type: 'blackout', enabled: true, start: job.epoch, end: job.epoch }); // Note: end is inclusive!
-				break;
-			} // switch job.type
-			
-			app.api.post( 'app/update_event', { id: self.event.id, triggers: self.event.triggers }, function(resp) {
-				Dialog.hideProgress();
-				app.showMessage('success', "The selected upcoming job will be skipped.");
-				
-				if (!self.active) return; // sanity
-				
-				self.upcomingJobs.splice( idx, 1 );
-				self.renderUpcomingJobs();
-			} ); // api.post
-		} ); // confirm
-	}
-	
-	autoExpireUpcomingJobs() {
-		// automatically remove upcoming jobs that upcame
-		if (!this.upcomingJobs || !this.upcomingJobs.length) return;
-		
-		while (this.upcomingJobs.length && (this.upcomingJobs[0].epoch <= app.epoch)) {
-			this.upcomingJobs.shift();
-		}
+	onAfterSkipUpcomingJob() {
+		// an uncoming jobs was skipped -- refresh the trigger summary
+		// (this hook is fired by doSkipUpcomingJob)
+		this.div.find('#d_ve_trigger_summary').html( this.getTriggerDetails() );
 	}
 	
 	fetchRevisionHistory() {
