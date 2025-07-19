@@ -393,7 +393,6 @@ Page.Dashboard = class Dashboard extends Page.PageUtils {
 		// received status update from server, see if major or minor
 		var self = this;
 		var div = this.div;
-		var bar_width = this.bar_width || 100;
 		
 		if (data.jobsChanged) {
 			this.updateDashGrid();
@@ -417,22 +416,7 @@ Page.Dashboard = class Dashboard extends Page.PageUtils {
 				div.find('#d_dash_jt_remaining_' + job.id).html( self.getNiceJobRemainingTime(job, false) );
 				
 				// update progress bar without redrawing it (so animation doesn't jitter)
-				var counter = job.progress || 1;
-				var cx = Math.floor( counter * bar_width );
-				var label = '' + Math.floor( (counter / 1.0) * 100 ) + '%';
-				var $cont = div.find('#d_dash_jt_progress_' + job.id + ' > div.progress_bar_container');
-				
-				if ((counter == 1.0) && !$cont.hasClass('indeterminate')) {
-					$cont.addClass('indeterminate').attr('title', "");
-				}
-				else if ((counter < 1.0) && $cont.hasClass('indeterminate')) {
-					$cont.removeClass('indeterminate');
-				}
-				
-				if (counter < 1.0) $cont.attr('title', '' + Math.floor( (counter / 1.0) * 100 ) + '%');
-				
-				$cont.find('> div.progress_bar_inner').css( 'width', '' + cx + 'px' );
-				$cont.find('div.progress_bar_label').html( label );
+				self.updateJobProgressBar(job, '#d_dash_jt_progress_' + job.id + ' > div.progress_bar_container');
 			} ); // foreach job
 		}
 		

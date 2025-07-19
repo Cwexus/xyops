@@ -1139,7 +1139,13 @@ Page.Base = class Base extends Page {
 		var bar_width = this.bar_width || 100;
 		var cx = Math.floor( counter * bar_width );
 		var label = '' + Math.floor( (counter / 1.0) * 100 ) + '%';
-		if (counter == 1.0) extra_classes.push('indeterminate');
+		
+		if ((job.state == 'start_delay') || (job.state == 'queued')) {
+			extra_classes.push('pending');
+			cx = 0;
+			label = '';
+		}
+		else if (counter == 1.0) extra_classes.push('indeterminate');
 		
 		html += '<div class="progress_bar_container ' + extra_classes.join(' ') + '" style="width:' + bar_width + 'px; margin:0;">';
 			html += '<div class="progress_bar_label first_half" style="width:' + bar_width + 'px;">' + label + '</div>';
@@ -1161,8 +1167,11 @@ Page.Base = class Base extends Page {
 		var label = '' + Math.floor( (counter / 1.0) * 100 ) + '%';
 		var indeterminate = !!(counter == 1.0);
 		
-		if (indeterminate && !$cont.hasClass('indeterminate')) $cont.addClass('indeterminate');
-		else if (!indeterminate && $cont.hasClass('indeterminate')) $cont.removeClass('indeterminate');
+		var pending = !!((job.state == 'start_delay') || (job.state == 'queued'));
+		if (pending) { cx = 0; label = ''; indeterminate = false; }
+		
+		$cont.toggleClass('indeterminate', indeterminate);
+		$cont.toggleClass('pending', pending);
 		
 		$cont.find('.progress_bar_inner').css('width', '' + cx + 'px');
 		$cont.find('.progress_bar_label').html( label );
