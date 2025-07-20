@@ -917,6 +917,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			var elem = $elem.get(0);
 			var box = { left: node.x, top: node.y, right: node.x + elem.offsetWidth, bottom: node.y + elem.offsetHeight };
 			if ($elem.hasClass('wf_entity')) box.bottom += 34; // entities have captions that live "outside" the offsetHeight
+			if (node.type == 'controller') box.right += 64; // controller nodes are double-entity-width which offsetWidth ignores
 			if (!bounds) { bounds = box; return; }
 			
 			if (box.left < bounds.left) bounds.left = box.left;
@@ -1512,6 +1513,10 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		switch (node.data.controller) {
 			case 'multiplex':
 				if (node.data.stagger) label = get_text_from_seconds(node.data.stagger, true, true) + ' stagger';
+			break;
+			
+			case 'wait':
+				label = get_text_from_seconds(node.data.wait, true, true);
 			break;
 			
 			case 'repeat':
