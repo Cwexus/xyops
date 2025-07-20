@@ -1641,6 +1641,17 @@ Page.Workflows = class Workflows extends Page.Events {
 			caption: 'Optionally enter a duration to stagger the start of each multiplexed job.'
 		});
 		
+		// wait time
+		html += this.getFormRow({
+			id: 'd_wfd_wait',
+			label: 'Wait Delay:',
+			content: this.getFormRelativeTime({
+				id: 'fe_wfd_wait',
+				value: node.data.wait || 0
+			}),
+			caption: 'Enter a duration to wait before control passes to the connected nodes.'
+		});
+		
 		// repeat iterations
 		html += this.getFormRow({
 			id: 'd_wfd_repeat',
@@ -1741,6 +1752,10 @@ Page.Workflows = class Workflows extends Page.Events {
 					node.data.continue = parseInt( $('#fe_wfd_continue').val() ) || 0;
 				break;
 				
+				case 'wait':
+					node.data.wait = parseInt( $('#fe_wfd_wait').val() ) || 0;
+				break;
+				
 				case 'repeat':
 					node.data.repeat = parseInt( $('#fe_wfd_repeat').val() ) || 0;
 					node.data.continue = parseInt( $('#fe_wfd_continue').val() ) || 0;
@@ -1798,16 +1813,17 @@ Page.Workflows = class Workflows extends Page.Events {
 		
 		// MultiSelect.init( $('#fe_wfd_targets') );
 		SingleSelect.init( $('#fe_wfd_type, #fe_wfd_icon') );
-		RelativeTime.init( $('#fe_wfd_stagger') );
+		RelativeTime.init( $('#fe_wfd_stagger, #fe_wfd_wait') );
 		
 		// handle type change
 		var do_change_type = function() {
 			// show/hide sections based on type
-			$('#d_wfd_stagger, #d_wfd_repeat, #d_wfd_split, #d_wfd_if, #d_wfd_title, #d_wfd_icon, #d_wfd_continue').hide();
+			$('#d_wfd_stagger, #d_wfd_wait, #d_wfd_repeat, #d_wfd_split, #d_wfd_if, #d_wfd_title, #d_wfd_icon, #d_wfd_continue').hide();
 			
 			var type = $('#fe_wfd_type').val();
 			switch (type) {
 				case 'multiplex': $('#d_wfd_stagger, #d_wfd_continue').show(); break;
+				case 'wait': $('#d_wfd_wait').show(); break;
 				case 'repeat': $('#d_wfd_repeat, #d_wfd_continue').show(); break;
 				case 'split': $('#d_wfd_split, #d_wfd_continue').show(); break;
 				case 'decision': $('#d_wfd_if, #d_wfd_title, #d_wfd_icon').show(); break;
