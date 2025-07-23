@@ -100,6 +100,7 @@ app.extend({
 			{ ID: 'Categories' },
 			{ ID: 'Channels' },
 			{ ID: 'WebHooks' },
+			{ ID: 'Buckets' },
 			{ ID: 'Plugins' },
 			{ ID: 'Tags' },
 			{ ID: 'Roles' },
@@ -403,6 +404,7 @@ app.extend({
 		$('.sidebar .section .section_item').addClass('enabled').show();
 		if (!this.hasAnyPrivilege('create_categories', 'edit_categories', 'delete_categories')) $('#tab_Categories').removeClass('enabled').hide();
 		if (!this.hasAnyPrivilege('create_tags', 'edit_tags', 'delete_tags')) $('#tab_Tags').removeClass('enabled').hide();
+		if (!this.hasAnyPrivilege('create_buckets', 'edit_buckets', 'delete_buckets')) $('#tab_Buckets').removeClass('enabled').hide();
 		
 		// admin section
 		if (!this.hasAnyPrivilege('create_alerts', 'edit_alerts', 'delete_alerts')) $('#tab_AlertSetup').removeClass('enabled').hide();
