@@ -2336,7 +2336,7 @@ Page.Job = class Job extends Page.PageUtils {
 		
 		var link = document.createElement("a");
 		link.href = URL.createObjectURL(blob);
-		link.download = "orchestra-job-" + this.job.id + '.json';
+		link.download = "opsrocket-job-" + this.job.id + '.json';
 		
 		document.body.appendChild(link);
 		link.click();

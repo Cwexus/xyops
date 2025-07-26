@@ -372,7 +372,7 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 					value: alert.id
 				}),
 				suffix: '<div class="form_suffix_icon mdi mdi-clipboard-text-outline" title="Copy ID to Clipboard" onClick="$P().copyFormID(this)"></div>',
-				caption: 'This is a unique ID for the alert, used by the Orchestra API.  It cannot be changed.'
+				caption: 'This is a unique ID for the alert, used by the OpsRocket API.  It cannot be changed.'
 			});
 		}
 		
@@ -437,7 +437,7 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 				class: 'monospace',
 				value: alert.expression
 			}),
-			caption: 'Enter the expression to evaluate the alert condition, e.g. <code>[monitors/load_avg] >= 5.0</code>.  If you need help, you can use the <span class="link" onClick="$P().showHostDataExplorer(\'#fe_ea_expression\')">Server Data Explorer</span>, or view the <a href="https://github.com/jhuckaby/orchestra/blob/main/docs/Monitoring.md#alert-expressions" target="_blank">documentation</a>.' // TODO: doc link AND ALSO showHostDataExplorer!!!
+			caption: 'Enter the expression to evaluate the alert condition, e.g. <code>[monitors/load_avg] >= 5.0</code>.  If you need help, you can use the <span class="link" onClick="$P().showHostDataExplorer(\'#fe_ea_expression\')">Server Data Explorer</span>, or view the <a href="https://github.com/pixlcore/opsrocket/blob/main/docs/Monitoring.md#alert-expressions" target="_blank">documentation</a>.' // TODO: doc link AND ALSO showHostDataExplorer!!!
 		});
 		
 		// samples
@@ -463,7 +463,7 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 				class: 'monospace',
 				value: alert.message
 			}),
-			caption: 'Enter the message text to be delivered with the alert notifications.  You can use <a href="https://github.com/jhuckaby/orchestra/blob/main/docs/Monitoring.md#alert-expressions" target="_blank">alert expressions</a> here.' // TODO: doc link
+			caption: 'Enter the message text to be delivered with the alert notifications.  You can use <a href="https://github.com/pixlcore/opsrocket/blob/main/docs/Monitoring.md#alert-expressions" target="_blank">alert expressions</a> here.' // TODO: doc link
 		});
 		
 		// monitor overlay

@@ -377,7 +377,7 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 					value: monitor.id
 				}),
 				suffix: '<div class="form_suffix_icon mdi mdi-clipboard-text-outline" title="Copy ID to Clipboard" onClick="$P().copyFormID(this)"></div>',
-				caption: 'This is a unique ID for the monitor, used by the Orchestra API.  It cannot be changed.'
+				caption: 'This is a unique ID for the monitor, used by the OpsRocket API.  It cannot be changed.'
 			});
 		}
 		
@@ -443,7 +443,7 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 				value: monitor.source
 			}),
 			suffix: '<div class="form_suffix_icon mdi mdi-magnify" title="Open Server Data Explorer" onClick="$P().showHostDataExplorer(\'#fe_em_source\')"></div>',
-			caption: 'Enter an expression for evaluating the data source, e.g. <code>[stats/network/conns]</code>.  If you need help, you can use the <span class="link" onClick="$P().showHostDataExplorer(\'#fe_em_source\')">Server Data Explorer</span>, or view the <a href="https://github.com/jhuckaby/orchestra/blob/main/docs/Monitoring.md#data-sources" target="_blank">documentation</a>.'
+			caption: 'Enter an expression for evaluating the data source, e.g. <code>[stats/network/conns]</code>.  If you need help, you can use the <span class="link" onClick="$P().showHostDataExplorer(\'#fe_em_source\')">Server Data Explorer</span>, or view the <a href="https://github.com/pixlcore/opsrocket/blob/main/docs/Monitoring.md#data-sources" target="_blank">documentation</a>.'
 		});
 		
 		// data match

@@ -1,8 +1,8 @@
 To: [email_to]
 From: [config/email_from]
-Subject: Orchestra Alert Cleared: [nice_server]: [def/title]
+Subject: OpsRocket Alert Cleared: [nice_server]: [def/title]
 
-The following Orchestra alert has been cleared: [def/title]
+The following OpsRocket alert has been cleared: [def/title]
 
 Hostname: [params/hostname]
 IP Address: [params/ip]
@@ -18,4 +18,4 @@ Live Server View:
 [server_url]
 
 Regards,
-The Orchestra Team
+The OpsRocket Team

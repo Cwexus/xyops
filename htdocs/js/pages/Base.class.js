@@ -8,7 +8,7 @@ Page.Base = class Base extends Page {
 	}
 	
 	getNiceAPIKey(item, link) {
-		// overriding method in orchestra-theme page.js
+		// overriding method in opsrocket-theme page.js
 		if (!item) return 'n/a';
 		var key = item.api_key || item.key;
 		var title = item.title;
@@ -3009,11 +3009,11 @@ Page.Base = class Base extends Page {
 		var filename = '';
 		
 		// possibly customize filename for current page
-		if (this.job) filename = 'orchestra-job-' + this.job.id + '-' + get_unique_id(8) + '-' + key + '.png';
-		else if (this.server) filename = 'orchestra-server-' + this.server.id + '-' + get_unique_id(8) + '-' + key + '.png';
-		else if (this.snapshot) filename = 'orchestra-snapshot-' + this.snapshot.id + '-' + get_unique_id(8) + '-' + key + '.png';
-		else if (this.event) filename = 'orchestra-event-' + this.event.id + '-' + get_unique_id(8) + '-' + key + '.png';
-		else filename = 'orchestra-' + get_unique_id(8) + '-' + key + '.png';
+		if (this.job) filename = 'opsrocket-job-' + this.job.id + '-' + get_unique_id(8) + '-' + key + '.png';
+		else if (this.server) filename = 'opsrocket-server-' + this.server.id + '-' + get_unique_id(8) + '-' + key + '.png';
+		else if (this.snapshot) filename = 'opsrocket-snapshot-' + this.snapshot.id + '-' + get_unique_id(8) + '-' + key + '.png';
+		else if (this.event) filename = 'opsrocket-event-' + this.event.id + '-' + get_unique_id(8) + '-' + key + '.png';
+		else filename = 'opsrocket-' + get_unique_id(8) + '-' + key + '.png';
 		
 		chart.download({
 			filename: filename,
@@ -3498,7 +3498,7 @@ Page.Base = class Base extends Page {
 			catch (err) { return app.doError("Failed to parse JSON in uploaded file: " + err); }
 			
 			if (!json.version || (json.version !== '1.0') || !json.type || !json.data || (typeof(json.data) != 'object')) {
-				return app.doError("Unknown Format: Uploaded file is not an Orchestra Portable Data Object.");
+				return app.doError("Unknown Format: Uploaded file is not an OpsRocket Portable Data Object.");
 			}
 			
 			var opts = config.ui.data_types[ json.type ];

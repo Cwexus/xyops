@@ -32,12 +32,12 @@ Need: ssl.crt – the public certificate in PEM format
 
 **Debian/Ubuntu:**
 
-1. `sudo cp ssl.crt /usr/local/share/ca-certificates/orchestra.crt`
+1. `sudo cp ssl.crt /usr/local/share/ca-certificates/opsrocket.crt`
 2. `sudo update-ca-certificates`
 
 **RedHat/CentOS/Fedora:**
 
-1. `sudo cp ssl.crt /etc/pki/ca-trust/source/anchors/orchestra.crt`
+1. `sudo cp ssl.crt /etc/pki/ca-trust/source/anchors/opsrocket.crt`
 2. `sudo update-ca-trust extract`
 
 **Note:** This does not affect Firefox unless it’s configured to use system trust (by default, it has its own CA store).

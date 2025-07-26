@@ -104,7 +104,7 @@
 			"params": [
 				{ "type":"select", "id":"method", "title":"Method", "value":"GET, HEAD, POST, PUT, DELETE" }, 
 				{ "type":"text", "id":"url", "title":"URL", "value":"http://" }, 
-				{ "type":"textarea", "id":"headers", "title":"Request Headers", "value":"User-Agent: Orchestra/HTTP-Plugin" }, 
+				{ "type":"textarea", "id":"headers", "title":"Request Headers", "value":"User-Agent: OpsRocket/HTTP-Plugin" }, 
 				{ "type":"textarea", "id":"data", "title":"POST Data", "value":"" }, 
 				{ "type":"text", "id":"timeout", "title":"Timeout (Seconds)", "value":"30" }, 
 				{ "type":"text", "id":"success_match", "title":"Success Match", "value":"" }, 
@@ -172,7 +172,7 @@
 			"method": "POST",
 			"headers": [
 				{ "name": "Content-Type", "value": "application/json" },
-				{ "name": "User-Agent", "value": "Orchestra/WebHook" }
+				{ "name": "User-Agent", "value": "OpsRocket/WebHook" }
 			],
 			"body": "{\n\t\"text\": \"[text]\",\n\t\"content\": \"[text]\"\n\t\"message\": \"[text]\"\n}",
 			"timeout": 30,
@@ -617,7 +617,7 @@
 			{
 				"action": "bundleCompress",
 				"uglify": false,
-				"header": "/* Copyright (c) PixlCore.com. */",
+				"header": "/* Copyright (c) PixlCore LLC. */",
 				"dest_bundle": "htdocs/js/_combo.js",
 				"src_html_file": "htdocs/index.html",
 				"dest_html_file": "htdocs/index.html",
@@ -627,10 +627,10 @@
 			{
 				"action": "printMessage",
 				"lines": [
-					"Welcome to Orchestra!",
-					"First time installing?  You should configure your settings in '/opt/orchestra/conf/config.json'.",
-					"Then, to start the service, type: '/opt/orchestra/bin/control.sh start'.",
-					"For full docs, please visit: http://github.com/jhuckaby/orchestra",
+					"Welcome to OpsRocket!",
+					"First time installing?  You should configure your settings in '/opt/opsrocket/conf/config.json'.",
+					"Then, to start the service, type: '/opt/opsrocket/bin/control.sh start'.",
+					"For full docs, please visit: http://github.com/pixlcore/opsrocket",
 					"Enjoy!"
 				]
 			}

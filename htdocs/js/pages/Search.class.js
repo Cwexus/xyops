@@ -55,7 +55,7 @@ Page.Search = class Search extends Page.Base {
 			// search box
 			html += '<div class="search_box">';
 				html += '<i class="mdi mdi-magnify" onMouseUp="$(\'#fe_s_match\').focus()">&nbsp;</i>';
-				// html += '<div class="search_help"><a href="https://github.com/jhuckaby/orchestra#search" target="_blank">Search Help<i class="mdi mdi-open-in-new"></i></a></div>';
+				// html += '<div class="search_help"><a href="https://github.com/pixlcore/opsrocket#search" target="_blank">Search Help<i class="mdi mdi-open-in-new"></i></a></div>';
 				html += '<input type="text" id="fe_s_match" maxlength="128" placeholder="Search Job Files..." value="' + escape_text_field_value(args.match || '') + '">';
 				// html += '<div class="search_widget"><i class="mdi mdi-checkbox-marked">&nbsp;</i>RegExp</div>';
 				// html += '<div class="search_widget"><i class="mdi mdi-checkbox-marked">&nbsp;</i>Case</div>';

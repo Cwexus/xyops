@@ -384,7 +384,7 @@ Page.Channels = class Channels extends Page.PageUtils {
 					value: channel.id
 				}),
 				suffix: '<div class="form_suffix_icon mdi mdi-clipboard-text-outline" title="Copy ID to Clipboard" onClick="$P().copyFormID(this)"></div>',
-				caption: 'This is a unique ID for the channel, used by the Orchestra API.  It cannot be changed.'
+				caption: 'This is a unique ID for the channel, used by the OpsRocket API.  It cannot be changed.'
 			});
 		}
 		

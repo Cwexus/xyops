@@ -1,4 +1,4 @@
-// Orchestra Web App
+// OpsRocket Web App
 // Author: Joseph Huckaby
 // Copyright (c) 2021 Joseph Huckaby
 
@@ -63,7 +63,7 @@ app.extend({
 		
 		if (config.debug) {
 			Debug.enable( this.debug_cats );
-			Debug.trace('system', "Orchestra Client Starting Up");
+			Debug.trace('system', "OpsRocket Client Starting Up");
 		}
 		
 		// setup theme (light / dark)
@@ -983,7 +983,7 @@ app.extend({
 	},
 	
 	getCodemirrorTheme: function() {
-		// get appropriate theme for cm, based on orchestra theme
+		// get appropriate theme for cm, based on opsrocket theme
 		return this.cmThemeMap[ this.getPref('theme') ];
 	},
 	
@@ -1046,10 +1046,10 @@ app.extend({
 		
 		// optional system-level notification
 		if (this.user.notifications && (Notification.permission === "granted")) {
-			var note = new Notification( "Orchestra: " + channel.title, {
+			var note = new Notification( "OpsRocket: " + channel.title, {
 				body: args.message.replace(/<.+?>/g, ''),
 				icon: '/images/logo-256.png',
-				tag: 'orchestra-channel',
+				tag: 'opsrocket-channel',
 				renotify: true,
 				requireInteraction: true
 			} );

@@ -15,7 +15,7 @@
 	"log_archive_path": "logs/archives/[yyyy]/[mm]/[dd]/[filename]-[yyyy]-[mm]-[dd].log.gz",
 	"log_crashes": true,
 	"temp_dir": "temp",
-	"pid_file": "logs/orchestra.pid",
+	"pid_file": "logs/opsrocket.pid",
 	"debug_level": 9,
 	"maintenance": "04:00",
 	"ttl": 300,
@@ -65,12 +65,12 @@
 	},
 	
 	"hook_text_templates": {
-		"job_start": "Orchestra Job started on [server/hostname]: [event/title]: [links/job_details]",
-		"job_success": "Orchestra Job completed successfully on [server/hostname]: [event/title]: [links/job_details]",
-		"job_error": "Orchestra Job failed on [server/hostname]: [event/title]: Error ([job/code]): [job/description]: [links/job_details]",
-		"job_progress": "Orchestra Job is in progress ([event/title]): [links/job_details]",
-		"alert_new": "Orchestra Alert: [nice_server]: [def.title]: [alert.message]: [alert_url]",
-		"alert_cleared": "Orchestra Alert Cleared: [nice_server]: [def.title]"
+		"job_start": "OpsRocket Job started on [server/hostname]: [event/title]: [links/job_details]",
+		"job_success": "OpsRocket Job completed successfully on [server/hostname]: [event/title]: [links/job_details]",
+		"job_error": "OpsRocket Job failed on [server/hostname]: [event/title]: Error ([job/code]): [job/description]: [links/job_details]",
+		"job_progress": "OpsRocket Job is in progress ([event/title]): [links/job_details]",
+		"alert_new": "OpsRocket Alert: [nice_server]: [def.title]: [alert.message]: [alert_url]",
+		"alert_cleared": "OpsRocket Alert Cleared: [nice_server]: [def.title]"
 	},
 	
 	"multi": {
@@ -83,7 +83,7 @@
 	},
 	
 	"satellite": {
-		"base_url": "https://github.com/pixlcore/orchestra-satellite/releases",
+		"base_url": "https://github.com/pixlcore/opsrocket-satellite/releases",
 		"version": "latest",
 		"cache_ttl": 86400,
 		"config": { 
@@ -150,7 +150,7 @@
 	},
 	
 	"client": {
-		"name": "Orchestra",
+		"name": "OpsRocket",
 		"debug": 1,
 		
 		"items_per_page": 50,
@@ -319,7 +319,7 @@
 		"http_max_upload_size": 1073741824,
 		"http_static_ttl": 31536000,
 		"http_static_index": "index.html",
-		"http_server_signature": "Orchestra v1.0",
+		"http_server_signature": "OpsRocket v1.0",
 		"http_compress_text": true,
 		"http_enable_brotli": true,
 		"http_timeout": 30,

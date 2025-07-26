@@ -1,6 +1,6 @@
 To: [job/email]
 From: [config/email_from]
-Subject: Orchestra Internal Job Report: [job/title]
+Subject: OpsRocket Internal Job Report: [job/title]
 
 Job ID: [job/id]
 Job Title: [job/title]
@@ -17,4 +17,4 @@ Details:
 [job/details]
 
 Regards,
-The Orchestra Team
+The OpsRocket Team

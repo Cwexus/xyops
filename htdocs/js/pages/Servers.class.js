@@ -346,7 +346,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 			// search box
 			html += '<div class="search_box">';
 				html += '<i class="mdi mdi-magnify" onMouseUp="$(\'#fe_ss_query\').focus()">&nbsp;</i>'; // TODO: fix search help url below:
-				html += '<div class="search_help"><a href="https://github.com/jhuckaby/orchestra#search" target="_blank">Search Help<i class="mdi mdi-open-in-new"></i></a></div>';
+				html += '<div class="search_help"><a href="https://github.com/pixlcore/opsrocket#search" target="_blank">Search Help<i class="mdi mdi-open-in-new"></i></a></div>';
 				html += '<input type="text" id="fe_ss_query" maxlength="128" placeholder="Search Keywords..." value="' + escape_text_field_value(args.query || '') + '">';
 			html += '</div>';
 			
@@ -1075,7 +1075,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		}
 		
 		var html = '';
-		html += `<div class="dialog_intro">This allows you to set a "watch" on a server, which means that Orchestra will take snapshots of it every minute until the watch duration elapses.</div>`;
+		html += `<div class="dialog_intro">This allows you to set a "watch" on a server, which means that OpsRocket will take snapshots of it every minute until the watch duration elapses.</div>`;
 		html += '<div class="dialog_box_content">';
 		
 		html += this.getFormRow({
@@ -1232,7 +1232,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		
 		if (this.online) {
 			// server is online
-			html += `<div class="dialog_intro">Are you sure you want to permanently delete the server <b>${nice_server}</b>?  Note that this will <b>shut down</b> and <b>uninstall</b> Orchestra Satellite from the server.</div>`;
+			html += `<div class="dialog_intro">Are you sure you want to permanently delete the server <b>${nice_server}</b>?  Note that this will <b>shut down</b> and <b>uninstall</b> OpsRocket Satellite from the server.</div>`;
 			html += '<div class="dialog_box_content">';
 			
 			html += this.getFormRow({

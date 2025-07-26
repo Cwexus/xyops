@@ -1,17 +1,17 @@
 #!/bin/sh
 
-# Install the latest Orchestra Satellite to /opt/orchestra/satellite/
+# Install the latest OpsRocket Satellite to /opt/opsrocket/satellite/
 # Copyright (c) 2025 PixlCore LLC.  Sustainable Use License.
 
 set -eu
 
 AUTH_TOKEN="[auth_token]"
 BASE_URL="[base_url]"
-INSTALL_DIR="/opt/orchestra/satellite"
+INSTALL_DIR="/opt/opsrocket/satellite"
 
 # Check if satellite is already installed
 if [ -f "$INSTALL_DIR/package.json" ]; then
-    echo "Error: Orchestra Satellite appears to be already installed in $INSTALL_DIR/"
+    echo "Error: OpsRocket Satellite appears to be already installed in $INSTALL_DIR/"
     echo "If you wish to reinstall, please remove the existing installation first."
     exit 1
 fi
@@ -61,7 +61,7 @@ if [ $RC != 0 ]; then
 	exit 1;
 fi
 
-echo "Installing Orchestra Satellite for ${OS}/${ARCH}..."
+echo "Installing OpsRocket Satellite for ${OS}/${ARCH}..."
 
 # Create directories
 mkdir -p $INSTALL_DIR

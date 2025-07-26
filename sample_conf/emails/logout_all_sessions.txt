@@ -1,6 +1,6 @@
 To: [/user/email]
 From: [/config/email_from]
-Subject: Orchestra Sessions Logged Out
+Subject: OpsRocket Sessions Logged Out
 
 Hey [/user/full_name],
 
@@ -10,10 +10,10 @@ Upon your request, we have deleted all user sessions associated with your accoun
 
 (End of report)
 
-If you have any questions, or if you did not request this action, please e-mail us at support@orchestra.dev.
+If you have any questions, or if you did not request this action, please e-mail your system administrator.
 
 This request was sent from IP address: [/session/ip]
 Using the following user agent: [/useragent]
 
 Regards,
-The Orchestra Team
+The OpsRocket Team

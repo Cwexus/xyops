@@ -1,10 +1,10 @@
-## Orchestra Privacy Policy
+## OpsRocket Privacy Policy
 
-This policy applies to all information collected or submitted on Orchestra's website and back-end web service.
+This policy applies to all information collected or submitted on OpsRocket's website and back-end web service.
 
 ### Information we collect
 
-When you create an account with Orchestra, you must provide a username, a password, an email address, and your name.  These are stored securely on our servers.  Your password is encrypted (see **Security** below).
+When you create an account with OpsRocket, you must provide a username, a password, an email address, and your name.  These are stored securely on our servers.  Your password is encrypted (see **Security** below).
 
 Email addresses are only used for logging in, password resets, responding to emails that you initiate, and sending notifications that you request. We don’t send promotional emails.
 
@@ -32,17 +32,17 @@ We implement a variety of security measures to help keep your information secure
 
 ### Accessing, changing, or deleting information
 
-You may access or change your information or delete your account from the Orchestra website at any time.
+You may access or change your information or delete your account from the OpsRocket website at any time.
 
 Deleted information may be kept in backups for up to 30 days. Backups are encrypted and are only accessed if needed for disaster recovery.
 
-Orchestra may delete your information at any time and for any reason, such as technical needs, legal concerns, abuse prevention, removal of idle accounts, data loss, or any other reason.
+OpsRocket may delete your information at any time and for any reason, such as technical needs, legal concerns, abuse prevention, removal of idle accounts, data loss, or any other reason.
 
 ### Third-party links and content
 
-Orchestra is **not responsible** for the message content of its users.
+OpsRocket is **not responsible** for the message content of its users.
 
-Orchestra may display links to third-party sites, if users post email messages containing these links.  These sites have their own independent privacy policies, and we have no responsibility or liability for their content or activities.
+OpsRocket may display links to third-party sites, if users post email messages containing these links.  These sites have their own independent privacy policies, and we have no responsibility or liability for their content or activities.
 
 ### California Online Privacy Protection Act Compliance
 
@@ -62,8 +62,8 @@ By using our site or apps, you consent to our privacy policy.
 
 ### Contacting Us
 
-If you have questions regarding this privacy policy, you may email support@orchestra.dev. Please note that account deletion should be done within the Orchestra website, not via email requests, for security reasons.
+If you have questions regarding this privacy policy, you may email support@opsrocket.dev. Please note that account deletion should be done within the OpsRocket website, not via email requests, for security reasons.
 
 ### Changes to this policy
 
-All historical versions of this document are available on [GitHub](https://github.com/jhuckaby/orchestra/blob/master/docs/privacy-policy.md).
+All historical versions of this document are available on [GitHub](https://github.com/pixlcore/opsrocket/blob/master/docs/privacy-policy.md).

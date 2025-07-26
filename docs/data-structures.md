@@ -1,6 +1,6 @@
 # Overview
 
-This document details all of the data structures used in Orchestra.
+This document details all of the data structures used in OpsRocket.
 
 # Event
 
@@ -100,7 +100,7 @@ An array of server or group targets to run the event.  Each item of the array is
 
 ## Event.algo
 
-When multiple servers are in the [Event.targets](#event-targets) array, Orchestra uses a select algorithm to select a server to run the job.  The available algorithms are:
+When multiple servers are in the [Event.targets](#event-targets) array, OpsRocket uses a select algorithm to select a server to run the job.  The available algorithms are:
 
 | Algorithm | Notes |
 |-----------|-------|
@@ -220,7 +220,7 @@ The duration of the job run in seconds (calculated as the difference between [Jo
 
 ## Job.code
 
-When a job completes, the `code` denotes the result.  Zero (`0`) means success, any other value means the job failed.  You can use this to specify your own internal error code, or just specify `1` for a generic error.  Any number or string is acceptable.  There are a few special values that Orchestra recognizes:
+When a job completes, the `code` denotes the result.  Zero (`0`) means success, any other value means the job failed.  You can use this to specify your own internal error code, or just specify `1` for a generic error.  Any number or string is acceptable.  There are a few special values that OpsRocket recognizes:
 
 | Job Code | Meaning |
 |----------|---------|
@@ -337,7 +337,7 @@ Once the job is complete, the files will be uploaded and the array will be recre
 
 | Property Name | Description |
 |---------------|-------------|
-| `path` | The partial path to the file in storage.  Combine this with the Orchestra master server hostname and port number (if applicable) to construct a full URL to the file. |
+| `path` | The partial path to the file in storage.  Combine this with the OpsRocket master server hostname and port number (if applicable) to construct a full URL to the file. |
 | `size` | The size of the file in bytes. |
 | `job` | The [Job.id](#job-id) associated with the file. |
 | `server` | The server ID of the server which uploaded the file. |

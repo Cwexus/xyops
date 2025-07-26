@@ -1,5 +1,5 @@
-Sound effects created for use in Orchestra.
-https://orchestra.dev
+Sound effects created for use in OpsRocket.
+https://opsrocket.io
 
 All sounds were generated using ElevenLabs AI Sound Effects.
 https://elevenlabs.io/sound-effects

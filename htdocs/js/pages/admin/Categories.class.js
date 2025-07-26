@@ -396,7 +396,7 @@ Page.Categories = class Categories extends Page.PageUtils {
 					value: category.id
 				}),
 				suffix: '<div class="form_suffix_icon mdi mdi-clipboard-text-outline" title="Copy ID to Clipboard" onClick="$P().copyFormID(this)"></div>',
-				caption: 'This is a unique ID for the category, used by the Orchestra API.  It cannot be changed.'
+				caption: 'This is a unique ID for the category, used by the OpsRocket API.  It cannot be changed.'
 			});
 		}
 		

@@ -18,7 +18,7 @@ var Tools = require('pixl-tools');
 var mkdirp = Tools.mkdirp;
 var glob = Tools.glob;
 
-var request = new Request( "Orchestra Build Tool" );
+var request = new Request( "OpsRocket Build Tool" );
 request.setTimeout( 30 * 1000 );
 request.setFollow( 5 );
 request.setAutoError( true );

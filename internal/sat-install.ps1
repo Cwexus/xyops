@@ -1,4 +1,4 @@
-# Install the latest Orchestra Satellite for Windows x64.
+# Install the latest OpsRocket Satellite for Windows x64.
 # Copyright (c) 2025 PixlCore LLC.  Sustainable Use License.
 
 # Pre-populated variables (these values will be replaced server-side)
@@ -16,7 +16,7 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
     Write-Output "Not running as Administrator. Attempting to re-launch as Administrator..."
     
     # Download the full script to a temporary file.
-    $tempFile = Join-Path $env:TEMP "OrchestraSatellite_install_temp.ps1"
+    $tempFile = Join-Path $env:TEMP "OpsRocketSatellite_install_temp.ps1"
     try {
         Invoke-WebRequest -Uri $scriptUrl -OutFile $tempFile -UseBasicParsing
     } catch {
@@ -38,13 +38,13 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 
 # Define the installation directory.
 # Using Program Files is a standard location for system-wide applications.
-$installDir = Join-Path $env:ProgramFiles "Orchestra Satellite"
-Write-Output "Installing Orchestra Satellite to: $installDir"
+$installDir = Join-Path $env:ProgramFiles "OpsRocket Satellite"
+Write-Output "Installing OpsRocket Satellite to: $installDir"
 
 # Check if the application is already installed
 $packageJsonPath = Join-Path $installDir "package.json"
 if (Test-Path $packageJsonPath) {
-    Write-Error "Orchestra Satellite is already installed in $installDir. Please uninstall the existing version first."
+    Write-Error "OpsRocket Satellite is already installed in $installDir. Please uninstall the existing version first."
     exit 1
 }
 
@@ -54,7 +54,7 @@ if (-Not (Test-Path $installDir)) {
 }
 
 # Download the package tarball.
-$tempPackageFile = Join-Path $env:TEMP "OrchestraSatellite.tar.gz"
+$tempPackageFile = Join-Path $env:TEMP "OpsRocketSatellite.tar.gz"
 Write-Output "Downloading package from $packageUrl ..."
 try {
     Invoke-WebRequest -Uri $packageUrl -OutFile $tempPackageFile -UseBasicParsing
@@ -108,4 +108,4 @@ Write-Output "Running installation command..."
 # Execute the final installation command.
 & $nodePath $mainJs -- install
 
-Write-Output "Orchestra Satellite installation complete."
+Write-Output "OpsRocket Satellite installation complete."

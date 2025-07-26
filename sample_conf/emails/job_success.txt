@@ -1,6 +1,6 @@
 To: [email_to]
 From: [config/email_from]
-Subject: ✅ Orchestra Job Completed Successfully: [event/title]
+Subject: ✅ OpsRocket Job Completed Successfully: [event/title]
 
 Date/Time: [display/date_time]
 Event: [event/title]
@@ -28,4 +28,4 @@ Event Notes:
 [job/notes]
 
 Regards,
-The Orchestra Team
+The OpsRocket Team

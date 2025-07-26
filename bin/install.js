@@ -1,9 +1,9 @@
-// Orchestra Auto Installer
+// OpsRocket Auto Installer
 // Copyright (c) 2023 Joseph Huckaby, MIT License.
-// https://github.com/jhuckaby/orchestra
+// https://github.com/pixlcore/opsrocket
 
 // To install, issue this command as root:
-// curl -s "https://raw.githubusercontent.com/jhuckaby/orchestra/master/bin/install.js" | node
+// curl -s "https://raw.githubusercontent.com/jhuckaby/opsrocket/master/bin/install.js" | node
 
 var path = require('path');
 var fs = require('fs');
@@ -12,33 +12,33 @@ var os = require('os');
 var cp = require('child_process');
 
 var installer_version = '1.0';
-var base_dir = '/opt/orchestra';
+var base_dir = '/opt/opsrocket';
 var log_dir = base_dir + '/logs';
 var log_file = '';
-var gh_repo_url = 'http://github.com/jhuckaby/orchestra';
-var gh_releases_url = 'https://api.github.com/repos/jhuckaby/orchestra/releases';
-var gh_head_tarball_url = 'https://github.com/jhuckaby/orchestra/archive/master.tar.gz';
+var gh_repo_url = 'http://github.com/pixlcore/opsrocket';
+var gh_releases_url = 'https://api.github.com/repos/jhuckaby/opsrocket/releases';
+var gh_head_tarball_url = 'https://github.com/pixlcore/opsrocket/archive/master.tar.gz';
 
 // don't allow npm to delete these (ugh)
 var packages_to_check = ['couchbase', 'redis', 'ioredis', 'ioredis-timeout', 'sqlite3'];
 var packages_to_rescue = {};
 
 // Check if Node.js version is old
-if (process.version.match(/^v?(\d+)/) && (parseInt(RegExp.$1) < 16) && !process.env['ORCHESTRA_OLD']) {
-	console.error("\nERROR: You are using an incompatible version of Node.js (" + process.version + ").  Please upgrade to v16 or later.  Instructions: https://nodejs.org/en/download/\n\nTo ignore this error and run unsafely, set an ORCHESTRA_OLD environment variable.  Do this at your own risk.\n");
+if (process.version.match(/^v?(\d+)/) && (parseInt(RegExp.$1) < 16) && !process.env['OPSROCKET_OLD']) {
+	console.error("\nERROR: You are using an incompatible version of Node.js (" + process.version + ").  Please upgrade to v16 or later.  Instructions: https://nodejs.org/en/download/\n\nTo ignore this error and run unsafely, set an OPSROCKET_OLD environment variable.  Do this at your own risk.\n");
 	process.exit(1);
 }
 
 // Error out if we have low memory
-if ((os.totalmem() < 64 * 1024 * 1024) && !process.env['ORCHESTRA_DANGER']) {
-	console.error("\nERROR: The current machine has less than 64 MB of total RAM.  Orchestra will likely fail to install successfully under such low memory conditions.\n\nTo ignore this error and attempt the install anyway, set a ORCHESTRA_DANGER environment variable.  Do this at your own risk.\n");
+if ((os.totalmem() < 64 * 1024 * 1024) && !process.env['OPSROCKET_DANGER']) {
+	console.error("\nERROR: The current machine has less than 64 MB of total RAM.  OpsRocket will likely fail to install successfully under such low memory conditions.\n\nTo ignore this error and attempt the install anyway, set a OPSROCKET_DANGER environment variable.  Do this at your own risk.\n");
 	process.exit(1);
 }
 
 // make sure we have NPM available
 try { cp.execSync('which npm'); }
 catch (err) {
-	console.error("\nERROR: NPM cannot be found.  Orchestra requires both Node.js and NPM to be preinstalled.  Instructions: https://nodejs.org/en/download/\n");
+	console.error("\nERROR: NPM cannot be found.  OpsRocket requires both Node.js and NPM to be preinstalled.  Instructions: https://nodejs.org/en/download/\n");
 	process.exit(1);
 }
 
@@ -75,7 +75,7 @@ var logonly = function(msg) {
 };
 
 if (process.getuid() != 0) {
-	die( "The Orchestra auto-installer must be run as root." );
+	die( "The OpsRocket auto-installer must be run as root." );
 }
 
 // create base and log directories
@@ -90,7 +90,7 @@ log_file = log_dir + '/install.log';
 logonly( "\nStarting install run: " + (new Date()).toString() + "\n" );
 
 print( 
-	"\n" + "Orchestra Installer v" + installer_version + "\n" + 
+	"\n" + "OpsRocket Installer v" + installer_version + "\n" + 
 	"Copyright (c) 2023 PixlCore.com. MIT Licensed.\n" + 
 	"Log File: " + log_file + "\n\n" 
 );
@@ -113,7 +113,7 @@ catch (err) {;}
 
 var is_running = false;
 if (is_preinstalled) {
-	var pid_file = log_dir + '/orchestra.pid';
+	var pid_file = log_dir + '/opsrocket.pid';
 	try {
 		var pid = fs.readFileSync(pid_file, { encoding: 'utf8' });
 		is_running = process.kill( pid, 0 );
@@ -175,13 +175,13 @@ cp.exec('curl -s ' + gh_releases_url, function (err, stdout, stderr) {
 	}
 	
 	// proceed with installation
-	if (is_preinstalled) print("Upgrading Orchestra from v"+cur_version+" to v"+new_version+"...\n");
-	else print("Installing Orchestra v"+new_version+"...\n");
+	if (is_preinstalled) print("Upgrading OpsRocket from v"+cur_version+" to v"+new_version+"...\n");
+	else print("Installing OpsRocket v"+new_version+"...\n");
 	
 	if (is_running) {
 		print("\n");
 		try { cp.execSync( base_dir + "/bin/control.sh stop", { stdio: 'inherit' } ); }
-		catch (err) { die("Failed to stop Orchestra: " + err); }
+		catch (err) { die("Failed to stop OpsRocket: " + err); }
 		print("\n");
 	}
 	
@@ -250,7 +250,7 @@ cp.exec('curl -s ' + gh_releases_url, function (err, stdout, stderr) {
 						
 						if (is_running) {
 							try { cp.execSync( base_dir + "/bin/control.sh start", { stdio: 'inherit' } ); }
-							catch (err) { die("Failed to start Orchestra: " + err); }
+							catch (err) { die("Failed to start OpsRocket: " + err); }
 							print("\n");
 						}
 					}

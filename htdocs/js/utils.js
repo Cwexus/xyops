@@ -1,4 +1,4 @@
-// Orchestra Web App - Utils
+// OpsRocket Web App - Utils
 // Author: Joseph Huckaby
 // Copyright (c) 2021 Joseph Huckaby
 

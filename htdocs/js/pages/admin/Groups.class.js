@@ -415,7 +415,7 @@ Page.Groups = class Groups extends Page.ServerUtils {
 					value: group.id
 				}),
 				suffix: '<div class="form_suffix_icon mdi mdi-clipboard-text-outline" title="Copy ID to Clipboard" onClick="$P().copyFormID(this)"></div>',
-				caption: 'This is a unique ID for the group, used by the Orchestra API.  It cannot be changed.'
+				caption: 'This is a unique ID for the group, used by the OpsRocket API.  It cannot be changed.'
 			});
 		}
 		
@@ -1557,7 +1557,7 @@ Page.Groups = class Groups extends Page.ServerUtils {
 		}
 		
 		var html = '';
-		html += `<div class="dialog_intro">This allows you to set a "watch" on a server group, which means that Orchestra will take snapshots of it every minute until the watch duration elapses.</div>`;
+		html += `<div class="dialog_intro">This allows you to set a "watch" on a server group, which means that OpsRocket will take snapshots of it every minute until the watch duration elapses.</div>`;
 		html += '<div class="dialog_box_content">';
 		
 		html += this.getFormRow({

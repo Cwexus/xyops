@@ -39,7 +39,7 @@ Page.Login = class Login extends Page.Base {
 		
 		html += '<div class="dialog inline">';
 			html += '<div class="dialog_title">User Login</div>';
-			html += '<div class="dialog_help">Enter the username and password associated with your Orchestra account.</div>';
+			html += '<div class="dialog_help">Enter the username and password associated with your OpsRocket account.</div>';
 			html += '<div class="box_content">';
 				
 				// username
@@ -147,7 +147,7 @@ Page.Login = class Login extends Page.Base {
 		
 		html += '<div class="dialog inline wider">';
 			html += '<div class="dialog_title">Create Account</div>';
-			html += '<div class="dialog_help">Fill out this form to sign up for Orchestra.</div>';
+			html += '<div class="dialog_help">Fill out this form to sign up for OpsRocket.</div>';
 			html += '<div class="box_content">';
 				
 				// username

@@ -47,7 +47,7 @@ Page.Events = class Events extends Page.PageUtils {
 			// search box
 			html += '<div class="search_box">';
 				html += '<i class="mdi mdi-magnify" onClick="$(\'#fe_el_search\').focus()">&nbsp;</i>'; // TODO: fix search help url below:
-				html += '<div class="search_help"><a href="https://github.com/jhuckaby/orchestra#search" target="_blank">Search Help<i class="mdi mdi-open-in-new"></i></a></div>';
+				html += '<div class="search_help"><a href="https://github.com/pixlcore/opsrocket#search" target="_blank">Search Help<i class="mdi mdi-open-in-new"></i></a></div>';
 				html += '<input type="text" id="fe_el_search" maxlength="128" placeholder="Search Keywords..." value="' + escape_text_field_value(args.search || '') + '">';
 			html += '</div>';
 			
@@ -2159,7 +2159,7 @@ Page.Events = class Events extends Page.PageUtils {
 					value: event.id
 				}),
 				suffix: '<div class="form_suffix_icon mdi mdi-clipboard-text-outline" title="Copy ID to Clipboard" onClick="$P().copyFormID(this)"></div>',
-				caption: 'This is a unique ID for the event, used by the Orchestra API.  It cannot be changed.'
+				caption: 'This is a unique ID for the event, used by the OpsRocket API.  It cannot be changed.'
 			});
 		}
 		
@@ -2690,7 +2690,7 @@ Page.Events = class Events extends Page.PageUtils {
 		html += this.getFormRow({
 			id: 'd_et_continuous_desc',
 			label: 'Description:',
-			content: 'Add this trigger to keep your job running continuously.  If it exits or crashes for any reason (besides a manual user abort), Orchestra will immediately start it up again.'
+			content: 'Add this trigger to keep your job running continuously.  If it exits or crashes for any reason (besides a manual user abort), OpsRocket will immediately start it up again.'
 		});
 		
 		// interval
