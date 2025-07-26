@@ -582,6 +582,10 @@
 			[ "symlinkCompress", "node_modules/ansi_up/ansi_up.js", "htdocs/js/external/" ],
 			[ "symlinkCompress", "node_modules/ansi_up/ansi_up.js.map", "htdocs/js/external/" ],
 			
+			[ "symlinkCompress", "node_modules/@xterm/xterm/lib/xterm.js", "htdocs/js/external/" ],
+			[ "symlinkCompress", "node_modules/@xterm/xterm/lib/xterm.js.map", "htdocs/js/external/" ],
+			[ "symlinkCompress", "node_modules/@xterm/xterm/css/xterm.css", "htdocs/css/" ],
+			
 			[ "symlinkFile", "node_modules/orchestra-theme/js", "htdocs/js/common" ],
 			[ "symlinkFile", "node_modules/orchestra-theme/css/normalize.css", "htdocs/css/" ],
 			[ "symlinkFile", "node_modules/orchestra-theme/css/base.css", "htdocs/css/" ],
