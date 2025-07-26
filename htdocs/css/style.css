@@ -79,6 +79,7 @@ div.header_widget.marquee:hover {
 
 div.box_title {
 	/* color: var(--green); */
+	position: relative;
 	
 	white-space: nowrap;
 	overflow: hidden;
@@ -150,6 +151,16 @@ body.dark .button.default {
 body.dark .button.delete {
 	background: var(--red);
 	color: white;
+}
+
+.button.icon.right.ghost {
+	position: absolute;
+	top: 20px;
+	left: 100%;
+	margin-left: -50px;
+}
+.button.icon.right.ghost:hover {
+	top: 19px;
 }
 
 #d_logo_overlay {
@@ -677,10 +688,13 @@ body.dark .clr_red, body.dark ul.clr_red > div { background-color: rgba(255, 64,
 	grid-row-gap: 30px;
 	align-items: stretch;
 }
+.box_grid.double {
+	grid-template-columns: 1fr 1fr;
+}
 
 .box_unit {
 	background: var(--box-background-color);
-	padding: 20px;
+	/* padding: 20px; */
 	
 	border: 1px solid var(--shadow-color);
 	border-radius: 4px;
@@ -1494,6 +1508,7 @@ pre code.hljs {
 	tab-size: 4;
 	overflow-x: hidden;
 	white-space: pre-wrap;
+	word-break: break-word;
 }
 
 span.hljs-number {
@@ -1501,6 +1516,30 @@ span.hljs-number {
 }
 body.dark span.hljs-number {
 	color: #56b6c2;
+}
+
+div.box_code_viewer	{
+	margin: 0;
+	padding: 0;
+	
+	max-height: 80vh; 
+	overflow-x: hidden; 
+	overflow-y: scroll;
+}
+div.box_code_viewer > pre {
+	margin-top: 0;
+}
+div.box_code_viewer > pre > code {
+	padding-left: 20px;
+	padding-top: 0px;
+}
+
+div.box_code_none {
+	padding-top: 30px;
+	text-align: center;
+	font-size: 13px;
+	font-style: italic;
+	color: var(--label-color);
 }
 
 /* Icon Overrides */
@@ -1619,7 +1658,7 @@ i.mdi.mdi-content-duplicate:before {
 	}
 	
 	.box_grid {
-		grid-template-columns: repeat(1, 1fr);
+		grid-template-columns: repeat(1, 1fr) !important;
 	}
 	.box_unit_title {
 		text-align: left;
@@ -1886,7 +1925,7 @@ i.mdi.mdi-content-duplicate:before {
 	}
 	
 	.box_grid {
-		grid-template-columns: repeat(1, 1fr);
+		grid-template-columns: repeat(1, 1fr) !important;
 	}
 	.box_unit_title {
 		text-align: left;
@@ -2312,7 +2351,7 @@ i.mdi.mdi-content-duplicate:before {
 	}
 	
 	.box_grid {
-		grid-template-columns: repeat(1, 1fr);
+		grid-template-columns: repeat(1, 1fr) !important;
 	}
 	.box_unit_title {
 		text-align: left;
