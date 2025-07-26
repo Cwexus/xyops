@@ -1,11 +1,11 @@
 {
 	"name": "opsrocket",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"private": true,
 	"description": "A complete task scheduler and server monitoring system.",
-	"author": "Joseph Huckaby <jhuckaby@gmail.com>",
+	"author": "Joseph Huckaby <jhuckaby@pixlcore.com>",
 	"homepage": "https://github.com/pixlcore/opsrocket",
-	"license": "MIT",
+	"license": "Sustainable Use License",
 	"main": "lib/main.js",
 	"scripts": {
 		"start": "bin/control.sh start",
