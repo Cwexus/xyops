@@ -2083,7 +2083,7 @@ Page.Base = class Base extends Page {
 		
 		html += this.getFormRow({
 			id: 'd_eja_email',
-			label: 'Addresses:',
+			label: 'Extra Recipients:',
 			content: this.getFormText({
 				id: 'fe_eja_email',
 				// type: 'email',
@@ -2093,7 +2093,7 @@ Page.Base = class Base extends Page {
 				placeholder: 'email@sample.com',
 				value: action.email || ''
 			}),
-			caption: 'Enter one or more email addresses for the action.'
+			caption: 'Optionally enter one or more additional email addresses for the action.'
 		});
 		
 		html += this.getFormRow({
