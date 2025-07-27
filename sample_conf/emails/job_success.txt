@@ -18,6 +18,9 @@ Avg. CPU Usage: [display/cpu]
 Job Details:
 [links/job_details]
 
+Job Files:
+[links/job_files]
+
 Job Log ([display/log_size]):
 [links/job_log]
 
