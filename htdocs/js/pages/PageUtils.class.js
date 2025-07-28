@@ -2097,7 +2097,8 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		fields.forEach( function(param) {
 			var elem_id = 'fe_uf_' + param.id;
 			var elem_value = (param.id in params) ? params[param.id] : param.value;
-			var elem_dis = (param.locked && !app.isAdmin()) ? 'disabled' : undefined; 
+			var elem_dis = (param.locked && !app.isAdmin()) ? 'disabled' : undefined;
+			var elem_icon = config.ui.control_type_icons[param.type];
 			if (param.type == 'hidden') return;
 			
 			if (param.type != 'checkbox') html += '<div class="info_label">' + param.title + '</div>';
@@ -2112,10 +2113,10 @@ Page.PageUtils = class PageUtils extends Page.Base {
 					// html += self.getFormTextarea({ id: elem_id, value: elem_value, rows: 5, class: 'monospace', disabled: elem_dis });
 					html += self.getFormTextarea({ id: elem_id, value: elem_value, rows: 1, disabled: elem_dis, style: 'display:none', 'data-title': param.title });
 					if (elem_dis) {
-						html += '<div class="button small secondary" onClick="$P().viewParamCode(\'' + param.id + '\')">View Code...</div>';
+						html += '<div class="button small secondary" onClick="$P().viewParamCode(\'' + param.id + '\')"><i class="mdi mdi-code-json">&nbsp;</i>View Code...</div>';
 					}
 					else {
-						html += '<div class="button small secondary" onClick="$P().editParamCode(\'' + param.id + '\')">Edit Code...</div>';
+						html += '<div class="button small secondary" onClick="$P().editParamCode(\'' + param.id + '\')"><i class="mdi mdi-text-box-edit-outline">&nbsp;</i>Edit Code...</div>';
 					}
 				break;
 				
