@@ -480,12 +480,24 @@ body.dark div.maint_unit {
 
 @keyframes sh_flash {
 	0% { box-shadow: 0px 0px 8px 4px var(--theme-color); }
-	100% { box-shadow: 0px 0px 0px 0px var(--background-color); }
+	100% { box-shadow: 0px 0px 0px 0px transparent; }
 }
 
 .flash {
 	animation-name: sh_flash;
 	animation-duration: 1.5s;
+	animation-fill-mode: none;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes sh_iflash {
+	0% { box-shadow: inset 0px 0px 7px 4px var(--theme-color); }
+	100% { box-shadow: inset 0px 0px 0px 0px transparent; }
+}
+
+.iflash {
+	animation-name: sh_iflash;
+	animation-duration: 1.2s;
 	animation-fill-mode: none;
 	animation-timing-function: ease-in-out;
 }
@@ -943,6 +955,144 @@ div.td_big {
 	font-size: 12px;
 }
 
+.fr_content .text_field_icon {
+	position: absolute;
+	z-index: 2;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	left: 100%;
+	top: 50%;
+	margin-left: -24px;
+	margin-top: -10px;
+	text-align: center;
+	font-size: 17px;
+	cursor: pointer;
+	color: var(--label-color);
+}
+.fr_content .text_field_icon:hover {
+	color: var(--theme-color);
+}
+.fr_content:has(.text_field_icon) > input {
+	padding-right: 24px;
+}
+
+/* JSON Tree Data Explorer */
+
+#d_ex_tree {
+	width: 500px;
+	background: var(--form-background-color);
+	border: 1px solid var(--border-color);
+	border-radius: 6px;
+	overflow: hidden;
+	padding: 15px;
+}
+.dialog #d_ex_tree {
+	background: rgba(233, 236, 240, 0.3);
+}
+body.dark .dialog #d_ex_tree {
+	background: rgba(255, 255, 255, 0.02);
+}
+
+.ex_tree_inner {
+	position: relative;
+	height: 50vh;
+	overflow-x: hidden;
+	overflow-y: auto;
+	
+	font-family: var(--font-family-monospace);
+	font-size: 12px;
+	line-height: 16px;
+	
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+.ex_tree_none {
+	height: 50vh;
+	line-height: 50vh;
+	text-align: center;
+	font-size: 13px;
+	font-style: italic;
+	color: var(--label-color);
+}
+
+.tree_row {
+	position: relative;
+	height: 20px;
+	line-height: 20px;
+	
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.tree_row .mdi:before {
+	transform: scale(1.4);
+}
+
+.tree_ctrl {
+	color: var(--label-color);
+	cursor: pointer;
+	padding-right: 5px;
+}
+.tree_ctrl:hover {
+	color: var(--theme-color);
+}
+.tree_ctrl:before {
+	transform: scale(1.1) !important;
+}
+
+.tree_folder {
+	padding-right: 5px;
+	color: var(--blue);
+}
+
+.tree_key {
+	/* color: var(--label-color); */
+	cursor: pointer;
+}
+.tree_key:hover {
+	color: var(--theme-color-highlight) !important;
+	text-decoration: underline !important;
+}
+
+.tree_indent {
+	margin-left: 20px;
+	overflow: hidden;
+}
+
+.tree_file {
+	margin-left: 18px;
+	padding-right: 5px;
+	color: var(--label-color);
+}
+
+.tree_value {
+	font-weight: normal;
+}
+/* .tree_value.tv_string {
+	color: var(--green);
+}
+.tree_value.tv_number {
+	font-weight: bold;
+	color: var(--orange);
+}
+.tree_value.tv_boolean {
+	font-weight: bold;
+	color: var(--purple);
+}
+.tree_value.tv_null {
+	font-weight: bold;
+	color: var(--pink);
+} */
+.tree_value:before {
+	content: ':';
+	padding-right: 5px;
+	color: var(--label-color);
+}
+
 /* Box Button Floater */
 
 .box_buttons.floater {
@@ -1022,17 +1172,17 @@ body.dark .plugin_param_editor_cont div.button.secondary:hover {
 	border-color: var(--green);
 }
 
-#dialog .plugin_param_editor_cont {
+.dialog .plugin_param_editor_cont {
 	background: rgba(233, 236, 240, 0.3);
 }
-body.dark #dialog .plugin_param_editor_cont {
+body.dark .dialog .plugin_param_editor_cont {
 	background: rgba(255, 255, 255, 0.02);
 }
-#dialog .plugin_param_editor_cont textarea, #dialog .plugin_param_editor_cont input, #dialog .plugin_param_editor_cont select {
+.dialog .plugin_param_editor_cont textarea, .dialog .plugin_param_editor_cont input, .dialog .plugin_param_editor_cont select {
 	background: var(--shadow-color);
 }
 
-#dialog .plugin_param_editor_cont textarea {
+.dialog .plugin_param_editor_cont textarea {
 	resize: none;
 }
 
@@ -1094,10 +1244,10 @@ body.dark #dialog .plugin_param_editor_cont {
 	grid-template-columns: 1fr 1fr 1fr;
 }
 
-#dialog .summary_grid {
+.dialog .summary_grid {
 	grid-row-gap: 25px;
 }
-#dialog .summary_grid .info_value {
+.dialog .summary_grid .info_value {
 	margin-top: 4px;
 }
 
@@ -2368,6 +2518,10 @@ i.mdi.mdi-content-duplicate:before {
 	
 	.dash_donut_grid {
 		grid-template-columns: repeat(2, 1fr);
+	}
+	
+	.dialog_intro {
+		width: 500px;
 	}
 	
 	.chart_grid_horiz.small { grid-template-columns: 1fr; }
