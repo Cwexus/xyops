@@ -1112,14 +1112,34 @@ Page.Base = class Base extends Page {
 		return html;
 	}
 	
-	getNiceColorLabel(color, text) {
-		// get nice color label with icon for certain colors
-		var icon = '';
-		switch (color) {
-			case 'green': icon = '<i class="mdi mdi-check-circle"></i>'; break;
-			case 'red': icon = '<i class="mdi mdi-alert-circle"></i>'; break;
+	getJobDisplayArgs(job) {
+		// get nice display args for job
+		var event_title = 'n/a';
+		var event_icon = '';
+		
+		var event = find_object( app.events, { id: job.event } );
+		var plugin = find_object( app.plugins, { id: job.plugin } );
+		
+		if (plugin && (job.type == 'adhoc')) {
+			event_title = job.label || plugin.title;
+			event_icon = job.icon || plugin.icon || 'power-plug-outline';
 		}
-		return '<span class="color_label ' + color + ' nowrap">' + icon + text + '</span>';
+		else if (event) {
+			event_title = event.title;
+			event_icon = event.icon || ((event.type == 'workflow') ? 'clipboard-flow-outline' : 'file-clock-outline');
+		}
+		
+		var icon = 'timer-outline';
+		if (job.icon) icon = job.icon;
+		else if (job.type == 'workflow') icon = 'clipboard-play-outline';
+		else if (job.workflow) icon = 'clipboard-clock-outline';
+		
+		var state = ucfirst(job.state || 'unknown');
+		if (state == 'Complete') state = get_text_from_seconds( app.epoch - job.completed, true, true ) + ' ago';
+		
+		var title = `${job.id} (${event_title} &mdash; ${state})`;
+		
+		return { icon, title, state, event_title, event_icon };
 	}
 	
 	getNiceJob(job, link) {
