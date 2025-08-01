@@ -878,36 +878,33 @@ Page.Workflows = class Workflows extends Page.Events {
 		var self = this;
 		var event = this.event;
 		var title = config.ui.titles.test_workflow;
-		var btn = ['open-in-new', config.ui.buttons.wfd_run_now];
+		var btn = ['open-in-new', config.ui.buttons.wfd_run_test];
 		var id = first_key(this.wfSelection);
 		var node = find_object( this.workflow.nodes, { id: id } );
-		
-		// TODO: actions handled separately
-		if (node.type == 'action') return this.doTestNode_action(node);
 		
 		app.clearError();
 		var event = this.get_event_form_json();
 		if (!event) return; // error
 		
+		if (node.type == 'limit') return app.doError('wf_test_no_limit');
+		
 		var html = '<div class="dialog_box_content scroll maximize">';
 		
 		// test scope
-		if (node.type.match(/^(event|job)$/)) {
-			html += this.getFormRow({
-				id: 'd_ete_scope',
-				content: this.getFormMenuSingle({
-					id: 'fe_ete_scope',
-					value: 'single'
-				})
-			});
-		}
+		html += this.getFormRow({
+			id: 'd_ete_scope',
+			content: this.getFormMenuSingle({
+				id: 'fe_ete_scope',
+				value: node.type.match(/^(trigger|controller)$/) ? 'entire' : 'single'
+			})
+		});
 		
 		// actions
 		html += this.getFormRow({
 			id: 'd_ete_actions',
 			content: this.getFormCheckbox({
 				id: 'fe_ete_actions',
-				checked: false
+				checked: true
 			})
 		});
 		
@@ -916,7 +913,7 @@ Page.Workflows = class Workflows extends Page.Events {
 			id: 'd_ete_limits',
 			content: this.getFormCheckbox({
 				id: 'fe_ete_limits',
-				checked: false
+				checked: true
 			})
 		});
 		
@@ -958,27 +955,24 @@ Page.Workflows = class Workflows extends Page.Events {
 			job.icon = "test-tube";
 			job.workflow.start = node.id; // set starting node
 			
-			if (node.type.match(/^(event|job)$/)) {
-				// event + job nodes have the scope menu
-				var scope = $('#fe_ete_scope').val();
-				if (scope == 'single') {
-					// restrict test to just a single node
-					job.workflow.nodes = [ node ];
-					job.workflow.connections = [];
-				}
+			var scope = $('#fe_ete_scope').val();
+			if (scope == 'single') {
+				// restrict test to just a single node
+				job.workflow.nodes = [ node ];
+				job.workflow.connections = [];
 			}
 			
 			if (!$('#fe_ete_actions').is(':checked')) {
 				// disable both workflow actions and action nodes
 				job.actions = [];
-				find_objects( job.workflow.nodes, { type: 'action' } ).forEach( function(action) {
+				if (scope != 'single') find_objects( job.workflow.nodes, { type: 'action' } ).forEach( function(action) {
 					action.enabled = false;
 				} );
 			}
 			if (!$('#fe_ete_limits').is(':checked')) {
 				// disable both workflow limits and limit nodes
 				job.limits = [];
-				find_objects( job.workflow.nodes, { type: 'limit' } ).forEach( function(limit) {
+				if (scope != 'single') find_objects( job.workflow.nodes, { type: 'limit' } ).forEach( function(limit) {
 					limit.enabled = false;
 				} );
 			}
@@ -1026,9 +1020,7 @@ Page.Workflows = class Workflows extends Page.Events {
 			Dialog.hide();
 		}); // Dialog.confirm
 		
-		if (node.type.match(/^(event|job)$/)) {
-			SingleSelect.init( $('#fe_ete_scope') );
-		}
+		SingleSelect.init( $('#fe_ete_scope') );
 		
 		Dialog.onHide = function() {
 			// cleanup
