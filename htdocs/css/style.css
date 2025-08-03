@@ -1731,6 +1731,7 @@ i.mdi.mdi-content-duplicate:before {
 		grid-template-columns: 2fr 6fr 1fr;
 	}
 	
+	/* 'Enabled', 'Event Title', 'Category', 'Plugin', 'Target', 'Trigger', 'Status', 'Actions' */
 	.data_grid.event_grid { grid-template-columns: 40px auto auto 0px auto auto auto auto !important; }
 	.data_grid.event_grid > ul > div:nth-child(4) { visibility: hidden; }
 }
@@ -1758,6 +1759,7 @@ i.mdi.mdi-content-duplicate:before {
 		font-size: 11px;
 	}
 	
+	/* 'Enabled', 'Event Title', 'Category', 'Plugin', 'Target', 'Trigger', 'Status', 'Actions' */
 	.data_grid.event_grid { grid-template-columns: 40px auto auto 0px auto auto auto auto !important; }
 	.data_grid.event_grid > ul > div:nth-child(4) { visibility: hidden; }
 	
@@ -1843,9 +1845,10 @@ i.mdi.mdi-content-duplicate:before {
 		gap: 4px;
 	}
 	
-	.data_grid.event_grid { grid-template-columns: 40px auto 0px 0px auto auto auto auto !important; }
-	.data_grid.event_grid > ul > div:nth-child(3) { visibility: hidden; }
+	/* 'Enabled', 'Event Title', 'Category', 'Plugin', 'Target', 'Trigger', 'Status', 'Actions' */
+	.data_grid.event_grid { grid-template-columns: 40px auto auto 0px 0px auto auto auto !important; }
 	.data_grid.event_grid > ul > div:nth-child(4) { visibility: hidden; }
+	.data_grid.event_grid > ul > div:nth-child(5) { visibility: hidden; }
 	
 	.data_grid.category_grid { grid-template-columns: min-content auto 0px auto auto auto auto !important; }
 	.data_grid.category_grid > ul > div:nth-child(3) { visibility: hidden; }
@@ -2162,10 +2165,11 @@ i.mdi.mdi-content-duplicate:before {
 		border-radius: 3px;
 	}
 	
-	.data_grid.event_grid { grid-template-columns: 40px auto 0px 0px 0px auto auto auto !important; }
-	.data_grid.event_grid > ul > div:nth-child(3) { visibility: hidden; }
+	/* 'Enabled', 'Event Title', 'Category', 'Plugin', 'Target', 'Trigger', 'Status', 'Actions' */
+	.data_grid.event_grid { grid-template-columns: 40px auto auto 0px 0px 0px auto auto !important; }
 	.data_grid.event_grid > ul > div:nth-child(4) { visibility: hidden; }
 	.data_grid.event_grid > ul > div:nth-child(5) { visibility: hidden; }
+	.data_grid.event_grid > ul > div:nth-child(6) { visibility: hidden; }
 	
 	.data_grid.category_grid { grid-template-columns: min-content auto 0px auto 0px auto auto !important; }
 	.data_grid.category_grid > ul > div:nth-child(3) { visibility: hidden; }
@@ -2618,15 +2622,12 @@ i.mdi.mdi-content-duplicate:before {
 		border-radius: 2px;
 	}
 	
-	.box_buttons.floater {
-		display: none;
-	}
-	
-	.data_grid.event_grid { grid-template-columns: 40px auto 0px 0px 0px 0px auto auto !important; }
-	.data_grid.event_grid > ul > div:nth-child(3) { visibility: hidden; }
+	/* 'Enabled', 'Event Title', 'Category', 'Plugin', 'Target', 'Trigger', 'Status', 'Actions' */
+	.data_grid.event_grid { grid-template-columns: 40px auto auto 0px 0px 0px 0px auto !important; }
 	.data_grid.event_grid > ul > div:nth-child(4) { visibility: hidden; }
 	.data_grid.event_grid > ul > div:nth-child(5) { visibility: hidden; }
 	.data_grid.event_grid > ul > div:nth-child(6) { visibility: hidden; }
+	.data_grid.event_grid > ul > div:nth-child(7) { visibility: hidden; }
 	
 	.data_grid.category_grid { grid-template-columns: min-content auto 0px auto 0px 0px auto !important; }
 	.data_grid.category_grid > ul > div:nth-child(3) { visibility: hidden; }
@@ -2963,12 +2964,14 @@ i.mdi.mdi-content-duplicate:before {
 		margin-right: 0;
 	}
 	
-	.data_grid.event_grid { grid-template-columns: 0px auto 0px 0px 0px 0px auto 0px !important; }
+	
+	/* 'Enabled', 'Event Title', 'Category', 'Plugin', 'Target', 'Trigger', 'Status', 'Actions' */
+	.data_grid.event_grid { grid-template-columns: 0px auto auto 0px 0px 0px 0px 0px !important; }
 	.data_grid.event_grid > ul > div:nth-child(1) { visibility: hidden; }
-	.data_grid.event_grid > ul > div:nth-child(3) { visibility: hidden; }
 	.data_grid.event_grid > ul > div:nth-child(4) { visibility: hidden; }
 	.data_grid.event_grid > ul > div:nth-child(5) { visibility: hidden; }
 	.data_grid.event_grid > ul > div:nth-child(6) { visibility: hidden; }
+	.data_grid.event_grid > ul > div:nth-child(7) { visibility: hidden; }
 	.data_grid.event_grid > ul > div:nth-child(8) { visibility: hidden; }
 	
 	/* 'Job ID', 'Server', 'State', 'Elapsed', 'Progress', 'Remaining', 'Actions' */
