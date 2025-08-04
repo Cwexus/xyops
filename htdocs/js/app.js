@@ -285,7 +285,7 @@ app.extend({
 		var num_alerts = num_keys( this.activeAlerts || {} );
 		
 		if (num_alerts) {
-			this.$alertCounter.show().html( '<i class="mdi mdi-bell-ring-outline"></i><span><b>' + commify(num_alerts) + ' ' + pluralize('Alert', num_alerts) + '</b></span>' );
+			this.$alertCounter.show().html( '<i class="mdi mdi-bell-ring-outline"></i><span><b>' + commify(num_alerts) + '<span class="sm_hide">&nbsp;' + pluralize('Alert', num_alerts) + '</span></b></span>' );
 		}
 		else {
 			this.$alertCounter.hide();
@@ -310,7 +310,7 @@ app.extend({
 			Object.values(this.internalJobs).filter( function(job) { return job.username && (job.usernane == app.username) && !job.quiet; } ).length;
 		
 		if (num_jobs) {
-			this.$jobCounter.show().html( '<i class="mdi mdi-run-fast"></i><span><b>' + commify(num_jobs) + ' ' + pluralize('Job', num_jobs) + '</b></span>' );
+			this.$jobCounter.show().html( '<i class="mdi mdi-run-fast"></i><span><b>' + commify(num_jobs) + '<span class="sm_hide">&nbsp;' + pluralize('Job', num_jobs) + '</span></b></span>' );
 		}
 		else {
 			this.$jobCounter.hide();
@@ -318,7 +318,7 @@ app.extend({
 		
 		// show queued job count as separate widget
 		if (num_pending) {
-			this.$pendingCounter.show().html( '<i class="mdi mdi-tray-full"></i><span><b>' + commify(num_pending) + ' Pending</b></span>' );
+			this.$pendingCounter.show().html( '<i class="mdi mdi-tray-full"></i><span><b>' + commify(num_pending) + '<span class="sm_hide">&nbsp;Pending</span></b></span>' );
 		}
 		else {
 			this.$pendingCounter.hide();

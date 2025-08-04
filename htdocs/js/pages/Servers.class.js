@@ -754,7 +754,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 			extra_classes = 'marquee';
 		}
 		
-		return `<div class="button secondary ${extra_classes}" onClick="$P().openWatchDialog()"><i class="mdi mdi-${icon}">&nbsp;</i>${label}</div>`;
+		return `<div class="button secondary mobile_collapse sm_hide ${extra_classes}" onClick="$P().openWatchDialog()"><i class="mdi mdi-${icon}">&nbsp;</i><span>${label}</span></div>`;
 	}
 	
 	updateWatchButton() {
@@ -782,25 +782,25 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		html += '<div class="box" style="border:none;">';
 			html += '<div class="box_title">';
 				html += '<div class="box_title_left">' + (online ? 'Live &mdash; Real-Time View' : 'Offline &mdash; Last Known State') + '</div>';
-				html += '<div class="box_title_left"><div class="button secondary" onClick="$P().chooseHistoricalView()"><i class="mdi mdi-calendar-cursor">&nbsp;</i>Change...</div></div>';
+				html += '<div class="box_title_left"><div class="button secondary mobile_collapse" onClick="$P().chooseHistoricalView()"><i class="mdi mdi-calendar-cursor">&nbsp;</i><span>Change...</span></div></div>';
 				
 				if (online) {
-					html += '<div class="box_title_right"><div class="button primary" onClick="$P().createSnapshot()"><i class="mdi mdi-monitor-eye">&nbsp;</i>Snapshot</div></div>';
+					html += '<div class="box_title_right"><div class="button mobile_collapse sm_hide" onClick="$P().createSnapshot()"><i class="mdi mdi-monitor-eye">&nbsp;</i><span>Snapshot</span></div></div>';
 					html += '<div class="box_title_right" id="d_vs_watch_btn">' + this.getWatchButton() + '</div>';
 				}
 				
-				html += '<div class="box_title_right"><div class="button secondary" onClick="$P().showEditServerDialog()"><i class="mdi mdi-file-edit-outline">&nbsp;</i>Edit Server...</div></div>';
+				html += '<div class="box_title_right"><div class="button default mobile_collapse" onClick="$P().showEditServerDialog()"><i class="mdi mdi-file-edit-outline">&nbsp;</i><span>Edit Server...</span></div></div>';
 			html += '</div>';
 		html += '</div>';
 		
 		html += '<div class="box">';
 			html += '<div class="box_title">';
 				html += 'Server Summary';
-				if (!online) html += ' &mdash; As of ' + this.getShortDateTimeText(snapshot.date);
+				if (!online) html += '<span class="sm_hide">&nbsp;&mdash; As of ' + this.getShortDateTimeText(snapshot.date) + '</span>';
 				
 				html += '<div class="button icon right danger" title="Delete Server..." onClick="$P().goDeleteServer()"><i class="mdi mdi-trash-can-outline"></i></div>';
-				html += '<div class="button icon right secondary" title="Job History..." onClick="$P().goJobHistory()"><i class="mdi mdi-cloud-search-outline"></i></div>';
-				html += '<div class="button icon right secondary" title="Alert History..." onClick="$P().goAlertHistory()"><i class="mdi mdi-restore-alert"></i></div>';
+				html += '<div class="button icon right secondary sm_hide" title="Job History..." onClick="$P().goJobHistory()"><i class="mdi mdi-cloud-search-outline"></i></div>';
+				html += '<div class="button icon right secondary sm_hide" title="Alert History..." onClick="$P().goAlertHistory()"><i class="mdi mdi-restore-alert"></i></div>';
 				html += '<div class="button icon right secondary" title="Server History..." onClick="$P().goServerHistory()"><i class="mdi mdi-script-text-outline"></i></div>';
 				
 				// if (!online) html += '<div class="box_title_note">As of ' + this.getShortDateTimeText(snapshot.date) + '</div>';

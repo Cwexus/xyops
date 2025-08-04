@@ -83,9 +83,9 @@ Page.Tags = class Tags extends Page.PageUtils {
 		html += '</div>'; // box_content
 		
 		html += '<div class="box_buttons">';
-			if (app.hasAnyPrivilege('create_tags', 'edit_tags')) html += '<div class="button" onClick="$P().doFileImportPrompt()"><i class="mdi mdi-cloud-upload-outline">&nbsp;</i>Import File...</div>';
-			html += '<div class="button secondary" onClick="$P().go_history()"><i class="mdi mdi-history">&nbsp;</i>Revision History...</div>';
-			if (app.hasPrivilege('create_tags')) html += '<div class="button default" onClick="$P().edit_tag(-1)"><i class="mdi mdi-tag-plus-outline">&nbsp;</i>New Tag...</div>';
+			if (app.hasAnyPrivilege('create_tags', 'edit_tags')) html += '<div class="button phone_collapse" onClick="$P().doFileImportPrompt()"><i class="mdi mdi-cloud-upload-outline">&nbsp;</i><span>Import File...</span></div>';
+			html += '<div class="button secondary phone_collapse" onClick="$P().go_history()"><i class="mdi mdi-history">&nbsp;</i><span>Revision History...</span></div>';
+			if (app.hasPrivilege('create_tags')) html += '<div class="button default" onClick="$P().edit_tag(-1)"><i class="mdi mdi-tag-plus-outline">&nbsp;</i><span>New Tag...</span></div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -160,9 +160,9 @@ Page.Tags = class Tags extends Page.PageUtils {
 		
 		// buttons at bottom
 		html += '<div class="box_buttons">';
-			html += '<div class="button" onClick="$P().cancel_tag_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i>Cancel</div>';
-			html += '<div class="button secondary" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
-			html += '<div class="button primary" onClick="$P().do_new_tag()"><i class="mdi mdi-tag-plus-outline">&nbsp;</i>Create Tag</div>';
+			html += '<div class="button phone_collapse" onClick="$P().cancel_tag_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Cancel</span></div>';
+			html += '<div class="button secondary phone_collapse" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
+			html += '<div class="button primary" onClick="$P().do_new_tag()"><i class="mdi mdi-tag-plus-outline">&nbsp;</i><span>Create Tag</span></div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -244,7 +244,7 @@ Page.Tags = class Tags extends Page.PageUtils {
 			html += '<div class="button danger mobile_collapse" onClick="$P().show_delete_tag_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>History...</span></div>';
-			html += '<div class="button primary" onClick="$P().do_save_tag()"><i class="mdi mdi-floppy">&nbsp;</i>Save Changes</div>';
+			html += '<div class="button primary phone_collapse" onClick="$P().do_save_tag()"><i class="mdi mdi-floppy">&nbsp;</i><span>Save Changes</span></div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box

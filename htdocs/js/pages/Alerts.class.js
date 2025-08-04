@@ -254,6 +254,7 @@ Page.Alerts = class Alerts extends Page.Base {
 			resp: resp,
 			cols: ["Alert ID", "Title", "Message", "Server", "Status", "Started", "Duration"],
 			data_type: 'alert',
+			class: 'data_grid alert_invo_grid',
 			offset: this.args.offset || 0,
 			limit: this.args.limit,
 			pagination_link: '$P().searchPaginate'
@@ -337,12 +338,12 @@ Page.Alerts = class Alerts extends Page.Base {
 		
 		html += '<div class="box">';
 			html += '<div class="box_title">';
-				html += alert.message;
 				
-				html += '<div class="button right danger" onMouseUp="$P().showDeleteAlertDialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i>Delete...</div>';
-				// html += '<div class="button secondary right" onMouseUp="$P().do_edit_from_view()"><i class="mdi mdi-file-edit-outline">&nbsp;</i>Edit Event...</div>';
-				// html += '<div class="button right" onMouseUp="$P().do_run_from_view()"><i class="mdi mdi-run-fast">&nbsp;</i>Run Now</div>';
-				html += '<div class="clear"></div>';
+				html += `<div style="display: grid; grid-template-columns: 1fr auto; gap: 15px;">`;
+					html += `<div style="text-align:left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${alert.message}</div>`;
+					html += `<div style="text-align:right"><div class="button danger phone_collapse" onClick="$P().showDeleteAlertDialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div></div>`;
+				html += `</div>`;
+				
 			html += '</div>'; // title
 			
 			html += '<div class="box_content table">';

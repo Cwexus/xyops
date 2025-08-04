@@ -971,18 +971,23 @@ Page.Job = class Job extends Page.PageUtils {
 		html += this.getBasicGrid( grid_args, function(item, idx) {
 			var disp = self.getJobActionDisplayArgs(item, true); // condition, type, text, desc, icon
 			
-			var link = 'n/a';
-			if (item.loc) link = '<a href="' + item.loc + '">View Details...</a>';
-			else if (item.description || item.details) link = '<span class="link" onClick="$P().viewJobActionDetails(' + idx + ')">View Details...</span>';
+			var link = '';
+			if (item.loc) link = `Nav.go('${item.loc}')`;
+			else if (item.description || item.details) link = `$P().viewJobActionDetails(${idx})`;
+			
+			var view_details = 'n/a';
+			if (link) view_details = '<span class="link" onClick="' + link + '">View Details...</span>';
 			
 			return [
-				'<b><i class="mdi mdi-' + disp.condition.icon + '">&nbsp;</i>' + disp.condition.title + '</b>',
+				// '<b><i class="mdi mdi-' + disp.condition.icon + '">&nbsp;</i>' + disp.condition.title + '</b>',
+				'<span class="link nowrap" onClick="' + link + '"><b><i class="mdi mdi-' + disp.condition.icon + '"></i>' + disp.condition.title + '</b></span>',
+				
 				'<i class="mdi mdi-' + disp.icon + '">&nbsp;</i>' + disp.type,
 				disp.desc,
 				self.getRelativeDateTime(item.date, true),
 				'<i class="mdi mdi-clock-check-outline">&nbsp;</i>' + get_text_from_ms_round( Math.floor(item.elapsed_ms), true),
 				self.getNiceJobResult(item), // yes, this works for actions too
-				'<b>' + link + '</b>'
+				'<b>' + view_details + '</b>'
 			];
 		}); // grid
 		
@@ -1454,14 +1459,14 @@ Page.Job = class Job extends Page.PageUtils {
 				nice_server,
 				'<span class="monospace">' + nice_node_id + '</span>',
 				nice_node_type,
-				nice_msg
+				'<span class="wrap">' + nice_msg + '</span>'
 			];
 		} // workflow
 		else {
 			tds = [
 				nice_timestamp,
 				nice_server,
-				nice_msg
+				'<span class="wrap">' + nice_msg + '</span>'
 			];
 		}
 		
@@ -1871,7 +1876,7 @@ Page.Job = class Job extends Page.PageUtils {
 		
 		// include network conns just below procs
 		if (conns.length) {
-			cols = ['State', 'Protocol', 'Local Address', 'Peer Address', 'Process', 'Age', 'Transferred', 'Avg. Rate'];
+			cols = ['State', 'Protocol', 'Local Address', 'Remote Address', 'Process', 'Age', 'Transferred', 'Avg. Rate'];
 			cols.headerCenter = '&nbsp;';
 			cols.headerRight = '&nbsp;';
 			

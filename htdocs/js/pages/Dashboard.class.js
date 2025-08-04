@@ -174,7 +174,7 @@ Page.Dashboard = class Dashboard extends Page.PageUtils {
 		// avg job output size
 		var avg_job_size = Math.round( (trans.job_log_file_size || 0) / (trans.job_complete || 1) );
 		html += '<div class="dash_unit_box">';
-			html += '<div class="dash_unit_value">' + get_text_from_bytes(avg_job_size, 1) + '</div>';
+			html += '<div class="dash_unit_value">' + get_text_from_bytes(avg_job_size, 1).replace(/bytes/, 'B') + '</div>';
 			html += '<div class="dash_unit_label">Avg Job Output</div>';
 		html += '</div>';
 		
@@ -206,7 +206,7 @@ Page.Dashboard = class Dashboard extends Page.PageUtils {
 		}
 		
 		html += '<div class="dash_unit_box">';
-			html += '<div class="dash_unit_value">' + get_text_from_bytes(total_mem, 1) + '</div>';
+			html += '<div class="dash_unit_value">' + get_text_from_bytes(total_mem, 1).replace(/bytes/, 'B') + '</div>';
 			html += '<div class="dash_unit_label">Job Mem Usage</div>';
 		html += '</div>';
 		

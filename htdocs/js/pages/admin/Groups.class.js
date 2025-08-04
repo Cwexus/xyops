@@ -114,9 +114,9 @@ Page.Groups = class Groups extends Page.ServerUtils {
 		html += '</div>'; // box_content
 		
 		html += '<div class="box_buttons">';
-			if (app.hasAnyPrivilege('create_groups', 'edit_groups')) html += '<div class="button" onClick="$P().doFileImportPrompt()"><i class="mdi mdi-cloud-upload-outline">&nbsp;</i>Import File...</div>';
-			html += '<div class="button secondary" onClick="$P().go_history()"><i class="mdi mdi-history">&nbsp;</i>Revision History...</div>';
-			if (app.hasPrivilege('create_groups')) html += '<div class="button default" onClick="$P().edit_group(-1)"><i class="mdi mdi-plus-circle-outline">&nbsp;</i>New Group...</div>';
+			if (app.hasAnyPrivilege('create_groups', 'edit_groups')) html += '<div class="button phone_collapse" onClick="$P().doFileImportPrompt()"><i class="mdi mdi-cloud-upload-outline">&nbsp;</i><span>Import File...</span></div>';
+			html += '<div class="button secondary phone_collapse" onClick="$P().go_history()"><i class="mdi mdi-history">&nbsp;</i><span>Revision History...</span></div>';
+			if (app.hasPrivilege('create_groups')) html += '<div class="button default" onClick="$P().edit_group(-1)"><i class="mdi mdi-plus-circle-outline">&nbsp;</i><span>New Group...</span></div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -231,9 +231,9 @@ Page.Groups = class Groups extends Page.ServerUtils {
 		
 		// buttons at bottom
 		html += '<div class="box_buttons">';
-			html += '<div class="button" onClick="$P().cancel_group_new()"><i class="mdi mdi-close-circle-outline">&nbsp;</i>Cancel</div>';
-			html += '<div class="button secondary" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
-			html += '<div class="button primary" onClick="$P().do_new_group()"><i class="mdi mdi-floppy">&nbsp;</i>Create Group</div>';
+			html += '<div class="button phone_collapse" onClick="$P().cancel_group_new()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Cancel</span></div>';
+			html += '<div class="button secondary phone_collapse" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
+			html += '<div class="button primary" onClick="$P().do_new_group()"><i class="mdi mdi-floppy">&nbsp;</i><span>Create Group</span></div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -302,7 +302,7 @@ Page.Groups = class Groups extends Page.ServerUtils {
 		html += '<div class="box">';
 		html += '<div class="box_title">';
 			html += 'Edit Server Group Details';
-			html += '<div class="box_subtitle"><a href="#Groups?sub=list">&laquo; Back to Group List</a></div>';
+			html += '<div class="box_subtitle"><a href="#Groups?sub=view&id=' + this.group.id + '">&laquo; Back to Group View</a></div>';
 		html += '</div>';
 		html += '<div class="box_content">';
 		
@@ -316,7 +316,7 @@ Page.Groups = class Groups extends Page.ServerUtils {
 			html += '<div class="button danger mobile_collapse" onClick="$P().show_delete_group_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>History...</span></div>';
-			html += '<div class="button primary" onClick="$P().do_save_group()"><i class="mdi mdi-floppy">&nbsp;</i>Save Changes</div>';
+			html += '<div class="button primary phone_collapse" onClick="$P().do_save_group()"><i class="mdi mdi-floppy">&nbsp;</i><span>Save Changes</span></div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -591,12 +591,12 @@ Page.Groups = class Groups extends Page.ServerUtils {
 		html += '<div class="box" style="border:none;">';
 			html += '<div class="box_title">';
 				html += '<div class="box_title_left">Live &mdash; Real-Time View</div>';
-				html += '<div class="box_title_left"><div class="button secondary" onClick="$P().chooseHistoricalView(true)"><i class="mdi mdi-calendar-cursor">&nbsp;</i>Change...</div></div>';
+				html += '<div class="box_title_left"><div class="button secondary mobile_collapse" onClick="$P().chooseHistoricalView(true)"><i class="mdi mdi-calendar-cursor">&nbsp;</i><span>Change...</span></div></div>';
 				
-				html += '<div class="box_title_right"><div class="button primary" onClick="$P().createSnapshot()"><i class="mdi mdi-monitor-eye">&nbsp;</i>Snapshot</div></div>';
+				html += '<div class="box_title_right"><div class="button default mobile_collapse" onClick="$P().goEditGroup()"><i class="mdi mdi-file-edit-outline">&nbsp;</i><span>Edit Group...</span></div></div>';
+				html += '<div class="box_title_right"><div class="button mobile_collapse sm_hide" onClick="$P().createSnapshot()"><i class="mdi mdi-monitor-eye">&nbsp;</i><span>Snapshot</span></div></div>';
 				html += '<div class="box_title_right" id="d_vg_watch_btn">' + this.getWatchButton() + '</div>';
 				
-				html += '<div class="box_title_right"><div class="button secondary" onClick="$P().goEditGroup()"><i class="mdi mdi-file-edit-outline">&nbsp;</i>Edit Group...</div></div>';
 			html += '</div>';
 		html += '</div>';
 		
@@ -605,9 +605,9 @@ Page.Groups = class Groups extends Page.ServerUtils {
 				html += 'Group Summary';
 				
 				html += '<div class="button icon right danger" title="Delete Group..." onClick="$P().show_delete_group_dialog()"><i class="mdi mdi-trash-can-outline"></i></div>';
-				html += '<div class="button icon right secondary" title="Job History..." onClick="$P().goJobHistory()"><i class="mdi mdi-cloud-search-outline"></i></div>';
-				html += '<div class="button icon right secondary" title="Alert History..." onClick="$P().goAlertHistory()"><i class="mdi mdi-restore-alert"></i></div>';
-				html += '<div class="button icon right secondary" title="Group History..." onClick="$P().goGroupHistory()"><i class="mdi mdi-script-text-outline"></i></div>';
+				html += '<div class="button icon right secondary sm_hide" title="Job History..." onClick="$P().goJobHistory()"><i class="mdi mdi-cloud-search-outline"></i></div>';
+				html += '<div class="button icon right secondary sm_hide" title="Alert History..." onClick="$P().goAlertHistory()"><i class="mdi mdi-restore-alert"></i></div>';
+				html += '<div class="button icon right secondary sm_hide" title="Group History..." onClick="$P().goGroupHistory()"><i class="mdi mdi-script-text-outline"></i></div>';
 				html += '<div class="button icon right" title="Add Server..." onClick="$P().addServerToGroup()"><i class="mdi mdi-plus-circle-outline"></i></div>';
 				
 				html += '<div class="clear"></div>';
@@ -1252,7 +1252,7 @@ Page.Groups = class Groups extends Page.ServerUtils {
 			extra_classes = 'marquee';
 		}
 		
-		return `<div class="button secondary ${extra_classes}" onClick="$P().openWatchDialog()"><i class="mdi mdi-${icon}">&nbsp;</i>${label}</div>`;
+		return `<div class="button secondary mobile_collapse sm_hide ${extra_classes}" onClick="$P().openWatchDialog()"><i class="mdi mdi-${icon}">&nbsp;</i><span>${label}</span></div>`;
 	}
 	
 	updateWatchButton() {

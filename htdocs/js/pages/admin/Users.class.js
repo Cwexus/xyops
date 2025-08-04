@@ -88,8 +88,8 @@ Page.Users = class Users extends Page.Base {
 		html += '</div>'; // box_content
 		
 		html += '<div class="box_buttons">';
-			html += '<div class="button secondary" onClick="$P().go_history()"><i class="mdi mdi-history">&nbsp;</i>Revision History...</div>';
-			html += '<div class="button default ' + (app.config.external_users ? 'disabled' : '') + '" onClick="$P().edit_user(-1)"><i class="mdi mdi-account-plus">&nbsp;</i>New User...</div>';
+			html += '<div class="button secondary phone_collapse" onClick="$P().go_history()"><i class="mdi mdi-history">&nbsp;</i><span>Revision History...</span></div>';
+			html += '<div class="button default ' + (app.config.external_users ? 'disabled' : '') + '" onClick="$P().edit_user(-1)"><i class="mdi mdi-account-plus">&nbsp;</i><span>New User...</span></div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -184,9 +184,9 @@ Page.Users = class Users extends Page.Base {
 		
 		// buttons at bottom
 		html += '<div class="box_buttons">';
-			html += '<div class="button" onClick="$P().cancel_user_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i>Cancel</div>';
-			if (config.debug) html += '<div class="button" onClick="$P().populate_random_user()"><i class="mdi mdi-dice-5">&nbsp;</i>Randomize...</div>';
-			html += '<div class="button primary" onClick="$P().do_new_user()"><i class="mdi mdi-floppy">&nbsp;</i>Create User</div>';
+			html += '<div class="button phone_collapse" onClick="$P().cancel_user_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Cancel</span></div>';
+			if (config.debug) html += '<div class="button phone_collapse" onClick="$P().populate_random_user()"><i class="mdi mdi-dice-5">&nbsp;</i><span>Randomize...</span></div>';
+			html += '<div class="button primary" onClick="$P().do_new_user()"><i class="mdi mdi-floppy">&nbsp;</i><span>Create User</span></div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -330,7 +330,7 @@ Page.Users = class Users extends Page.Base {
 			html += '<div class="button mobile_collapse" onClick="$P().cancel_user_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Cancel</span></div>';
 			html += '<div class="button danger mobile_collapse" onClick="$P().show_delete_account_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>History...</span></div>';
-			html += '<div class="button primary ' + (app.config.external_users ? 'disabled' : '') + '" onClick="$P().do_save_user()"><i class="mdi mdi-floppy">&nbsp;</i>Save Changes</div>';
+			html += '<div class="button primary phone_collapse ' + (app.config.external_users ? 'disabled' : '') + '" onClick="$P().do_save_user()"><i class="mdi mdi-floppy">&nbsp;</i><span>Save Changes</span></div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
