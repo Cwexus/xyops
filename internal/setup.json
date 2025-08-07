@@ -163,7 +163,7 @@
 			"email": "",
 			"web_hook": "",
 			"run_event": "",
-			"sound": "",
+			"sound": "attention-3.mp3",
 			"icon": "",
 			"shell_exec": ""
 		} ],
@@ -590,6 +590,8 @@
 			[ "symlinkCompress", "node_modules/@xterm/xterm/lib/xterm.js", "htdocs/js/external/" ],
 			[ "symlinkCompress", "node_modules/@xterm/xterm/lib/xterm.js.map", "htdocs/js/external/" ],
 			[ "symlinkCompress", "node_modules/@xterm/xterm/css/xterm.css", "htdocs/css/" ],
+			
+			[ "symlinkCompress", "node_modules/canvas-confetti/dist/confetti.browser.js", "htdocs/js/external/" ],
 			
 			[ "symlinkFile", "node_modules/orchestra-theme/js", "htdocs/js/common" ],
 			[ "symlinkFile", "node_modules/orchestra-theme/css/normalize.css", "htdocs/css/" ],
