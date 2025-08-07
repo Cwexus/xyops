@@ -1772,5 +1772,5 @@ i.mdi.mdi-content-duplicate:before {
 /* Privacy Mode */
 
 body.privacy [data-private] {
-	filter: blur(4px) contrast(125%);
+	filter: blur(4px);
 }
