@@ -672,21 +672,20 @@ app.extend({
 	
 	get_password_toggle_html: function() {
 		// get html for a password toggle control
-		return '<span class="link password_toggle" onMouseUp="app.toggle_password_field(this)">&laquo;&nbsp;Show</span>';
+		return `<div class="form_suffix_icon mdi mdi-eye-off-outline" title="Show Password" onClick="app.toggle_password_field(this)"></div>`;
 	},
 	
-	toggle_password_field: function(span) {
+	toggle_password_field: function(elem) {
 		// toggle password field visible / masked
-		var $span = $(span);
-		// var $field = $span.prev();
-		var $field = $span.closest('.form_row').find('input');
+		var $elem = $(elem);
+		var $field = $elem.closest('.form_row').find('input');
 		if ($field.attr('type') == 'password') {
 			$field.attr('type', 'text');
-			$span.html( '&laquo; Hide' );
+			$elem.removeClass().addClass('form_suffix_icon mdi mdi-eye-outline').attr('title', 'Hide Password');
 		}
 		else {
 			$field.attr('type', 'password');
-			$span.html( '&laquo; Show' );
+			$elem.removeClass().addClass('form_suffix_icon mdi mdi-eye-off-outline').attr('title', 'Show Password');
 		}
 	},
 	
