@@ -2946,7 +2946,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		var self = this;
 		var workflow = this.workflow;
 		var $cont = this.wfGetContainer();
-		var canvas = $cont.find('canvas').get(0);
+		var canvas = $cont.find('#c_wf_canvas').get(0);
 		var ctx = canvas.getContext('2d');
 		
 		var width = $cont.width();
@@ -3015,7 +3015,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		ctx.restore();
 	}
 	
-	getWFPoleCenterPoint(sel) {
+	getWFCenterPoint(sel) {
 		// get x/y coords of center of pole, relative to canvas origin
 		var el = $(sel)[0];
 		var x = el.offsetWidth / 2;
@@ -3033,8 +3033,8 @@ Page.PageUtils = class PageUtils extends Page.Base {
 	
 	prepWFCondition(trig, sel1, sel2) {
 		// position condition element in place between two poles
-		var a = this.getWFPoleCenterPoint(sel1);
-		var b = this.getWFPoleCenterPoint(sel2);
+		var a = this.getWFCenterPoint(sel1);
+		var b = this.getWFCenterPoint(sel2);
 		var c = [
 			a[0] + ((b[0] - a[0]) / 2),
 			a[1] + ((b[1] - a[1]) / 2),
@@ -3050,8 +3050,8 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		// draw one bezier spline connection between two poles
 		var { sel1, sel2, start_dir, end_dir, custom, ctx } = opts;
 		
-		var a = this.getWFPoleCenterPoint(sel1);
-		var b = this.getWFPoleCenterPoint(sel2);
+		var a = this.getWFCenterPoint(sel1);
+		var b = this.getWFCenterPoint(sel2);
 		var mid = [
 			a[0] + ((b[0] - a[0]) / 2),
 			a[1] + ((b[1] - a[1]) / 2),

@@ -321,6 +321,41 @@ Page.Workflows = class Workflows extends Page.Events {
 		
 		// setup mouse drag handling on nodes
 		this.afterDraw();
+		
+		// add effects canvas
+		this.setupEffects();
+	}
+	
+	setupEffects() {
+		// setup effects canvas, if user allows
+		if (!app.user.effects) return; // no whimsy
+		
+		var $cont = this.wfGetContainer();
+		var $canvas = $('<canvas id="c_wf_effects" class="wf_canvas"></canvas>');
+		$cont.find('.wf_fade').append($canvas);
+		
+		var canvas = $canvas.get(0);
+		var width = $cont.width();
+		var height = $cont.height();
+		
+		canvas.width = width * window.devicePixelRatio;
+		canvas.height = height * window.devicePixelRatio;
+		
+		this.confetti = confetti.create($canvas.get(0), { resize: false });
+	}
+	
+	updateEffects() {
+		// resize effects canvas after a window resize
+		if (!this.confetti) return;
+		
+		var $cont = this.wfGetContainer();
+		var $canvas = $cont.find('#c_wf_effects');
+		var canvas = $canvas.get(0);
+		var width = $cont.width();
+		var height = $cont.height();
+		
+		canvas.width = width * window.devicePixelRatio;
+		canvas.height = height * window.devicePixelRatio;
 	}
 	
 	afterDraw() {
@@ -505,22 +540,36 @@ Page.Workflows = class Workflows extends Page.Events {
 			$elem.addClass('wf_flash');
 			
 			// how about a little confetti for the new family member?
+			if (!self.confetti) return;
+			
 			var node = find_object( workflow.nodes, { id } );
 			var color = new Color( app.getCSSVar( self.getNodeColor(node) ) );
+			var pos = self.getWFCenterPoint($elem);
 			
-			app.confetti({
-				origin: $elem,
+			var opts = {
+				origin: { x: (pos[0] / $cont.width()) * self.wfZoom, y: (pos[1] / $cont.height()) * self.wfZoom },
 				colors: [ color.hex(), color.clone().mix('#FFFFFF', 0.5).hex() ],
 				angle: 0,
 				spread: 360,
 				particleCount: 40,
-				startVelocity: node.type.match(/^(event|job)$/) ? 15 : 10,
+				startVelocity: 10,
 				gravity: 0.5,
 				decay: 0.9,
-				scalar: 0.5,
+				scalar: 0.5 * window.devicePixelRatio,
 				ticks: 50,
 				shapes: ['star']
-			});
+			};
+			
+			if (node.type.match(/^(event|job)$/)) {
+				opts.startVelocity *= 2;
+				opts.particleCount *= 2;
+			}
+			
+			opts.startVelocity *= self.wfZoom * window.devicePixelRatio;
+			opts.gravity *= self.wfZoom;
+			opts.scalar *= self.wfZoom;
+			
+			self.confetti(opts);
 		} ); // foreach key
 		
 		// pole buttons
@@ -711,7 +760,7 @@ Page.Workflows = class Workflows extends Page.Events {
 			self.renderWFConnections();
 			
 			// add our temp connection
-			var canvas = $cont.find('canvas').get(0);
+			var canvas = $cont.find('#c_wf_canvas').get(0);
 			var ctx = canvas.getContext('2d');
 			
 			ctx.save();
@@ -997,7 +1046,10 @@ Page.Workflows = class Workflows extends Page.Events {
 	addSolderSparks(solder, $elem) {
 		// add solder point sparks for whimsy
 		// Note: solder is PRE-swap for reserve solders, so end will be where the user clicked
+		if (!this.confetti) return;
+		
 		var workflow = this.workflow;
+		var $cont = this.wfGetContainer();
 		
 		// find end node so we can get the color
 		var node = find_object( workflow.nodes, { id: solder.end_node } );
@@ -1005,16 +1057,19 @@ Page.Workflows = class Workflows extends Page.Events {
 		var color_name = this.getNodeColor(node);
 		
 		var opts = { 
-			origin: $elem,
 			spread: 180,
 			particleCount: 20,
 			startVelocity: 10,
 			gravity: 0.5,
 			decay: 0.9,
-			scalar: 0.5,
+			scalar: 0.5 * window.devicePixelRatio,
 			ticks: 50,
 			shapes: ['star']
 		};
+		
+		// figure out origin point
+		var pos = this.getWFCenterPoint($elem);
+		opts.origin = { x: (pos[0] / $cont.width()) * this.wfZoom, y: (pos[1] / $cont.height()) * this.wfZoom };
 		
 		switch (solder.end_pole) {
 			case 'wf_input_pole': opts.angle = 180; opts.startVelocity = 7; break;
@@ -1023,10 +1078,14 @@ Page.Workflows = class Workflows extends Page.Events {
 			case 'wf_up_pole': opts.angle = 90; opts.startVelocity = 5; break;
 		}
 		
+		opts.startVelocity *= this.wfZoom;
+		opts.gravity *= this.wfZoom;
+		opts.scalar *= this.wfZoom;
+		
 		var color = new Color( app.getCSSVar(color_name) );
 		opts.colors = [ color.hex(), color.clone().mix('#FFFFFF', 0.5).hex() ];
 		
-		app.confetti(opts);
+		this.confetti(opts);
 	}
 	
 	doTestSelection() {
@@ -2417,13 +2476,20 @@ Page.Workflows = class Workflows extends Page.Events {
 	
 	onResize() {
 		// called when page is resized
-		if (this.wfZoom) this.renderWFConnections();
+		if (this.wfZoom) {
+			this.renderWFConnections();
+			this.updateEffects();
+		}
 	}
 	
 	onDeactivate() {
 		// called when page is deactivated
 		if ((this.args.sub == 'new') || (this.args.sub == 'edit')) {
 			this.checkSavePageDraft( this.get_event_form_json(true) );
+		}
+		if (this.confetti) {
+			this.confetti.reset();
+			delete this.confetti;
 		}
 		
 		delete this.event;
