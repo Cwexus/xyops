@@ -153,7 +153,7 @@ Page.MyAccount = class MyAccount extends Page.Base {
 		// avatar
 		var ava_html = '';
 		ava_html += '<div class="simple_grid_horiz">';
-		ava_html += '<div id="d_ma_image" class="avatar_edit" style="background-image:url(' + app.getUserAvatarURL(128) + ')" onClick="$P().uploadAvatar()"></div>';
+		ava_html += '<div id="d_ma_image" class="avatar_edit" style="background-image:url(' + app.getUserAvatarURL(128, true) + ')" onClick="$P().uploadAvatar()"></div>';
 		ava_html += '<div class="button small danger" title="Delete Avatar Image" onClick="$P().deleteAvatar()">&laquo; Delete</div>';
 		ava_html += '</div>';
 		html += this.getFormRow({
@@ -227,6 +227,7 @@ Page.MyAccount = class MyAccount extends Page.Base {
 			app.doError("Image Upload Failed: " + data.description);
 		}
 		
+		app.cacheBust = hires_time_now();
 		$('#d_ma_image').css( 'background-image', 'url('+app.getUserAvatarURL(128, true)+')' );
 		app.updateHeaderInfo(true);
 	}
@@ -235,7 +236,7 @@ Page.MyAccount = class MyAccount extends Page.Base {
 		// avatar upload error
 		Dialog.hideProgress();
 		app.doError("Image Upload Failed: " + message);
-		$('#d_ma_image').css( 'background-image', 'url('+app.getUserAvatarURL(128)+')' );
+		$('#d_ma_image').css( 'background-image', 'url('+app.getUserAvatarURL(128, true)+')' );
 	}
 	
 	deleteAvatar() {
@@ -295,7 +296,7 @@ Page.MyAccount = class MyAccount extends Page.Base {
 			app.origUser = deep_copy_object(app.user);
 			app.applyUserRoles();
 			
-			$('#d_ma_image').css( 'background-image', 'url('+app.getUserAvatarURL(128)+')' );
+			$('#d_ma_image').css( 'background-image', 'url('+app.getUserAvatarURL(128, true)+')' );
 		} );
 	}
 	
