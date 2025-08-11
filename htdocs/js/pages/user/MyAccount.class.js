@@ -122,7 +122,7 @@ Page.MyAccount = class MyAccount extends Page.Base {
 			// new password
 			html += this.getFormRow({
 				label: 'New Password:',
-				content: '<div class="button" onClick="$P().showNewPasswordField(this)"><i class="mdi mdi-account-key">&nbsp;</i>Change Password...</div><div style="display:none">' + this.getFormText({
+				content: '<div class="button danger" onClick="$P().showNewPasswordField(this)"><i class="mdi mdi-account-key">&nbsp;</i>Change Password...</div><div style="display:none">' + this.getFormText({
 					type: 'password',
 					id: 'fe_ma_new_password',
 					spellcheck: 'false',
