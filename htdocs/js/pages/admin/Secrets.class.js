@@ -603,7 +603,7 @@ Page.Secrets = class Secrets extends Page.PageUtils {
 				value: $('#fe_sev_value').val()
 			};
 			
-			if (!variable.name.match(/^[A-Za-z]\w*$/)) {
+			if (!variable.name.match(/^[A-Za-z_]\w*$/)) {
 				return app.badField('fe_sev_name', "Please enter a valid variable name (must follow POSIX environment variable rules).");
 			}
 			
