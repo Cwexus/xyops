@@ -477,6 +477,13 @@ Page.System = class System extends Page.Base {
 			if (extras.includes('stat_data')) {
 				items.push({ type: 'list', key: 'global/stats' });
 			}
+			if (lists.includes('buckets')) {
+				items.push({ type: 'bucketData' });
+				items.push({ type: 'bucketFiles' });
+			}
+			if (lists.includes('secrets')) {
+				items.push({ type: 'secretData' });
+			}
 			
 			if (!items.length) return app.doError("Please select at least one item to export.");
 			Dialog.hide();
