@@ -430,13 +430,7 @@ Page.System = class System extends Page.Base {
 				id: 'fe_sys_ex_extras',
 				title: 'Select Extras',
 				placeholder: '(None)',
-				options: [
-					{ id: 'job_files', title: "Job Files", icon: 'file-image-outline' },
-					{ id: 'job_logs', title: "Job Logs", icon: 'file-document-outline' },
-					{ id: 'monitor_data', title: "Monitor History", icon: 'chart-timeline-variant' },
-					{ id: 'stat_data', title: "Stat History", icon: 'chart-scatter-plot' },
-					{ id: 'user_avatars', title: 'User Avatars', icon: 'account-circle' }
-				],
+				options: sort_by( config.ui.extra_list, 'title', { copy: true } ),
 				values: [],
 				'data-hold': 1,
 				'data-shrinkwrap': 1,
@@ -452,44 +446,18 @@ Page.System = class System extends Page.Base {
 			app.clearError();
 			
 			// prepare request
-			var items = [];
 			var lists = $('#fe_sys_ex_lists').val();
-			var dbs = $('#fe_sys_ex_dbs').val();
+			var indexes = $('#fe_sys_ex_dbs').val();
 			var extras = $('#fe_sys_ex_extras').val();
 			
-			lists.forEach( function(list) {
-				items.push({ type: 'list', key: 'global/' + list });
-			} );
-			
-			dbs.forEach( function(db) {
-				items.push({ type: 'index', index: db });
-			} );
-			
-			if (lists.includes('users')) {
-				items.push({ type: 'users', avatars: extras.includes('user_avatars') });
-			}
-			if (extras.includes('job_files') || extras.includes('job_logs')) {
-				items.push({ type: 'jobFiles', logs: extras.includes('job_logs'), files: extras.includes('job_files') });
-			}
-			if (extras.includes('monitor_data')) {
-				items.push({ type: 'monitorData' });
-			}
-			if (extras.includes('stat_data')) {
-				items.push({ type: 'list', key: 'global/stats' });
-			}
-			if (lists.includes('buckets')) {
-				items.push({ type: 'bucketData' });
-				items.push({ type: 'bucketFiles' });
-			}
-			if (lists.includes('secrets')) {
-				items.push({ type: 'secretData' });
+			if (!lists.length && !indexes.length && !extras.length) {
+				return app.doError("Please select at least one item to export.");
 			}
 			
-			if (!items.length) return app.doError("Please select at least one item to export.");
 			Dialog.hide();
 			
 			// fetch transfer token
-			app.api.post( 'app/get_transfer_token', { items }, function(resp) {
+			app.api.post( 'app/get_transfer_token', { lists, indexes, extras }, function(resp) {
 				window.location = app.base_api_url + '/app/admin_export_data?token=' + resp.token;
 			}); // api.post
 		});
@@ -554,6 +522,14 @@ Page.System = class System extends Page.Base {
 			
 			if (lists.includes('users')) {
 				items.push({ type: 'users' });
+			}
+			
+			if (lists.includes('buckets')) {
+				items.push({ type: 'bucketData' });
+				items.push({ type: 'bucketFiles' });
+			}
+			if (lists.includes('secrets')) {
+				items.push({ type: 'secretData' });
 			}
 			
 			lists.forEach( function(list) {

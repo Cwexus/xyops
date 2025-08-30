@@ -78,6 +78,14 @@
 		{ "id": "activity", "title": "Activity", "icon": "script-text-outline" }
 	],
 	
+	"extra_list": [
+		{ "id": "job_files", "title": "Job Files", "icon": "file-image-outline" },
+		{ "id": "job_logs", "title": "Job Logs", "icon": "file-document-outline" },
+		{ "id": "monitor_data", "title": "Monitor History", "icon": "chart-timeline-variant" },
+		{ "id": "stat_data", "title": "Stat History", "icon": "chart-scatter-plot" },
+		{ "id": "user_avatars", "title": "User Avatars", "icon": "account-circle" }
+	],
+	
 	"activity_descriptions": {
 		"alert_create": "Alert definition created: [description] ([alert.id])",
 		"alert_update": "Alert definition updated: [description] ([alert.id])",
