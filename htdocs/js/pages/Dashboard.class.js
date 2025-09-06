@@ -87,7 +87,7 @@ Page.Dashboard = class Dashboard extends Page.PageUtils {
 		html += '</div>'; // box
 		
 		// quickmon charts
-		html += '<div class="box charts" id="d_dash_monitors">';
+		html += '<div class="box charts" id="d_dash_monitors" style="display:none">';
 			html += '<div class="box_title">';
 				html += '<div class="box_title_widget" style="overflow:visible; margin-left:0;"><i class="mdi mdi-magnify" onMouseUp="$(this).next().focus()">&nbsp;</i><input type="text" placeholder="Filter" value="" onInput="$P().applyQuickMonitorFilter(this)"></div>';
 				html += this.getChartSizeSelector('chart_size_quick');
@@ -106,7 +106,7 @@ Page.Dashboard = class Dashboard extends Page.PageUtils {
 		this.renderActiveJobs();
 		this.getQueueSummary();
 		this.getUpcomingJobs();
-		this.setupQuickMonitors();
+		// this.setupQuickMonitors();
 		this.renderActiveAlerts();
 		this.renderInternalJobs();
 		this.setupJobHistoryDayGraph();
@@ -655,9 +655,9 @@ Page.Dashboard = class Dashboard extends Page.PageUtils {
 	
 	onPageUpdate(pcmd, pdata) {
 		// receive data packet for this page specifically (i.e. live graph append)
-		switch (pcmd) {
-			case 'quickmon': this.appendSampleToChart(pdata); break;
-		}
+		// switch (pcmd) {
+		// 	case 'quickmon': this.appendSampleToChart(pdata); break;
+		// }
 	}
 	
 	onStatusUpdate(data) {
@@ -677,6 +677,10 @@ Page.Dashboard = class Dashboard extends Page.PageUtils {
 			
 			case 'activeAlerts': 
 				this.renderActiveAlerts(); 
+				this.updateDashGrid();
+			break;
+			
+			case 'servers': 
 				this.updateDashGrid();
 			break;
 			
