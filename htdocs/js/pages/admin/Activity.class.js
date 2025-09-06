@@ -584,7 +584,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 			md += "\n";
 			md += job.details.trim() + "\n";
 		}
-		else {
+		else if (!job.params && !job.stats) {
 			md += "\n### Details\n\n";
 			md += "No details provided.\n";
 		}
