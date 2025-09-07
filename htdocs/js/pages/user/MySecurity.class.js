@@ -126,7 +126,7 @@ Page.MySecurity = class MySecurity extends Page.Base {
 		html += '</div>'; // box_content
 		
 		html += '<div class="box_buttons">';
-			html += '<div class="button danger" onMouseUp="$P().logoutAll()"><i class="mdi mdi-alert-decagram-outline">&nbsp;</i>Logout All Sessions...</div>';
+			html += '<div class="button danger" onMouseUp="$P().logoutAll()"><i class="mdi mdi-power-standby">&nbsp;</i>Logout All Sessions...</div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -157,7 +157,7 @@ Page.MySecurity = class MySecurity extends Page.Base {
 		html += '</div>';
 		html += '</form>';
 		
-		Dialog.confirmDanger( 'Logout Confirmation', html, ['alert-decagram', 'Confirm'], function(result) {
+		Dialog.confirmDanger( 'Logout Confirmation', html, ['power-standby', 'Confirm'], function(result) {
 			if (!result) return;
 			var password = $('#fe_la_password').val();
 			if (!password) return app.badField('#fe_la_password', "Please enter your current account password.");

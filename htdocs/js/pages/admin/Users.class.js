@@ -326,6 +326,7 @@ Page.Users = class Users extends Page.Base {
 		html += '<div class="box_buttons">';
 			html += '<div class="button mobile_collapse" onClick="$P().cancel_user_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Cancel</span></div>';
 			html += '<div class="button danger mobile_collapse" onClick="$P().show_delete_account_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
+			html += '<div class="button danger mobile_collapse" onClick="$P().logout_all()"><i class="mdi mdi-power-standby">&nbsp;</i>Logout...</div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>History...</span></div>';
 			html += '<div class="button primary phone_collapse" onClick="$P().do_save_user()"><i class="mdi mdi-floppy">&nbsp;</i><span>Save Changes</span></div>';
 		html += '</div>'; // box_buttons
@@ -464,6 +465,23 @@ Page.Users = class Users extends Page.Base {
 		
 		Nav.go('Users?sub=list', 'force');
 		app.showMessage('success', "The user account &ldquo;" + this.user.username + "&rdquo; was deleted successfully.");
+	}
+	
+	logout_all() {
+		// logout all user sessions, after prompt
+		var self = this;
+		var user = this.user;
+		var msg = "Are you sure you want to <b>logout all sessions</b> for the user account &ldquo;" + user.username + "&rdquo;?";
+		
+		Dialog.confirmDanger( 'Logout All Sessions', msg, ['power-standby', 'Logout All'], function(result) {
+			if (!result) return;
+			Dialog.showProgress( 1.0, "Logging User Out..." );
+			
+			app.api.post( 'app/admin_logout_all', { username: user.username }, function(resp) {
+				Dialog.hideProgress();
+				app.showMessage('success', "User sessions for account &ldquo;" + user.username + "&rdquo; are being logged out in the background.");
+			} ); // api.post
+		} ); // confirmDanger
 	}
 	
 	get_user_edit_html() {

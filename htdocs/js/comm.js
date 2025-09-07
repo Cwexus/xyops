@@ -168,6 +168,11 @@ app.comm = {
 				this.commandQueue = [];
 			break;
 			
+			case 'logout':
+				// server wants us to logout (bad session, etc.)
+				app.doUserLogout(true);
+			break;
+			
 			case 'update':
 				// server is sending us an update
 				this.handleDataUpdate(data);
