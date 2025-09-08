@@ -69,13 +69,9 @@ Page.Users = class Users extends Page.Base {
 				'<span class="link" onClick="$P().edit_user('+idx+')"><b>Edit</b></span>',
 				'<span class="link danger" onClick="$P().delete_user('+idx+')"><b>Delete</b></span>'
 			];
-			var avatar_url = '';
-			if (user.avatar) avatar_url = user.avatar.replace(/^\w+\:/, '');
-			else avatar_url = '/api/app/avatar/' + user.username + '.png?size=64&mod=' + (user.custom_avatar || 0);
 			
 			return [
 				'<b>' + self.getNiceUser(user, true) + '</b>',
-				// '<a href="#Users?sub=edit&username=' + user.username + '"><div class="td_avatar" style="background-image:url(' + avatar_url + ')">' + user.username + '</div></a>',
 				'<span class="mono" data-private>' + user.username + '</span>',
 				'<a href="mailto:'+user.email+'" data-private>'+user.email+'</a>',
 				user.active ? '<span class="color_label green"><i class="mdi mdi-check-circle">&nbsp;</i>Active</span>' : '<span class="color_label red"><i class="mdi mdi-alert-circle">&nbsp;</i>Suspended</span>',
