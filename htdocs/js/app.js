@@ -1163,11 +1163,27 @@ app.extend({
 		// color accessibilty
 		if (this.user.color_acc) $body.addClass('coloracc'); else $body.removeClass('coloracc');
 		
-		// grayscale mode
-		if (this.user.grayscale) $body.addClass('grayscale'); else $body.removeClass('grayscale');
-		
 		// privacy mode
 		if (this.user.privacy_mode) $body.addClass('privacy'); else $body.removeClass('privacy');
+		
+		// filters
+		var filters = this.user.filters;
+		if (!filters) return; // sanity
+		
+		if ((filters.brightness != 100) || (filters.contrast != 100) || (filters.hue != 0) || (filters.saturation != 100) || (filters.sepia != 0) || (filters.grayscale != 0)) {
+			var filts = [];
+			if (filters.brightness != 100) filts.push(`brightness(${filters.brightness}%)`);
+			if (filters.contrast != 100) filts.push(`contrast(${filters.contrast}%)`);
+			if (filters.hue != 0) filts.push(`hue-rotate(${filters.hue}deg)`);
+			if (filters.saturation != 100) filts.push(`saturate(${filters.saturation}%)`);
+			if (filters.sepia != 0) filts.push(`sepia(${filters.sepia}%)`);
+			if (filters.grayscale != 0) filts.push(`grayscale(${filters.grayscale}%)`);
+			$('#filter_overlay').css('backdropFilter', filts.join(' ')).show();
+		}
+		else {
+			console.log("got here, none");
+			$('#filter_overlay').css('backdropFilter', 'none').hide();
+		}
 	},
 	
 	privacyMode() {

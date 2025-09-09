@@ -139,13 +139,21 @@
 		"hour_cycle": "h12",
 		"timezone": "",
 		"color_acc": false,
-		"grayscale": false,
 		"privacy_mode": false,
+		"notifications": false,
 		"effects": true,
 		"page_info": true,
 		"contrast": "auto",
 		"motion": "auto",
-		"volume": 7
+		"volume": 7,
+		"filters": {
+			"brightness": 100,
+			"contrast": 100,
+			"hue": 0,
+			"saturation": 100,
+			"sepia": 0,
+			"grayscale": 0
+		}
 	},
 	
 	"db_maint": {

@@ -1283,7 +1283,6 @@ A user account is a representation of an individual user within the system.  The
 	"effects": true,
 	"email": "blob.schuurman@example.com",
 	"full_name": "Blob Schuurman",
-	"grayscale": false,
 	"groups": [],
 	"hour_cycle": "h12",
 	"icon": "",
@@ -1396,10 +1395,6 @@ The preferred timezone of the user, e.g. `America/New_York`.  If not set, will b
 ## User.color_acc
 
 A boolean, which indicates the user uses "color accessibility mode".  This adjusts the UI colors for better visibility.
-
-## User.grayscale
-
-A boolean, which indicates the user uses "grayscale mode".  This removes all color from the UI and instead renders everything using shades of gray.
 
 ## User.privacy_mode
 

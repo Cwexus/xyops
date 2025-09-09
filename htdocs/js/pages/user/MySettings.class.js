@@ -35,7 +35,10 @@ Page.MySettings = class MySettings extends Page.Base {
 		var reg = ropts.locale.split(/\-/).pop();
 		
 		html += '<div class="box">';
-		html += '<div class="box_title">Localization Settings</div>';
+		html += '<div class="box_title">';
+			html += 'Localization Settings';
+			html += '<div class="button right phone_collapse" onClick="$P().reset_loc()"><i class="mdi mdi-undo-variant">&nbsp;</i>Reset to Defaults</div>';
+		html += '</div>';
 		html += '<div class="box_content" style="margin-bottom:30px">';
 		
 		// Language
@@ -136,35 +139,25 @@ Page.MySettings = class MySettings extends Page.Base {
 		html += '</div>'; // box
 		
 		html += '<div class="box">';
-		html += '<div class="box_title">User Interface Settings</div>';
+		html += '<div class="box_title">';
+			html += 'User Interface Settings';
+			html += '<div class="button right phone_collapse" onClick="$P().reset_ui()"><i class="mdi mdi-undo-variant">&nbsp;</i>Reset to Defaults</div>';
+		html += '</div>';
 		html += '<div class="box_content" style="margin-bottom:30px">';
-		
-		// sound volume
-		html += this.getFormRow({
-			label: 'Sound Volume:',
-			content: this.getFormRange({
-				id: 'fe_ms_volume',
-				min: 0,
-				max: 10,
-				step: 1,
-				value: user.volume || 0
-			}),
-			suffix: '<div class="form_suffix_icon mdi mdi-play-circle-outline" title="Preview Volume..." onClick="$P().playPreviewSound()" onMouseDown="event.preventDefault();"></div>',
-			caption: 'Select your desired audio volume level for app notifications.'
-		});
 		
 		// motion preference
 		html += this.getFormRow({
 			label: 'Motion:',
 			content: this.getFormMenuSingle({
-				id: 'fe_ms_motion',
+				id: 'fe_ms_motionacc',
 				title: 'Select Motion Preference',
 				options: [ 
 					{ id: 'auto', title: 'Auto (System)', icon: 'creation' }, 
 					{ id: 'full', title: 'Full Motion', icon: 'run-fast' }, 
 					{ id: 'reduced', title: 'Reduced Motion', icon: 'walk' } 
 				],
-				value: user.motion || 'auto'
+				value: user.motion || 'auto',
+				onChange: '$P().saveChanges()'
 			}),
 			caption: 'Select your desired preference for motion.  Reduced motion disables certain animations which may be sensitive to some people.'
 		});
@@ -173,7 +166,7 @@ Page.MySettings = class MySettings extends Page.Base {
 		html += this.getFormRow({
 			label: 'Contrast:',
 			content: this.getFormMenuSingle({
-				id: 'fe_ms_contrast',
+				id: 'fe_ms_contrastacc',
 				title: 'Select Contrast Level',
 				options: [ 
 					{ id: 'auto', title: 'Auto (System)', icon: 'creation' }, 
@@ -199,25 +192,14 @@ Page.MySettings = class MySettings extends Page.Base {
 			caption: 'Enable or disable color assistance, which uses indicators other than color for differentiation.'
 		});
 		
-		// grayscale
-		html += this.getFormRow({
-			label: 'Saturation:',
-			content: this.getFormCheckbox({
-				id: 'fe_ms_grayscale',
-				label: 'Grayscale Mode',
-				checked: !!user.grayscale,
-				onChange: '$P().previewGrayscale(this)'
-			}),
-			caption: 'Check this box to desaturate all color from the user interface, and instead use shades of gray.'
-		});
-		
 		// show page descriptions
 		html += this.getFormRow({
 			label: 'Assistance:',
 			content: this.getFormCheckbox({
 				id: 'fe_ms_pageinfo',
 				label: 'Show Page Descriptions',
-				checked: !!user.page_info
+				checked: !!user.page_info,
+				onChange: '$P().saveChanges()'
 			}),
 			caption: 'Enable or disable page descriptions, which introduce each page in the app.  This can be helpful for new users.'
 		});
@@ -229,7 +211,8 @@ Page.MySettings = class MySettings extends Page.Base {
 				id: 'fe_ms_notify',
 				label: 'Use System Notifications',
 				checked: user.notifications,
-				disabled: !app.secure
+				disabled: !app.secure,
+				onChange: '$P().saveChanges()'
 			}),
 			caption: 'Enable or disable system notifications, for custom channel messages' + (app.secure ? '' : ' (requires SSL)') + '.'
 		});
@@ -267,9 +250,128 @@ Page.MySettings = class MySettings extends Page.Base {
 		
 		html += '</div>'; // box
 		
+		// a/v settings
+		html += '<div class="box">';
+		html += '<div class="box_title">';
+			html += 'Audio / Visual Settings';
+			html += '<div class="button right phone_collapse" onClick="$P().reset_av()"><i class="mdi mdi-undo-variant">&nbsp;</i>Reset to Defaults</div>';
+		html += '</div>';
+		html += '<div class="box_content" style="margin-bottom:30px">';
+		
+		// sound volume
+		html += this.getFormRow({
+			label: 'Sound Volume:',
+			content: this.getFormRange({
+				id: 'fe_ms_volume',
+				min: 0,
+				max: 10,
+				step: 1,
+				value: user.volume || 0,
+				onChange: '$P().saveChanges()'
+			}),
+			suffix: '<div class="form_suffix_icon mdi mdi-play-circle-outline" title="Preview Volume..." onClick="$P().playPreviewSound()" onMouseDown="event.preventDefault();"></div>',
+			// caption: 'Select your desired audio volume level for app notifications.'
+		});
+		
+		// brightness
+		html += this.getFormRow({
+			label: 'Brightness:',
+			content: this.getFormRange({
+				id: 'fe_ms_brightness',
+				min: 0,
+				max: 200,
+				step: 1,
+				value: user.filters.brightness || 0,
+				onInput: '$P().previewFilters()',
+				onChange: '$P().saveChanges()'
+			}),
+			suffix: '<div style="position:relative; left:-15px;">%</div>',
+		});
+		
+		// contrast
+		html += this.getFormRow({
+			label: 'Contrast:',
+			content: this.getFormRange({
+				id: 'fe_ms_contrast',
+				min: 0,
+				max: 200,
+				step: 1,
+				value: user.filters.contrast || 0,
+				onInput: '$P().previewFilters()',
+				onChange: '$P().saveChanges()'
+			}),
+			suffix: '<div style="position:relative; left:-15px;">%</div>',
+		});
+		
+		// hue
+		html += this.getFormRow({
+			label: 'Hue:',
+			content: this.getFormRange({
+				id: 'fe_ms_hue',
+				min: -180,
+				max: 180,
+				step: 1,
+				value: user.filters.hue || 0,
+				onInput: '$P().previewFilters()',
+				onChange: '$P().saveChanges()'
+			}),
+			suffix: '<div style="position:relative; left:-15px;"><i class="mdi mdi-triangle-outline"></i></div>',
+		});
+		
+		// saturation
+		html += this.getFormRow({
+			label: 'Saturation:',
+			content: this.getFormRange({
+				id: 'fe_ms_saturation',
+				min: 0,
+				max: 200,
+				step: 1,
+				value: user.filters.saturation || 0,
+				onInput: '$P().previewFilters()',
+				onChange: '$P().saveChanges()'
+			}),
+			suffix: '<div style="position:relative; left:-15px;">%</div>',
+		});
+		
+		// sepia
+		html += this.getFormRow({
+			label: 'Sepia:',
+			content: this.getFormRange({
+				id: 'fe_ms_sepia',
+				min: 0,
+				max: 100,
+				step: 1,
+				value: user.filters.sepia || 0,
+				onInput: '$P().previewFilters()',
+				onChange: '$P().saveChanges()'
+			}),
+			suffix: '<div style="position:relative; left:-15px;">%</div>',
+		});
+		
+		// grayscale
+		html += this.getFormRow({
+			label: 'Grayscale:',
+			content: this.getFormRange({
+				id: 'fe_ms_grayscale',
+				min: 0,
+				max: 100,
+				step: 1,
+				value: user.filters.grayscale || 0,
+				onInput: '$P().previewFilters()',
+				onChange: '$P().saveChanges()'
+			}),
+			suffix: '<div style="position:relative; left:-15px;">%</div>',
+		});
+		
+		html += '</div>'; // box_content
+		html += '</div>'; // box
+		
 		if (app.isAdmin()) {
 			html += '<div class="box">';
-			html += '<div class="box_title">Administrator Settings</div>';
+			html += '<div class="box_title">';
+				html += 'Administrator Settings';
+				html += '<div class="button right phone_collapse" onClick="$P().reset_admin()"><i class="mdi mdi-undo-variant">&nbsp;</i>Reset to Defaults</div>';
+			html += '</div>';
 			html += '<div class="box_content" style="margin-bottom:30px">';
 			
 			html += this.getFormRow({
@@ -277,7 +379,8 @@ Page.MySettings = class MySettings extends Page.Base {
 				content: this.getFormCheckbox({
 					id: 'fe_ms_admin_notify_sys',
 					label: 'Show Notifications for System Events',
-					checked: !user.admin_hide_notify_sys
+					checked: !user.admin_hide_notify_sys,
+					onChange: '$P().saveChanges()'
 				}),
 				caption: 'Check this box to show notifications for system activity, such as servers connecting or disconnecting.'
 			});
@@ -287,7 +390,8 @@ Page.MySettings = class MySettings extends Page.Base {
 				content: this.getFormCheckbox({
 					id: 'fe_ms_admin_notify_user',
 					label: 'Show Notifications for User Events',
-					checked: !user.admin_hide_notify_user
+					checked: !user.admin_hide_notify_user,
+					onChange: '$P().saveChanges()'
 				}),
 				caption: 'Check this box to show notifications for user activity, including every time a user makes a change.'
 			});
@@ -297,7 +401,7 @@ Page.MySettings = class MySettings extends Page.Base {
 		} // admin
 		
 		this.div.html( html );
-		SingleSelect.init( this.div.find('#fe_ms_language, #fe_ms_region, #fe_ms_tz, #fe_ms_numformat, #fe_ms_hrcycle, #fe_ms_motion, #fe_ms_contrast') );
+		SingleSelect.init( this.div.find('#fe_ms_language, #fe_ms_region, #fe_ms_tz, #fe_ms_numformat, #fe_ms_hrcycle, #fe_ms_motionacc, #fe_ms_contrastacc') );
 		this.update_date_time_preview();
 	}
 	
@@ -305,24 +409,21 @@ Page.MySettings = class MySettings extends Page.Base {
 		// set local mode on change
 		app.user.contrast = $(elem).val();
 		app.updateAccessibility();
+		this.saveChanges();
 	}
 	
 	previewColorMode(elem) {
 		// set local mode on change
 		app.user.color_acc = $(elem).is(':checked');
 		app.updateAccessibility();
-	}
-	
-	previewGrayscale(elem) {
-		// set local mode on change
-		app.user.grayscale = $(elem).is(':checked');
-		app.updateAccessibility();
+		this.saveChanges();
 	}
 	
 	previewPrivacyMode(elem) {
 		// set local mode on change
 		app.user.privacy_mode = $(elem).is(':checked');
 		app.updateAccessibility();
+		this.saveChanges();
 	}
 	
 	previewVisualEffects(elem) {
@@ -332,12 +433,25 @@ Page.MySettings = class MySettings extends Page.Base {
 			particleCount: 150,
 			origin: elem
 		});
+		this.saveChanges();
 	}
 	
 	playPreviewSound() {
 		// play preview sound at new volume level (unless zero)
 		var volume = parseInt( this.div.find('#fe_ms_volume').val() );
 		if (volume > 0) app.playSound( rand_array(app.sounds), volume);
+	}
+	
+	previewFilters() {
+		// preview page backdrop filters
+		var filters = app.user.filters;
+		filters.brightness = parseInt( this.div.find('#fe_ms_brightness').val() );
+		filters.contrast = parseInt( this.div.find('#fe_ms_contrast').val() );
+		filters.hue = parseInt( this.div.find('#fe_ms_hue').val() );
+		filters.saturation = parseInt( this.div.find('#fe_ms_saturation').val() );
+		filters.sepia = parseInt( this.div.find('#fe_ms_sepia').val() );
+		filters.grayscale = parseInt( this.div.find('#fe_ms_grayscale').val() );
+		app.updateAccessibility();
 	}
 	
 	update_date_time_preview() {
@@ -364,6 +478,64 @@ Page.MySettings = class MySettings extends Page.Base {
 		};
 		
 		this.div.find('#d_ms_dt_preview').html( (new Date()).toLocaleString( opts.locale, opts ) );
+		this.saveChanges();
+	}
+	
+	reset_loc() {
+		// reset localization settings
+		var user = app.user;
+		var defaults = config.default_user_prefs;
+		
+		user.language = defaults.language;
+		user.region = defaults.region;
+		user.timezone = defaults.timezone;
+		user.num_format = defaults.num_format;
+		user.hour_cycle = defaults.hour_cycle;
+		
+		this.receiveUser({ user: app.user });
+		this.saveChanges();
+	}
+	
+	reset_ui() {
+		// reset ui settings
+		var user = app.user;
+		var defaults = config.default_user_prefs;
+		
+		user.motion = defaults.motion;
+		user.contrast = defaults.contrast;
+		user.color_acc = defaults.color_acc;
+		user.privacy_mode = defaults.privacy_mode;
+		user.page_info = defaults.page_info;
+		user.notifications = defaults.notifications;
+		user.effects = defaults.effects;
+		
+		this.receiveUser({ user: app.user });
+		app.updateAccessibility();
+		this.saveChanges();
+	}
+	
+	reset_av() {
+		// reset av settings
+		var user = app.user;
+		var defaults = config.default_user_prefs;
+		
+		user.filters = deep_copy_object(defaults.filters);
+		
+		this.receiveUser({ user: app.user });
+		app.updateAccessibility();
+		this.saveChanges();
+	}
+	
+	reset_admin() {
+		// reset admin settings
+		var user = app.user;
+		var defaults = config.default_user_prefs;
+		
+		user.admin_hide_notify_sys = false;
+		user.admin_hide_notify_user = false;
+		
+		this.receiveUser({ user: app.user });
+		this.saveChanges();
 	}
 	
 	get_settings_form_json() {
@@ -375,15 +547,23 @@ Page.MySettings = class MySettings extends Page.Base {
 			num_format: this.div.find('#fe_ms_numformat').val(),
 			hour_cycle: this.div.find('#fe_ms_hrcycle').val(),
 			volume: parseInt( this.div.find('#fe_ms_volume').val() ),
-			motion: this.div.find('#fe_ms_motion').val(),
-			contrast: this.div.find('#fe_ms_contrast').val(),
+			motion: this.div.find('#fe_ms_motionacc').val(),
+			contrast: this.div.find('#fe_ms_contrastacc').val(),
 			color_acc: this.div.find('#fe_ms_coloracc').is(':checked'),
-			grayscale: this.div.find('#fe_ms_grayscale').is(':checked'),
 			privacy_mode: this.div.find('#fe_ms_privacy').is(':checked'),
 			page_info: this.div.find('#fe_ms_pageinfo').is(':checked'),
 			notifications: this.div.find('#fe_ms_notify').is(':checked'),
-			effects: this.div.find('#fe_ms_effects').is(':checked')
+			effects: this.div.find('#fe_ms_effects').is(':checked'),
+			filters: {}
 		};
+		
+		var filters = settings.filters;
+		filters.brightness = parseInt( this.div.find('#fe_ms_brightness').val() );
+		filters.contrast = parseInt( this.div.find('#fe_ms_contrast').val() );
+		filters.hue = parseInt( this.div.find('#fe_ms_hue').val() );
+		filters.saturation = parseInt( this.div.find('#fe_ms_saturation').val() );
+		filters.sepia = parseInt( this.div.find('#fe_ms_sepia').val() );
+		filters.grayscale = parseInt( this.div.find('#fe_ms_grayscale').val() );
 		
 		if (app.isAdmin()) {
 			settings.admin_hide_notify_sys = !this.div.find('#fe_ms_admin_notify_sys').is(':checked');
@@ -393,49 +573,18 @@ Page.MySettings = class MySettings extends Page.Base {
 		return settings;
 	}
 	
-	is_dirty() {
-		// return true if user made changes, false otherwise
-		var user = app.user;
-		if (!user) return false; // sanity
-		if (!this.div.find('#fe_ms_tz').length) return false; // sanity
-		
-		var json = this.get_settings_form_json();
-		if (json.language != user.language) return true;
-		if (json.region != user.region) return true;
-		if (json.timezone != user.timezone) return true;
-		if (json.num_format != user.num_format) return true;
-		if (json.hour_cycle != user.hour_cycle) return true;
-		if (json.volume != user.volume) return true;
-		if (json.motion != user.motion) return true;
-		if (json.contrast != user.contrast) return true;
-		if (json.color_acc != user.color_acc) return true;
-		if (json.grayscale != user.grayscale) return true;
-		if (json.privacy_mode != user.privacy_mode) return true;
-		if (json.page_info != user.page_info) return true;
-		if (json.notifications != user.notifications) return true;
-		if (json.effects != user.effects) return true;
-		
-		if (app.isAdmin()) {
-			// bool-cast comparisons here, because the keys may not exist yet
-			if (!!json.admin_hide_notify_sys != !!user.admin_hide_notify_sys) return true;
-			if (!!json.admin_hide_notify_user != !!user.admin_hide_notify_user) return true;
-		}
-		
-		return false;
-	}
-	
 	saveChanges() {
 		// save changes to user info
 		var self = this;
 		app.clearError();
-		Dialog.showProgress( 1.0, "Saving preferences..." );
+		// Dialog.showProgress( 1.0, "Saving preferences..." );
 		
 		var json = this.get_settings_form_json();
 		
 		app.api.post( 'app/user_settings', json, function(resp) {
 			// save complete
-			Dialog.hideProgress();
-			app.showMessage('success', "Your settings were saved successfully.");
+			// Dialog.hideProgress();
+			// app.showMessage('success', "Your settings were saved successfully.");
 			
 			app.user = resp.user;
 			
@@ -449,21 +598,6 @@ Page.MySettings = class MySettings extends Page.Base {
 	
 	onDeactivate() {
 		// called when page is deactivated
-		
-		// auto-save in background if user made changes
-		if (this.is_dirty()) {
-			var json = this.get_settings_form_json();
-			merge_hash_into( app.user, json );
-			// app.prepUser();
-			app.initSidebarTabs();
-			app.updateHeaderInfo();
-			app.updateAccessibility();
-			
-			app.api.post( 'app/user_settings', json, function(resp) {
-				app.showMessage('success', "Your settings were saved successfully.");
-			}); // api.post
-		}
-		
 		this.div.html( '' );
 		return true;
 	}
