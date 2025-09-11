@@ -755,7 +755,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			
 			html += `<div style="background:${grad}" data-date="${day_code}" onClick="Nav.go('${url}')" title="${tooltip}"></div>`;
 		}
-		else html += `<div class="empty" data-date="${day_code}" title="No data for ${nice_date}"></div>`;
+		else html += `<div class="empty" data-date="${day_code}" data-epoch="${epoch}" title="No data for ${nice_date}"></div>`;
 		
 		return html;
 	}
@@ -2745,6 +2745,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			case 'email':
 				title = "Send Email";
 				icon = 'email-arrow-right-outline';
+				if (action.users && action.users.length) label = commify(action.users.length) + ' ' + pluralize('user', action.users.length);
 			break;
 			
 			case 'web_hook':
