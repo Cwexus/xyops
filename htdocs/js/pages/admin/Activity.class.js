@@ -459,13 +459,19 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 				case 'error':
 					desc = encode_entities( item.description );
 					color = 'red';
+					click = `$P().showActionReport(${idx},'unused')`;
+					actions.push(`<span class="link" onClick="${click}"><b>Details...</b></span>`);
 				break;
 				case 'warning':
 					desc = encode_entities( item.description );
-					color = 'yellow';
+					color = 'warning';
+					click = `$P().showActionReport(${idx},'unused')`;
+					actions.push(`<span class="link" onClick="${click}"><b>Details...</b></span>`);
 				break;
 				case 'notice':
 					desc = encode_entities( item.description );
+					click = `$P().showActionReport(${idx},'unused')`;
+					actions.push(`<span class="link" onClick="${click}"><b>Details...</b></span>`);
 				break;
 			} // action
 			
@@ -520,7 +526,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 		// summary
 		md += "### Summary\n\n";
 		// md += '- **Category:** <i class="mdi mdi-' + item._type.icon + '">&nbsp;</i>' + item._type.label + "\n";
-		md += '- **Description:** <i class="mdi mdi-' + item._type.icon + '">&nbsp;</i>' + item._desc + "\n";
+		md += '- **Description:** <i class="mdi mdi-' + item._type.icon + '">&nbsp;</i>' + item._desc.replace(/\s+/g, ' ') + "\n";
 		md += '- **Date/Time:** ' + this.getRelativeDateTime(item.epoch) + "\n";
 		
 		// user info
