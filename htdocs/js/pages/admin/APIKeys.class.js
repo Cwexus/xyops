@@ -65,10 +65,20 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 				'<span class="link" onClick="$P().edit_api_key('+idx+')"><b>Edit</b></span>',
 				'<span class="link danger" onClick="$P().delete_api_key('+idx+')"><b>Delete</b></span>'
 			];
+			
+			var nice_status = '';
+			if (item.active) {
+				if (item.expires && (app.epoch >= item.expires)) nice_status = '<span class="color_label yellow"><i class="mdi mdi-alert-outline">&nbsp;</i>Expired</span>';
+				else nice_status = '<span class="color_label green"><i class="mdi mdi-check-circle">&nbsp;</i>Active</span>'
+			}
+			else {
+				nice_status = '<span class="color_label red"><i class="mdi mdi-alert-circle">&nbsp;</i>Suspended</span>';
+			}
+			
 			return [
 				'<b>' + self.getNiceAPIKey(item, true) + '</b>',
-				'<span class="mono" data-private>' + item.key + '</span>',
-				item.active ? '<span class="color_label green"><i class="mdi mdi-check-circle">&nbsp;</i>Active</span>' : '<span class="color_label red"><i class="mdi mdi-alert-circle">&nbsp;</i>Suspended</span>',
+				'<span class="mono" data-private>' + self.getMaskedKey(item.key) + '</span>',
+				nice_status,
 				self.getNiceUser(item.username, app.isAdmin()),
 				'<span title="'+self.getNiceDateTimeText(item.created)+'">'+self.getNiceDate(item.created)+'</span>',
 				actions.join(' | ')
@@ -126,8 +136,24 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 			key: get_unique_id(24),
 			active: 1,
 			privileges: copy_object( config.default_user_privileges ),
-			roles: []
+			roles: [],
+			expires: 0
 		};
+		
+		// API Key
+		html += this.getFormRow({
+			label: 'API Key:',
+			content: this.getFormText({
+				id: 'fe_ak_key',
+				class: 'monospace',
+				spellcheck: 'false',
+				readonly: 'readonly',
+				value: this.api_key.key,
+				'data-private': ''
+			}),
+			suffix: '<div class="form_suffix_icon mdi mdi-dice-5" title="Generate Random Key" onClick="$P().generate_key()" onMouseDown="event.preventDefault();"></div>',
+			caption: 'The API Key string is used to authenticate API calls.'
+		});
 		
 		html += this.get_api_key_edit_html();
 		
@@ -189,6 +215,24 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 		app.api.post( 'app/get_api_key', { id: args.id }, this.receive_key.bind(this), this.fullPageError.bind(this) );
 	}
 	
+	getFormKeyCopier() {
+		return `<div class="form_suffix_icon mdi mdi-clipboard-text-outline" title="Copy API Key" onClick="$P().copyAPIKey(this)"></div>`;
+	}
+	
+	copyAPIKey(elem) {
+		// copy api key to clipboard
+		var $elem = $(elem);
+		var $row = $elem.closest('.form_row');
+		copyToClipboard( this.api_key.key );
+		$elem.removeClass().addClass([ 'form_suffix_icon', 'mdi', 'mdi-clipboard-check-outline' ]).css('color', 'var(--green)');
+		app.showMessage('info', "The API Key was copied to your clipboard.");
+	}
+	
+	getMaskedKey(key) {
+		// mask key for security
+		return key.substring(0, 4) + ('*').repeat(key.length - 8) + key.substring(key.length - 4);
+	}
+	
 	receive_key(resp) {
 		// edit existing API Key
 		var html = '';
@@ -208,6 +252,21 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 			html += '<div class="box_subtitle"><a href="#APIKeys?sub=list">&laquo; Back to Key List</a></div>';
 		html += '</div>';
 		html += '<div class="box_content">';
+		
+		// API Key
+		html += this.getFormRow({
+			label: 'API Key:',
+			content: this.getFormText({
+				id: 'fe_ak_key',
+				class: 'monospace',
+				spellcheck: 'false',
+				disabled: 'disabled',
+				value: this.getMaskedKey(this.api_key.key),
+				'data-private': ''
+			}),
+			suffix: this.getFormKeyCopier(),
+			caption: 'The API key is masked for security purposes.  However, you can still copy it to the clipboard using the button on the right.'
+		});
 		
 		html += this.get_api_key_edit_html();
 		
@@ -299,20 +358,6 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 		var html = '';
 		var api_key = this.api_key;
 		
-		// API Key
-		html += this.getFormRow({
-			label: 'API Key:',
-			content: this.getFormText({
-				id: 'fe_ak_key',
-				class: 'monospace',
-				spellcheck: 'false',
-				value: api_key.key,
-				'data-private': ''
-			}),
-			suffix: '<div class="form_suffix_icon mdi mdi-dice-5" title="Generate Random Key" onClick="$P().generate_key()" onMouseDown="event.preventDefault();"></div>',
-			caption: 'The API Key string is used to authenticate API calls.'
-		});
-		
 		// status
 		html += this.getFormRow({
 			label: 'Status:',
@@ -383,6 +428,17 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 			caption: 'Select which privileges the API Key account should have. Administrators have <b>all</b> privileges.'
 		});
 		
+		// expiration date
+		html += this.getFormRow({
+			label: 'Expiration:',
+			content: this.getFormText({
+				id: 'fe_ak_expires',
+				type: 'date',
+				value: api_key.expires ? yyyy_mm_dd(api_key.expires, '-') : ''
+			}),
+			caption: 'Optionally set an expiration date for the API Key.  It cannot be used on or after the specified date.'
+		});
+		
 		return html;
 	}
 	
@@ -436,15 +492,27 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 		// get api key elements from form, used for new or edit
 		var api_key = this.api_key;
 		
-		api_key.key = $('#fe_ak_key').val();
+		// only grab api key from DOM when creating new
+		// on edit the existing value will pass thru
+		if (!api_key.id) api_key.key = $('#fe_ak_key').val();
+		
 		api_key.active = parseInt( $('#fe_ak_status').val() );
 		api_key.title = $('#fe_ak_title').val().trim();
 		api_key.description = $('#fe_ak_desc').val();
 		api_key.privileges = array_to_hash_keys( $('#fe_ak_privs').val(), 1 );
 		api_key.roles = $('#fe_ak_roles').val();
 		
+		api_key.expires = $('#fe_ak_expires').val();
+		if (api_key.expires.length) {
+			api_key.expires = parse_date( api_key.expires + ' 00:00:00' );
+		}
+		else api_key.expires = 0;
+		
 		if (!api_key.key.length) {
 			return app.badField('#fe_ak_key', "Please enter an API Key string, or generate a random one.");
+		}
+		if (api_key.key.length < 16) {
+			return app.badField('#fe_ak_key', "API keys must be at least 16 characters in length.");
 		}
 		
 		return api_key;
