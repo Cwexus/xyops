@@ -3380,6 +3380,18 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			caption: 'Enter the default value for the hidden field.'
 		});
 		
+		// required
+		html += this.getFormRow({
+			id: 'd_epa_required',
+			label: 'Enforce:',
+			content: this.getFormCheckbox({
+				id: 'fe_epa_required',
+				label: 'Value Required',
+				checked: !!param.required
+			}),
+			caption: 'Check this box to require a value in order to continue.'
+		});
+		
 		// admin lock
 		html += this.getFormRow({
 			label: 'Security:',
@@ -3408,14 +3420,17 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			switch (param.type) {
 				case 'text':
 					param.value = $('#fe_epa_value_text').val();
+					param.required = !!$('#fe_epa_required').is(':checked');
 				break;
 				
 				case 'textarea':
 					param.value = $('#fe_epa_value_textarea').val();
+					param.required = !!$('#fe_epa_required').is(':checked');
 				break;
 				
 				case 'code':
 					param.value = $('#fe_epa_value_code').val();
+					param.required = !!$('#fe_epa_required').is(':checked');
 				break;
 				
 				case 'checkbox':
@@ -3444,6 +3459,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		var change_param_type = function(new_type) {
 			$('#d_epa_value_text, #d_epa_value_textarea, #d_epa_value_code, #d_epa_value_checkbox, #d_epa_value_select, #d_epa_value_hidden').hide();
 			$('#d_epa_value_' + new_type).show();
+			$('#d_epa_required').toggle( !!new_type.match(/^(text|textarea|code)$/) );
 			Dialog.autoResize();
 		}; // change_action_type
 		
