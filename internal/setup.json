@@ -80,6 +80,7 @@
 			"command": "[test-plugin]",
 			"username": "admin",
 			"type": "event",
+			"kill": "parent",
 			"modified": 1434125333,
 			"created": 1434125333,
 			"params": [
@@ -97,7 +98,7 @@
 			"command": "[shell-plugin]",
 			"username": "admin",
 			"type": "event",
-			"kill": true,
+			"kill": "all",
 			"modified": 1434125333,
 			"created": 1434125333,
 			"params": [
@@ -113,6 +114,7 @@
 			"command": "[http-plugin]",
 			"username": "admin",
 			"type": "event",
+			"kill": "parent",
 			"modified": 1434125333,
 			"created": 1434125333,
 			"params": [

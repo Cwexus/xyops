@@ -194,6 +194,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 			"groups": [],
 			"format": "text",
 			"params": [],
+			"kill": "parent",
 			"notes": ""
 		};
 		this.params = this.plugin.params;
@@ -213,7 +214,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		
 		this.div.html( html );
 		
-		SingleSelect.init( this.div.find('#fe_ep_icon, #fe_ep_type, #fe_ep_format') );
+		SingleSelect.init( this.div.find('#fe_ep_icon, #fe_ep_type, #fe_ep_format, #fe_ep_kill') );
 		MultiSelect.init( this.div.find('select[multiple]') );
 		// this.updateAddRemoveMe('#fe_ep_email');
 		$('#fe_ep_title').focus();
@@ -302,7 +303,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		
 		this.div.html( html );
 		
-		SingleSelect.init( this.div.find('#fe_ep_icon, #fe_ep_type, #fe_ep_format') );
+		SingleSelect.init( this.div.find('#fe_ep_icon, #fe_ep_type, #fe_ep_format, #fe_ep_kill') );
 		MultiSelect.init( this.div.find('select[multiple]') );
 		// this.updateAddRemoveMe('#fe_ep_email');
 		this.setPluginType();
@@ -544,16 +545,22 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 			caption: "Optionally set the Group ID (GID) for the Plugin to run as.  The GID may be either numerical or a string ('wheel', 'admin', etc.)."
 		});
 		
-		// kill all
+		// kill policy
 		html += this.getFormRow({
 			id: 'd_ep_kill',
 			label: 'Abort Policy:',
-			content: this.getFormCheckbox({
+			content: this.getFormMenuSingle({
 				id: 'fe_ep_kill',
-				label: 'Kill All Processes',
-				checked: plugin.kill || false
+				title: 'Select Abort Policy',
+				options: [
+					{ id: 'none', title: 'Kill None', icon: 'peace' },
+					{ id: 'parent', title: 'Kill Parent Process', icon: 'target' },
+					{ id: 'all', title: 'Kill All Processes', icon: 'death-star-variant' }
+				],
+				value: plugin.kill,
+				// 'data-shrinkwrap': 1
 			}),
-			caption: 'Check this box to have xySat kill **all** the job processes on abort, as opposed to only the top-level parent process.'
+			caption: 'Select how you would like xySat to handle shutting down running jobs when they are aborted.'
 		});
 		
 		// notes
@@ -609,7 +616,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		plugin.gid = $('#fe_ep_gid').val();
 		plugin.notes = $('#fe_ep_notes').val();
 		
-		if (plugin.type == 'event') plugin.kill = $('#fe_ep_kill').is(':checked') ? true : false;
+		if (plugin.type == 'event') plugin.kill = $('#fe_ep_kill').val();
 		else delete plugin.kill;
 		
 		if (!plugin.title.length) {
