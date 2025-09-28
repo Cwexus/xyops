@@ -718,6 +718,20 @@ Page.Job = class Job extends Page.PageUtils {
 		if (!this.job.final) this.getWorkflowQueueSummary();
 	}
 	
+	doAbortJob(id) {
+		// abort job, clicked from active or queued tables
+		Dialog.confirmDanger( 'Abort Job', "Are you sure you want to abort the workflow job &ldquo;<b>" + id + "</b>&rdquo;?", ['alert-decagram', 'Abort'], function(result) {
+			if (!result) return;
+			app.clearError();
+			Dialog.showProgress( 1.0, "Aborting Job..." );
+			
+			app.api.post( 'app/abort_job', { id: id }, function(resp) {
+				Dialog.hideProgress();
+				app.showMessage('success', config.ui.messages.job_aborted);
+			} ); // api.post
+		} ); // confirm
+	}
+	
 	decorateWorkflowNodes() {
 		// after rendering the table, assign css classes to workflow nodes, etc.
 		var self = this;
@@ -1096,7 +1110,7 @@ Page.Job = class Job extends Page.PageUtils {
 			return [
 				'<b>' + self.getNiceAlertID(item, true) + '</b>',
 				self.getNiceAlert(item.alert, true),
-				item.message,
+				encode_entities(item.message),
 				self.getNiceServer(item.server, true),
 				self.getNiceAlertStatus(item),
 				self.getRelativeDateTime(item.date),
@@ -2207,7 +2221,7 @@ Page.Job = class Job extends Page.PageUtils {
 			var actions = [
 				'<a href="' + url + '" target="_blank"><b>View</b></a>',
 				'<a href="' + url + '?download=' + encodeURIComponent(file.filename) + '"><b>Download</b></a>',
-				'<span class="link danger" onMouseUp="$P().do_delete_file(' + idx + ')"><b>Delete</b></span>'
+				'<span class="link danger" onClick="$P().do_delete_file(' + idx + ')"><b>Delete</b></span>'
 			];
 			
 			var nice_source = '';
