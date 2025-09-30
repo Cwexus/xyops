@@ -1,6 +1,6 @@
 <!-- To: {{email_to}} -->
 <!-- Subject: ⚠️ {{config.client.name}} Alert: {{nice_server}}: {{def.title}} -->
-<!-- Title: Alert Cleared -->
+<!-- Title: New Alert -->
 <!-- Button: View Alert | {{links.alert_url}} -->
 
 The following {{config.client.name}} alert has fired: **{{def.title}}**
