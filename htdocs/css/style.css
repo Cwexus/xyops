@@ -1222,6 +1222,13 @@ div.ex_tree_inner pre code.hljs {
 	z-index: 2;
 	padding: 17px 20px 20px 20px;
 	/* border-top: 1px solid var(--border-color); */
+	
+	border-top: 1px solid var(--border-color);
+	border-left: 1px solid var(--border-color);
+	border-right: 1px solid var(--border-color);
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	
 	background: var(--box-background-color);
 	box-shadow: 0px -2px 8px var(--shadow-color);
 	/* background: rgba(255, 0, 0, 0.1); */
@@ -1236,7 +1243,6 @@ div.ex_tree_inner pre code.hljs {
 }
 
 body.dark .box_buttons.floater {
-	border-top: 1px solid var(--border-color);
 	box-shadow: 0px -2px 8px var(--background-color);
 }
 
