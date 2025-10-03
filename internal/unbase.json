@@ -324,6 +324,10 @@
 					"type": "date"
 				},
 				{
+					"id": "server",
+					"source": "/server"
+				},
+				{
 					"id": "subject",
 					"source": "/subject",
 					"min_word_length": 1,
