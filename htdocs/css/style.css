@@ -598,6 +598,9 @@ body.dark div.maint_unit {
 .markdown-body a {
 	color: var(--blue);
 }
+.markdown-body a:hover {
+	color: var(--theme-color);
+}
 
 .markdown-body h1,
 .markdown-body h2,
@@ -709,6 +712,13 @@ body.dark .dialog .markdown-body table tr th {
 }
 body.dark .markdown-body p code, body.dark .markdown-body td code, body.dark .markdown-body li code, .fr_caption code {
 	background-color: var(--border-color);
+}
+
+.fr_caption code {
+	background-color: rgba(0, 0, 0, 0.05) !important;
+}
+body.dark .fr_caption code {
+	background-color: var(--border-color) !important;
 }
 
 .markdown-body pre {
