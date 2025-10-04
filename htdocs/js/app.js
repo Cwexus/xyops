@@ -164,6 +164,7 @@ app.extend({
 		
 		// precompile regexpes
 		this.hostnameStrip = new RegExp( config.hostname_display_strip );
+		this.ipAddressStrip = new RegExp( config.ip_display_strip );
 		
 		// pop version into footer
 		$('#d_footer_version').html( "Version " + this.version || 0 );
@@ -711,6 +712,11 @@ app.extend({
 	formatHostname: function(hostname) {
 		// format hostname for display
 		return hostname.replace( this.hostnameStrip, '' );
+	},
+	
+	formatIPAddress: function(ip) {
+		// format ip for display
+		return ip.replace( this.ipAddressStrip, '' );
 	},
 	
 	onScroll: function() {

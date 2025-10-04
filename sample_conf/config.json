@@ -65,6 +65,7 @@
 	],
 	
 	"hostname_display_strip": "\\.[\\w\\-]+\\.\\w+$",
+	"ip_display_strip": "^::ffff:",
 	"tick_precision_ms": 50,
 	
 	"alert_email_to": "",

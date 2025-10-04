@@ -658,7 +658,7 @@ Page.Base = class Base extends Page {
 		else if (ext.match(/^(mp4|m4v|mkv|mov|avi|webm)$/)) icon = 'file-video-outline';
 		else if (ext.match(/^(mp3|m4a|ogg)$/)) icon = 'file-music-outline';
 		else if (ext.match(/^(txt|log|md)$/)) icon = 'file-document-outline';
-		else if (ext.match(/^(xml|dtd|json|yml|ini|js|mjs|ts|tsx|py|pl|rb|php|html|css|conf|c|h|cpp|hpp)$/)) icon = 'file-code-outline';
+		else if (ext.match(/^(xml|dtd|json|yml|ini|js|mjs|ts|tsx|py|pl|rb|go|rs|php|html|css|conf|c|h|cpp|hpp)$/)) icon = 'file-code-outline';
 		else if (ext.match(/^(csv|tsv)$/)) icon = 'file-delimited-outline';
 		else if (ext.match(/^(xls|xlsx)$/)) icon = 'file-table-outline';
 		else if (ext.match(/^(doc|docx)$/)) icon = 'file-word-outline';
@@ -684,8 +684,7 @@ Page.Base = class Base extends Page {
 	getNiceIP(ip) {
 		// get nice ip address for display
 		if (!ip) return 'n/a';
-		ip = ('' + ip).replace(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/, '$1');
-		return '<i class="mdi mdi-earth">&nbsp;</i><span data-private>' + ip + '</span>';
+		return '<i class="mdi mdi-earth">&nbsp;</i><span data-private>' + app.formatIPAddress(ip) + '</span>';
 	}
 	
 	getNiceArch(arch) {
