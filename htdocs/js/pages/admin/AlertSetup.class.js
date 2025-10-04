@@ -456,12 +456,12 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 		html += this.getFormRow({
 			id: 'd_editor',
 			label: 'Message:',
-			content: this.getFormTextarea({
+			content: '<div onClick="$P().editor.focus()">' + this.getFormTextarea({
 				id: 'fe_editor',
 				rows: 5,
 				class: 'monospace',
 				value: alert.message
-			}),
+			}) + '</div>',
 			suffix: `<div class="form_suffix_icon mdi mdi-database-search-outline" title="${config.ui.tooltips.server_data_explorer}" onClick="$P().openServerDataExplorer(this,true)"></div>`,
 			caption: 'Enter the message text to be delivered with the alert notifications.  You can use `{{macros}}` to insert dynamic content from the server data.  Click the search icon to the right to open the Server Data Explorer.  [Learn More](#Docs/monitoring/alert-messages).'
 		});

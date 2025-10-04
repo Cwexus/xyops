@@ -496,13 +496,13 @@ Page.WebHooks = class WebHooks extends Page.PageUtils {
 		html += this.getFormRow({
 			id: 'd_editor',
 			label: 'Request Body:',
-			content: this.getFormTextarea({
+			content: '<div onClick="$P().editor.focus()">' + this.getFormTextarea({
 				id: 'fe_editor',
 				rows: 5,
 				class: 'monospace',
 				spellcheck: 'false',
 				value: web_hook.body
-			}),
+			}) + '</div>',
 			caption: 'For endpoints that require it, compose the request body here.  You can use `{{macros}}` to insert dynamic content from the web hook data.  [Learn More](#Docs/web-hooks/body)'
 		});
 		

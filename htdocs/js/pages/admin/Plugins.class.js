@@ -474,12 +474,12 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		html += this.getFormRow({
 			id: 'd_editor',
 			label: 'Script:',
-			content: this.getFormTextarea({
+			content: '<div onClick="$P().editor.focus()">' + this.getFormTextarea({
 				id: 'fe_editor',
 				class: 'monospace',
 				rows: 5,
 				value: (plugin.script || '') + "\n"
-			}),
+			}) + '</div>',
 			caption: 'Optionally enter your Plugin source code here, which will be written to a temporary file and passed as an argument to your executable.  Leave this blank if your Plugin executable should run standalone.'
 		});
 		
