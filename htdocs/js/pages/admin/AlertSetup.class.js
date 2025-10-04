@@ -186,10 +186,10 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 			"samples": 1,
 			"message": "",
 			"groups": [],
-			"email": "",
-			"web_hook": "",
-			"enabled": true
+			"enabled": true,
+			"actions": []
 		};
+		this.actions = this.alert.actions; // for action editor
 		
 		html += this.get_alert_edit_html();
 		
@@ -208,7 +208,7 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 		this.div.html( html );
 		
 		MultiSelect.init( this.div.find('select[multiple]') );
-		SingleSelect.init( this.div.find('#fe_ea_monitor, #fe_ea_channel, #fe_ea_run_event, #fe_ea_icon, #fe_ea_web_hook') );
+		SingleSelect.init( this.div.find('#fe_ea_monitor, #fe_ea_icon') );
 		this.updateAddRemoveMe('#fe_ea_email');
 		$('#fe_ea_title').focus();
 		this.setupBoxButtonFloater();
@@ -260,6 +260,7 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 		}
 		
 		this.alert = resp.alert;
+		this.actions = this.alert.actions; // for action editor
 		
 		app.setWindowTitle( "Editing Alert \"" + (this.alert.title) + "\"" );
 		
@@ -295,7 +296,7 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 		this.div.html( html );
 		
 		MultiSelect.init( this.div.find('select[multiple]') );
-		SingleSelect.init( this.div.find('#fe_ea_monitor, #fe_ea_channel, #fe_ea_run_event, #fe_ea_icon, #fe_ea_web_hook') );
+		SingleSelect.init( this.div.find('#fe_ea_monitor, #fe_ea_icon') );
 		this.updateAddRemoveMe('#fe_ea_email');
 		this.setupBoxButtonFloater();
 		this.setupEditor('text/plain');
@@ -492,61 +493,6 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 			caption: 'Optionally select a monitor to overlay alert annotations on.'
 		});
 		
-		// notification channel
-		html += this.getFormRow({
-			label: 'Notify Channel:',
-			content: this.getFormMenuSingle({
-				id: 'fe_ea_channel',
-				title: 'Select Channel',
-				options: [ ['', "(None)"] ].concat(app.channels),
-				value: alert.channel_id || '',
-				default_icon: 'bullhorn-outline'
-			}),
-			caption: 'Optionally select a notification channel to fire for this alert.'
-		});
-		
-		// email
-		html += this.getFormRow({
-			label: 'Email:',
-			content: this.getFormText({
-				id: 'fe_ea_email',
-				// type: 'email',
-				spellcheck: 'false',
-				placeholder: 'email@sample.com',
-				value: alert.email,
-				onChange: '$P().updateAddRemoveMe(this)',
-				'data-private': ''
-			}),
-			suffix: '<div class="form_suffix_icon mdi" title="" onClick="$P().addRemoveMe(this)"></div>',
-			caption: 'Optionally add e-mail recipients to be notified for this alert.'
-		});
-		
-		// web hook
-		html += this.getFormRow({
-			label: 'Web Hook:',
-			content: this.getFormMenuSingle({
-				id: 'fe_ea_web_hook',
-				title: 'Select Web Hook',
-				options: [ ['', "(None)"] ].concat( app.web_hooks ),
-				value: alert.web_hook,
-				default_icon: 'webhook'
-			}),
-			caption: 'Optionally select a Web Hook to fire for this alert.'
-		});
-		
-		// launch event
-		html += this.getFormRow({
-			label: 'Run Event:',
-			content: this.getFormMenuSingle({
-				id: 'fe_ea_run_event',
-				title: 'Select Event',
-				options: [ ['', "(None)"] ].concat( this.getCategorizedEvents() ),
-				value: alert.run_event,
-				default_icon: 'calendar-clock'
-			}),
-			caption: 'Optionally select an event to run for this alert.'
-		});
-		
 		// limit jobs
 		html += this.getFormRow({
 			label: 'Job Limit:',
@@ -567,6 +513,14 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 				checked: alert.abort_jobs
 			}),
 			caption: 'Abort all running jobs on the server when the alert fires.'
+		});
+		
+		// actions
+		// (requires this.actions to be populated)
+		html += this.getFormRow({
+			label: 'Alert Actions:',
+			content: '<div id="d_ea_jobact_table">' + this.getJobActionTable() + '</div>',
+			caption: 'Optionally select custom actions to perform when the alert fires and/or clears.'
 		});
 		
 		// notes
@@ -595,10 +549,6 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 		alert.samples = parseInt( $('#fe_ea_samples').val() ) || 1;
 		alert.message = this.editor.getValue().trim();
 		alert.monitor_id = $('#fe_ea_monitor').val();
-		alert.channel_id = $('#fe_ea_channel').val();
-		alert.email = $('#fe_ea_email').val();
-		alert.web_hook = $('#fe_ea_web_hook').val();
-		alert.run_event = $('#fe_ea_run_event').val();
 		alert.limit_jobs = $('#fe_ea_limit_jobs').is(':checked') ? true : false;
 		alert.abort_jobs = $('#fe_ea_abort_jobs').is(':checked') ? true : false;
 		alert.notes = $('#fe_ea_notes').val();
@@ -611,6 +561,42 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 		}
 		
 		return alert;
+	}
+	
+	editJobAction(idx) {
+		// show dialog to select actions for alert (overrides base one in PageUtils)
+		// action: { condition, type, email?, url? }
+		var self = this;
+		var action = (idx > -1) ? this.actions[idx] : { condition: 'alert_new', type: 'email', email: '', enabled: true };
+		var title = (idx > -1) ? "Editing Alert Action" : "New Alert Action";
+		var btn = (idx > -1) ? ['check-circle', "Accept"] : ['plus-circle', "Add Action"];
+		
+		this.showEditJobActionDialog({
+			action: action,
+			title: title,
+			btn: btn,
+			show_condition: true,
+			conditions: config.ui.alert_action_condition_menu,
+			
+			action_type_filter: function(item) { 
+				// filter out unsupported actions for alerts
+				return !item.id.match(/^(disable|delete|store|fetch)$/); 
+			},
+			
+			callback: function(action) {
+				// see if we need to add or replace
+				if (idx == -1) {
+					self.actions.push(action);
+				}
+				else self.actions[idx] = action;
+				
+				// keep list sorted by condition reverse (so alert_new comes first)
+				sort_by(self.actions, 'condition', { dir: -1 });
+				
+				// self.dirty = true;
+				self.renderJobActionEditor();
+			}
+		});
 	}
 	
 	do_test_alert() {
@@ -728,6 +714,9 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 	
 	onDeactivate() {
 		// called when page is deactivated
+		delete this.alert;
+		delete this.actions;
+		
 		this.killEditor();
 		this.cleanupRevHistory();
 		this.div.html( '' );
