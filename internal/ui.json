@@ -1070,6 +1070,7 @@
 		"status": "changed status to: [disp]",
 		"type": "changed type to: [disp]",
 		"category": "changed category to: [disp]",
+		"server": "changed server to: [disp]",
 		"assignee": "changed assignee to: [disp]",
 		"due": "changed due date to: [disp]",
 		"cc": "changed Cc list to: [disp]",
