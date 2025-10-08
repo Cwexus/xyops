@@ -2547,7 +2547,7 @@ Page.Base = class Base extends Page {
 		var auto_mode = !mode;
 		
 		if (!mode && elem.value.length) {
-			mode = app.detectCodemirrorMode(elem.value) || this.defaultEditorMode || null;
+			mode = this.defaultEditorMode || app.detectCodemirrorMode(elem.value) || null;
 			Debug.trace('debug', "Detected initial language: " + mode);
 		}
 		
@@ -2576,7 +2576,7 @@ Page.Base = class Base extends Page {
 			// also, do not auto-detect beyond 1K of text, for same reason
 			var value = self.editor.getValue();
 			if (value.length < 4096) {
-				var mode = app.detectCodemirrorMode(value) || self.defaultEditorMode || null;
+				var mode = self.defaultEditorMode || app.detectCodemirrorMode(value) || null;
 				if (mode != self.editor.getOption('mode')) {
 					Debug.trace('debug', "Detected language: " + mode);
 					self.editor.setOption('mode', { name: 'mustache', backdrop: mode });
@@ -2589,7 +2589,7 @@ Page.Base = class Base extends Page {
 			// delay 1ms so we can get the full editor content
 			setTimeout( function() { 
 				var value = self.editor.getValue();
-				var mode = app.detectCodemirrorMode(value) || self.defaultEditorMode || null;
+				var mode = self.defaultEditorMode || app.detectCodemirrorMode(value) || null;
 				if (mode != self.editor.getOption('mode')) {
 					Debug.trace('debug', "Detected language: " + mode);
 					self.editor.setOption('mode', { name: 'mustache', backdrop: mode });
