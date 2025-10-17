@@ -1889,8 +1889,12 @@ Page.PageUtils = class PageUtils extends Page.Base {
 						disabled: elem_dis, 
 						autocomplete: 'off' 
 					};
-					if (param.variant && (param.variant != 'text')) html += self.getFormText(text_args);
-					else html += explore_start + self.getFormText(text_args) + explore_end;
+					if (!param.variant || param.variant.match(/^(email|number|password|text|tel|url)$/)) {
+						html += explore_start + self.getFormText(text_args) + explore_end;
+					}
+					else {
+						html += self.getFormText(text_args);
+					}
 				break;
 				
 				case 'textarea':
@@ -3999,14 +4003,20 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			
 			switch (param.type) {
 				case 'text':
-					html += explore_start + self.getFormText({ 
+					var text_args = { 
 						id: elem_id, 
 						type: param.variant || 'text', 
 						value: elem_value, 
 						class: 'monospace', 
 						disabled: elem_dis, 
 						autocomplete: 'off' 
-					}) + explore_end;
+					};
+					if (!param.variant || param.variant.match(/^(email|number|password|text|tel|url)$/)) {
+						html += explore_start + self.getFormText(text_args) + explore_end;
+					}
+					else {
+						html += self.getFormText(text_args);
+					}
 				break;
 				
 				case 'textarea':
