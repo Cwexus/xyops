@@ -2002,6 +2002,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 	
 	editPluginParamCode(plugin_id, param_id) {
 		// open editor for code plugin param
+		var self = this;
 		var elem_id = 'fe_pp_' + plugin_id + '_' + param_id;
 		var elem_value = $('#' + elem_id).val();
 		
@@ -2013,6 +2014,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		
 		this.editCodeAuto(param.title, elem_value, function(new_value) {
 			$('#' + elem_id).val( new_value );
+			if (!Dialog.active) self.triggerEditChange();
 		});
 	}
 	
@@ -4057,12 +4059,14 @@ Page.PageUtils = class PageUtils extends Page.Base {
 	
 	editParamCode(param_id) {
 		// open editor for code plugin param
+		var self = this;
 		var elem_id = 'fe_uf_' + param_id;
 		var elem_value = $('#' + elem_id).val();
 		var title = $('#' + elem_id).data('title');
 		
 		this.editCodeAuto(title, elem_value, function(new_value) {
 			$('#' + elem_id).val( new_value );
+			if (!Dialog.active) self.triggerEditChange();
 		});
 	}
 	
