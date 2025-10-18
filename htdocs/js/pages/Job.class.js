@@ -2661,6 +2661,9 @@ Page.Job = class Job extends Page.PageUtils {
 			if (!num_keys(new_job.workflow)) delete new_job.workflow;
 		}
 		
+		// remove system tags from new job
+		new_job.tags = (new_job.tags || []).filter( function(tag) { return !tag.match(/^_/); } );
+		
 		Dialog.showProgress( 1.0, "Launching Job..." );
 		
 		app.api.post( 'app/run_event', new_job, function(resp) {
