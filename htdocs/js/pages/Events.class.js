@@ -32,8 +32,17 @@ Page.Events = class Events extends Page.PageUtils {
 	gosub_list(args) {
 		// show event list
 		var self = this;
-		app.setWindowTitle( "Events" );
-		app.setHeaderTitle( '<i class="mdi mdi-calendar-clock">&nbsp;</i>Events' );
+		
+		if (args.plugin == '_workflow') {
+			app.setWindowTitle( "Workflows" );
+			app.setHeaderTitle( '<i class="mdi mdi-clipboard-flow-outline">&nbsp;</i>Workflows' );
+			app.highlightTab( 'Workflows' );
+		}
+		else {
+			app.setWindowTitle( "Events" );
+			app.setHeaderTitle( '<i class="mdi mdi-calendar-clock">&nbsp;</i>Events' );
+			app.highlightTab( 'Events' );
+		}
 		
 		var event_plugins = app.plugins.filter( function(plugin) { return plugin.type == 'event'; } );
 		var scheduler_plugins = app.plugins.filter( function(plugin) { return plugin.type == 'scheduler'; } );
@@ -656,10 +665,20 @@ Page.Events = class Events extends Page.PageUtils {
 		var edit_btn_text = is_workflow ? 'Edit Workflow...' : 'Edit Event...';
 		var thing = is_workflow ? 'Workflow' : 'Event';
 		
-		app.setHeaderNav([
-			{ icon: 'calendar-clock', loc: '#Events?sub=list', title: 'Events' },
-			{ icon: icon, title: event.title }
-		]);
+		if (is_workflow) {
+			app.setHeaderNav([
+				{ icon: 'clipboard-flow-outline', loc: '#Events?plugin=_workflow', title: 'Workflows' },
+				{ icon: icon, title: event.title }
+			]);
+			app.highlightTab( 'Workflows' );
+		}
+		else {
+			app.setHeaderNav([
+				{ icon: 'calendar-clock', loc: '#Events?sub=list', title: 'Events' },
+				{ icon: icon, title: event.title }
+			]);
+			app.highlightTab( 'Events' );
+		}
 		
 		// app.setHeaderTitle( '<i class="mdi mdi-calendar-search">&nbsp;</i>Event Details' );
 		app.setWindowTitle( `Viewing ${thing} "${event.title}"` );
