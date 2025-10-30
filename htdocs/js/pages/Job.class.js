@@ -2165,7 +2165,10 @@ Page.Job = class Job extends Page.PageUtils {
 			}
 		}
 		else if ((job.progress > 0) && (job.progress < 1.0)) {
-			if ($prog_cont.hasClass('indeterminate')) $prog_cont.removeClass('indeterminate');
+			if ($prog_cont.hasClass('indeterminate')) {
+				$prog_bar.css('width', '0px').get(0).offsetWidth; // skip animation
+				$prog_cont.removeClass('indeterminate');
+			}
 			var cx = Math.floor( job.progress * bwidth );
 			$prog_bar.css('width', '' + cx + 'px');
 			$prog_pct.html( pct(job.progress, 1.0, true) );

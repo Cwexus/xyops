@@ -1329,6 +1329,11 @@ Page.Base = class Base extends Page {
 			else if (job.state == 'queued') label = '<i class="mdi mdi-tray-full"></i>';
 		}
 		
+		// skip animation if going from indeterminate to determinate
+		if ($cont.hasClass('indeterminate') && !indeterminate) {
+			$cont.find('.progress_bar_inner').css('width', '0px').get(0).offsetWidth;
+		}
+		
 		$cont.toggleClass('indeterminate', indeterminate);
 		$cont.toggleClass('pending', pending);
 		
