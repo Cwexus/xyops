@@ -994,16 +994,34 @@ Page.Events = class Events extends Page.PageUtils {
 			grid_template_columns: 'auto auto auto'
 		};
 		
+		// add inherited category actions
+		var category = find_object( app.categories, { id: this.event.category } ) || {};
+		(category.actions || []).forEach( function(action) {
+			if (action.enabled) rows.push({ ...action, source: 'category' });
+		} );
+		
+		// add universal actions (not hidden)
+		var temp_event_type = this.workflow ? 'workflow' : 'default';
+		config.job_universal_actions[temp_event_type].forEach( function(action) {
+			if (action.enabled && !action.hidden) rows.push({ ...action, source: 'universal' });
+		} );
+		
 		html += this.getCompactGrid(targs, function(item, idx) {
 			var disp = self.getJobActionDisplayArgs(item);
+			var disp_cond_icon = disp.condition.icon;
+			if (item.source == 'category') disp_cond_icon = 'lock-outline';
+			else if (item.source == 'universal') disp_cond_icon = 'lock';
+			var tooltip = item.source ? `title="(Inherited from ${item.source})"` : '';
 			
 			var tds = [
-				'<div class="td_big nowrap"><i class="mdi mdi-' + disp.condition.icon + '"></i>' + disp.condition.title + '</div>',
-				'<div class="td_big ellip"><i class="mdi mdi-' + disp.icon + '">&nbsp;</i>' + disp.type + '</div>',
-				'<div class="ellip">' + disp.desc + '</div>'
+				'<div class="td_big nowrap" ' + tooltip + '><i class="mdi mdi-' + disp_cond_icon + '"></i>' + disp.condition.title + '</div>',
+				'<div class="td_big ellip" ' + tooltip + '><i class="mdi mdi-' + disp.icon + '">&nbsp;</i>' + disp.type + '</div>',
+				'<div class="ellip" ' + tooltip + '>' + disp.desc + '</div>'
 			];
 			
-			if (!item.enabled) tds.className = 'disabled';
+			if (item.source == 'category') tds.className = 'src_cat';
+			else if (item.source == 'universal') tds.className = 'src_uni';
+			else if (!item.enabled) tds.className = 'disabled';
 			return tds;
 		} ); // getCompactGrid
 		
@@ -1027,15 +1045,32 @@ Page.Events = class Events extends Page.PageUtils {
 			grid_template_columns: 'auto auto'
 		};
 		
+		// add inherited category limits
+		var category = find_object( app.categories, { id: this.event.category } ) || {};
+		(category.limits || []).forEach( function(limit) {
+			if (limit.enabled) rows.push({ ...limit, source: 'category' });
+		} );
+		
+		// add universal limits (not hidden)
+		var temp_event_type = this.workflow ? 'workflow' : 'default';
+		config.job_universal_limits[temp_event_type].forEach( function(limit) {
+			if (limit.enabled && !limit.hidden) rows.push({ ...limit, source: 'universal' });
+		} );
+		
 		html += this.getCompactGrid(targs, function(item, idx) {
 			var { nice_title, nice_desc, icon } = self.getResLimitDisplayArgs(item);
+			if (item.source == 'category') icon = 'lock-outline';
+			else if (item.source == 'universal') icon = 'lock';
+			var tooltip = item.source ? `title="(Inherited from ${item.source})"` : '';
 			
 			var tds = [
-				'<div class="td_big nowrap"><i class="mdi mdi-' + icon + '"></i>' + nice_title + '</div>',
-				'<div class="wrap">' + nice_desc + '</div>'
+				'<div class="td_big nowrap" ' + tooltip + '><i class="mdi mdi-' + icon + '"></i>' + nice_title + '</div>',
+				'<div class="wrap" ' + tooltip + '>' + nice_desc + '</div>'
 			];
 			
-			if (!item.enabled) tds.className = 'disabled';
+			if (item.source == 'category') tds.className = 'src_cat';
+			else if (item.source == 'universal') tds.className = 'src_uni';
+			else if (!item.enabled) tds.className = 'disabled';
 			return tds;
 		} ); // getCompactGrid
 		
