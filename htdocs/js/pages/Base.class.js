@@ -1564,6 +1564,7 @@ Page.Base = class Base extends Page {
 		
 		switch (source) {
 			case 'event': icon = 'file-clock-outline'; break;
+			case 'workflow': icon = 'clipboard-flow-outline'; break;
 			case 'category': icon = 'folder-open-outline'; break;
 			case 'universal': icon = 'earth'; break;
 		}
@@ -1578,6 +1579,7 @@ Page.Base = class Base extends Page {
 		
 		switch (source) {
 			case 'event': icon = 'file-clock-outline'; break;
+			case 'workflow': icon = 'clipboard-flow-outline'; break;
 			case 'category': icon = 'folder-open-outline'; break;
 			case 'universal': icon = 'earth'; break;
 		}
