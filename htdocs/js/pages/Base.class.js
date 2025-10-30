@@ -1557,6 +1557,34 @@ Page.Base = class Base extends Page {
 		} ).join(', ');
 	}
 	
+	getNiceLimitSource(source) {
+		// get formatted limit source
+		var icon = '';
+		var title = ucfirst(source);
+		
+		switch (source) {
+			case 'event': icon = 'file-clock-outline'; break;
+			case 'category': icon = 'folder-open-outline'; break;
+			case 'universal': icon = 'earth'; break;
+		}
+		
+		return '<i class="mdi mdi-' + icon + '">&nbsp;</i>' + title;
+	}
+	
+	getNiceActionSource(source) {
+		// get formatted action source
+		var icon = '';
+		var title = ucfirst(source);
+		
+		switch (source) {
+			case 'event': icon = 'file-clock-outline'; break;
+			case 'category': icon = 'folder-open-outline'; break;
+			case 'universal': icon = 'earth'; break;
+		}
+		
+		return '<i class="mdi mdi-' + icon + '">&nbsp;</i>' + title;
+	}
+	
 	getNiceLanguage(id) {
 		var def = find_object( app.config.intl.languages, { id: id } );
 		return def ? def.title : id;
