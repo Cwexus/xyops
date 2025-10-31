@@ -105,7 +105,7 @@ Page.Alerts = class Alerts extends Page.PageUtils {
 							title: 'Date Range',
 							options: date_items.map( function(item) { 
 								return item[0] ? { id: item[0], title: item[1], icon: 'calendar-range' } : item; 
-							} ),
+							} ).concat([ { id: 'custom', title: 'Custom...', icon: 'cog-outline' } ]),
 							value: args.date,
 							'data-shrinkwrap': 1
 						})
@@ -151,10 +151,16 @@ Page.Alerts = class Alerts extends Page.PageUtils {
 		// $('.header_search_widget').hide();
 		
 		this.div.find('#fe_sa_alert, #fe_sa_server, #fe_sa_group, #fe_sa_date, #fe_sa_sort').on('change', function() {
-			self.navSearch();
+			if (this.value == 'custom') self.showDateRangePicker( self.navSearch.bind(self) );
+			else self.navSearch();
 		});
 		
-		this.doSearch();
+		// this.doSearch();
+		setTimeout( function() { 
+			// do this in another thread to ensure that Nav.loc is updated
+			// not to mention user_nav
+			self.doSearch();
+		}, 1 );
 		
 		return true;
 	}
@@ -173,7 +179,13 @@ Page.Alerts = class Alerts extends Page.PageUtils {
 		if (group) args.group = group;
 		
 		var date = this.div.find('#fe_sa_date').val();
-		if (date) args.date = date;
+		if (date) {
+			args.date = date;
+			if (date == 'custom') {
+				args.start = this.args.start || yyyy_mm_dd(0, '-');
+				args.end = this.args.end || yyyy_mm_dd(0, '-');
+			}
+		}
 		
 		var sort = this.div.find('#fe_sa_sort').val();
 		if (sort != 'date_desc') args.sort = sort;
