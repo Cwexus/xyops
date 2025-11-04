@@ -268,7 +268,7 @@ Page.Job = class Job extends Page.PageUtils {
 					
 					html += '<div>';
 						html += '<div class="info_label">Linked Job</div>';
-						html += '<div class="info_value">' + this.getNiceJob(job.parent, true) + '</div>';
+						html += '<div class="info_value">' + this.getNiceJob(job.parent ? job.parent.job : '', true) + '</div>';
 					html += '</div>';
 					
 					html += '<div>';
