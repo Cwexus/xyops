@@ -1257,13 +1257,174 @@ In addition to the [Standard Response Format](#standard-response-format), this w
 
 ### upload_files
 
+```
+POST /api/app/upload_files/v1
+```
+
+Upload one or more files for the authenticated user. This is a general-purpose upload endpoint (not tied to any specific job). Requires a valid user session or API Key. Use `multipart/form-data` with one or more file fields.
+
+Notes:
+
+- Files are stored under a user-specific path and automatically expire per server configuration (see [file_expiration](configuration.md#file_expiration)).
+- Field names are arbitrary; all files in the request are processed.
+
+In addition to the [Standard Response Format](#standard-response-format), this will include a `urls` array of absolute URLs for the uploaded files.
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "urls": [
+        "https://example.xyops.io/files/admin/report.csv"
+    ]
+}
+```
+
 ### upload_job_file
+
+```
+POST /api/app/upload_job_file/v1
+```
+
+Upload a file and associate it with a running job. This endpoint is primarily used by the satellite agent (xySat), and is not designed for external use. Requires authentication via one of three methods below and `multipart/form-data` with a single file field named `file1`.
+
+Authentication methods:
+
+- API Key: Provide a valid API key via standard mechanisms (e.g., `X-API-Key` header or `api_key` param). For convenience, you may also pass it in an `auth` parameter.
+- Server token: Provide `server` (Server ID) and `auth` (a server token). The satellite computes this token; it’s verified by the primary.
+- Job token: Provide `auth` computed for the job. The satellite computes this token; it’s verified by the primary.
+
+Parameters (form + query):
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `id` | String | **(Required)** The running [Job.id](data-structures.md#job-id). |
+| `auth` | String | **(Required)** Authentication token or API key (see above). |
+| `server` | String | Optional. Required only for the server token method. |
+| `file1` | File | **(Required)** The uploaded file content (multipart field name must be `file1`). |
+
+Example multipart request (pseudocode):
+
+```
+POST /api/app/upload_job_file/v1?id=jabc123def&auth=...&server=main
+Content-Type: multipart/form-data; boundary=----XYZ
+
+------XYZ
+Content-Disposition: form-data; name="file1"; filename="log.txt"
+Content-Type: text/plain
+
+hello
+------XYZ--
+```
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "key": "files/jobs/jabc123def/Y2Jh.../log.txt",
+    "size": 5338
+}
+```
+
+In addition to the [Standard Response Format](#standard-response-format), this will include a `key` (storage path) and `size` (bytes). You can later fetch the file with `GET /{key}` relative to your base URL (see [file](#file)).
 
 ### delete_job_file
 
+```
+POST /api/app/delete_job_file/v1
+```
+
+Delete a file previously attached to a job. Requires a valid session or API Key with the [delete_jobs](privileges.md#delete_jobs) privilege, and category/target access to the job’s event. Supports HTTP POST with JSON, or HTTP GET with query parameters.
+
+Parameters:
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `id` | String | **(Required)** The [Job.id](data-structures.md#job-id). |
+| `path` | String | **(Required)** The exact storage path of the file to delete.  Must be a file attached to the specified job. |
+
+Example request:
+
+```json
+{
+    "id": "jabc123def",
+    "path": "files/jobs/jabc123def/Y2Jh.../log.txt"
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0
+}
+```
+
+The file is removed from storage and the job’s `files` list.  To be clear, this API does not allow file deletion given any arbitrary storage path.  The specified `path` must be registered as a file inside the given job object, or else the API returns an error.
+
 ### upload_job_input_files
 
+```
+POST /api/app/upload_job_input_files/v1
+```
+
+Upload one or more files intended as input to a job before it starts (e.g., from the Run Event dialog). Requires a valid session or API Key with the [run_jobs](privileges.md#run_jobs) privilege. Use `multipart/form-data` with one or more file fields.
+
+Notes:
+
+- Files automatically expire per [client.job_upload_settings.user_file_expiration](configuration.md#client-job_upload_settings) in server configuration.
+- The response provides metadata that can be supplied to `run_event` under `input.files`.
+
+In addition to the [Standard Response Format](#standard-response-format), this will include a `files` array with metadata for each uploaded file.
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "files": [
+        {
+            "id": "fme4wijr73h",
+            "date": 1754783040,
+            "filename": "input.csv",
+            "path": "files/admin/bdY8zZ9nKynfFUb4xH6fA/input.csv",
+            "size": 92615,
+            "username": "admin"
+        }
+        
+    ]
+}
+```
+
+See [Job.files](data-structures.md#job-files) for how these are consumed by jobs.
+
 ### file
+
+```
+GET /files/...  or  GET /api/app/file/v1?path=...
+```
+
+Serve a file from storage. This is a binary/streaming endpoint (not JSON). It supports full GET, HEAD, conditional requests via `ETag` and `If-Modified-Since`, and HTTP Range requests for partial content. You can access files by direct path under `/files/...`, or via `GET /api/app/file/v1?path=...`.
+
+Parameters (query):
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `path` | String | When using `/api/app/file/v1`, the relative storage path under `files/` to serve. |
+| `download` | String | Optional. If set, forces download. Use `1` to download with the original filename, or supply a custom filename. |
+
+Behavior:
+
+- When content type is or contains `text/html`, downloads are enforced unless `download` is specified, to prevent HTML rendering in the browser.
+- Range requests return `206 Partial Content` with `Content-Range` and `Content-Length` headers.
+- HEAD requests return headers only, and may return `304 Not Modified` if applicable.
+
+Examples:
+
+- Direct URL: `GET https://example.xyops.io/files/admin/report.csv`
+- API form: `GET https://example.xyops.io/api/app/file/v1?path=admin/report.csv&download=1`
 
 
 
