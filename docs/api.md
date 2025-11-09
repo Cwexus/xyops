@@ -931,17 +931,325 @@ Deletions are permanent and cannot be undone.
 
 ### get_events
 
+```
+GET /api/app/get_events/v1
+```
+
+Fetch all event definitions. No input parameters are required. No specific privilege is required beyond a valid user session or API Key.
+
+In addition to the [Standard Response Format](#standard-response-format), this will include a `rows` array containing all events, and a `list` object containing list metadata (e.g. `length` for total rows without pagination).
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "rows": [
+        {
+            "id": "event100",
+            "title": "Diverse heuristic complexity",
+            "enabled": true,
+            "username": "admin",
+            "modified": 1653843747,
+            "created": 1651348186,
+            "category": "cat9",
+            "targets": ["main"],
+            "notes": "This is a test event.",
+            "limits": [
+                { "type": "time", "enabled": true, "duration": 3600 }
+            ],
+            "actions": [
+                { "enabled": true, "condition": "error", "type": "email", "email": "admin@localhost" }
+            ],
+            "plugin": "shellplug",
+            "params": { "script": "#!/bin/bash\n\nsleep 30;\necho HELLO;\n", "annotate": false, "json": false },
+            "triggers": [
+                { "type": "schedule", "enabled": true, "hours": [19], "minutes": [6] }
+            ],
+            "icon": "",
+            "tags": ["important"],
+            "algo": "random"
+        }
+        
+    ],
+    "list": { "length": 1 }
+}
+```
+
+See [Event](data-structures.md#event) for details on event properties.
+
 ### get_event
+
+```
+GET /api/app/get_event/v1
+```
+
+Fetch a single event definition by ID. No specific privilege is required beyond a valid user session or API Key. Both HTTP GET with query string parameters and HTTP POST with JSON are accepted.
+
+Parameters:
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `id` | String | **(Required)** The alphanumeric ID of the event to fetch. |
+
+Example request:
+
+```json
+{
+    "id": "event100"
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "event": { /* full event object */ },
+    "jobs": [ /* currently active jobs for this event */ ],
+    "queued": 0
+}
+```
+
+In addition to the [Standard Response Format](#standard-response-format), this will include an `event` object containing the requested event, a `jobs` array of currently running jobs for the event, and a `queued` number indicating the count of queued jobs.
+
+See [Event](data-structures.md#event) for details on event properties, and [Job](data-structures.md#job) for job properties.
 
 ### get_event_history
 
+```
+GET /api/app/get_event_history/v1
+```
+
+Fetch the revision history for a specific event from the activity log. Requires a valid user session or API Key, and category/target access to the event.
+
+Parameters:
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `id` | String | **(Required)** The event ID to fetch history for. |
+| `offset` | Number | Optional row offset for pagination. Defaults to `0`. |
+| `limit` | Number | Optional row limit for pagination. Defaults to `1`. |
+| `sort_by` | String | Optional sort field. Defaults to `_id`. |
+| `sort_dir` | Number | Optional sort direction. Use `-1` for descending (default) or `1` for ascending. |
+
+Example request:
+
+```json
+{
+    "id": "event100",
+    "offset": 0,
+    "limit": 50
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "rows": [
+        { "action": "event_update", "username": "admin", "description": "Updated title", "date": 1754784000 }
+        
+    ],
+    "list": { "length": 1 }
+}
+```
+
+In addition to the [Standard Response Format](#standard-response-format), this will include a `rows` array of activity records related to the event, and a `list` object with pagination metadata.
+
 ### create_event
+
+```
+POST /api/app/create_event/v1
+```
+
+Create a new event. Requires the [create_events](privileges.md#create_events) privilege, plus category/target access for the event, and a valid user session or API Key. Send as HTTP POST with JSON. See [Event](data-structures.md#event) for property details. The `id` may be omitted and will be auto-generated; `username`, `created`, and `modified` are set by the server.
+
+Notes:
+
+- For non-workflow events, `targets` and `plugin` are required.
+- For workflow events (`type: "workflow"`), the server sets `plugin` to `_workflow` and requires a `workflow` object; `targets` are not required.
+- Locked plugin/event parameters are enforced for non-admins and required fields are validated.
+
+Example request (non-workflow event):
+
+```json
+{
+    "title": "Diverse heuristic complexity",
+    "enabled": true,
+    "category": "cat9",
+    "targets": ["main"],
+    "plugin": "shellplug",
+    "params": { "script": "#!/bin/bash\necho HELLO\n" },
+    "triggers": [ { "type": "manual", "enabled": true } ]
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "event": { /* full event object including auto-generated fields */ }
+}
+```
+
+In addition to the [Standard Response Format](#standard-response-format), this will include an `event` object containing the newly created event.
 
 ### update_event
 
+```
+POST /api/app/update_event/v1
+```
+
+Update an existing event by ID. Requires the [edit_events](privileges.md#edit_events) privilege, plus category/target access to the event, and a valid user session or API Key. Send as HTTP POST with JSON. The request is shallow-merged into the existing event, so you can provide a sparse set of properties to update. The server updates `modified` and increments `revision` automatically.
+
+Parameters:
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `id` | String | **(Required)** The event ID to update. |
+| other fields | Various | Any updatable [Event](data-structures.md#event) fields (e.g. `title`, `enabled`, `category`, `targets`, `algo`, `plugin`, `params`, `triggers`, `limits`, `actions`, `notes`). |
+
+Special behavior:
+
+- Non-admins have locked plugin/event parameters enforced; required fields must be present.
+- You can update per-event state by passing `update_state` as an object of key/value pairs. These are stored in event state and removed from the event record itself.
+
+Example request:
+
+```json
+{
+    "id": "event100",
+    "title": "Diverse heuristic complexity (v2)",
+    "limits": [ { "type": "time", "enabled": true, "duration": 1800 } ],
+    "update_state": { "cursor": 1234 }
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0
+}
+```
+
+The `update_state` is used to reset the event's time cursor for [Catch-Up](events.md#catch-up) mode.
+
 ### delete_event
 
+```
+POST /api/app/delete_event/v1
+```
+
+Delete an existing event by ID. Requires the [delete_events](privileges.md#delete_events) privilege, plus category/target access to the event, and a valid user session or API Key. Deletion is blocked if any jobs are active for the event. You may optionally request deletion of all historical jobs for the event.
+
+Parameters:
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `id` | String | **(Required)** The event ID to delete. |
+| `delete_jobs` | Boolean | Optional. If `true`, delete all historical jobs for the event (performed in background). |
+
+Example request:
+
+```json
+{
+    "id": "event100",
+    "delete_jobs": true
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0
+}
+```
+
+Deletions are permanent and cannot be undone.
+
 ### run_event
+
+```
+POST /api/app/run_event/v1
+```
+
+Run an event on demand with optional overrides and optional file uploads. Requires the [run_jobs](privileges.md#run_jobs) privilege, plus category/target access to the event, and a valid user session or API Key.
+
+Manual run rules:
+
+- The event must have an enabled `manual` trigger, unless you pass `test: true`.
+- Disabled events cannot be run unless you pass `test: true`.
+
+Input formats:
+
+- Pure JSON: Send `Content-Type: application/json` with a JSON body.
+- Multipart form-data (for file uploads): Send `Content-Type: multipart/form-data` and include a `json` field containing the full JSON payload (as a string), plus one or more file fields. All uploaded files are attached to `input.files` for the job.
+
+Parameters (core):
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `id` | String | The event ID to run. One of `id` or `title` is required. |
+| `title` | String | The event title to run (alternative to `id`). |
+| `params` | Object | Optional overrides for [Event.params](data-structures.md#event-params). Missing keys fall back to the event's saved params. |
+| `input` | Object | Optional input object; may include `data` and/or `files` (see [Job.input](data-structures.md#job-input)). Uploaded files are appended to `input.files`. |
+| `test` | Boolean | If `true`, bypasses manual-trigger and enabled checks and marks the job as a test. |
+
+Additional behaviors:
+
+- Nested keys using `parent/child` can be supplied as flat parameters (e.g. `params/foo=bar`).
+- When using multipart uploads, the `json` field should contain the exact JSON you would otherwise POST.
+- If the `post_data` query parameter is present, all raw POST fields are placed under `post_data` instead of being merged (advanced usage).
+- Non-admins have locked plugin/event parameters enforced; required fields must be present.
+
+Example: JSON POST (no files)
+
+```json
+{
+    "id": "event100",
+    "params": { "foo": "bar" },
+    "input": { "data": { "greeting": "hello" } }
+}
+```
+
+Example: multipart/form-data with files
+
+```
+POST /api/app/run_event/v1
+Content-Type: multipart/form-data; boundary=----XYZ
+
+------XYZ
+Content-Disposition: form-data; name="json"
+
+{"id":"event100","params":{"foo":"bar"}}
+------XYZ
+Content-Disposition: form-data; name="file1"; filename="input.csv"
+Content-Type: text/csv
+
+id,value\n1,alpha\n2,beta\n
+------XYZ
+Content-Disposition: form-data; name="file2"; filename="notes.txt"
+Content-Type: text/plain
+
+hello world
+------XYZ--
+```
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "id": "jabc123def" 
+}
+```
+
+In addition to the [Standard Response Format](#standard-response-format), this will include an `id` property containing the newly created [Job.id](data-structures.md#job-id).
 
 
 
