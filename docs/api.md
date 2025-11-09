@@ -501,15 +501,228 @@ Deletions are permanent and cannot be undone.
 
 ### get_categories
 
+```
+GET /api/app/get_categories/v1
+```
+
+Fetch all category definitions. No input parameters are required. No specific privilege is required beyond a valid user session or API Key. In addition to the [Standard Response Format](#standard-response-format), the response includes a `rows` array of categories and a `list` object with summary metadata. The `list.length` value is the total number of categories (without pagination).
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "rows": [
+        {
+            "id": "general",
+            "title": "General",
+            "enabled": true,
+            "sort_order": 0,
+            "username": "admin",
+            "modified": 1754365754,
+            "created": 1754365754,
+            "notes": "For events that don't fit anywhere else.",
+            "color": "plain",
+            "icon": "",
+            "limits": [],
+            "actions": [],
+            "revision": 1
+        }
+        
+    ],
+    "list": { "length": 1 }
+}
+```
+
+See [Category](data-structures.md#category) for details on category properties.
+
 ### get_category
+
+```
+GET /api/app/get_category/v1
+```
+
+Fetch a single category definition by ID. No specific privilege is required beyond a valid user session or API Key. Both HTTP GET with query string parameters and HTTP POST with JSON are accepted. Parameters:
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `id` | String | **(Required)** The alphanumeric ID of the category to fetch. |
+
+Example request:
+
+```json
+{
+    "id": "general"
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "category": {
+        "id": "general",
+        "title": "General",
+        "enabled": true,
+        "sort_order": 0,
+        "username": "admin",
+        "modified": 1754365754,
+        "created": 1754365754,
+        "notes": "For events that don't fit anywhere else.",
+        "color": "plain",
+        "icon": "",
+        "limits": [],
+        "actions": [],
+        "revision": 1
+    }
+}
+```
+
+In addition to the [Standard Response Format](#standard-response-format), this will include a `category` property containing the requested category defintion.  See [Category](data-structures.md#category) for details on category properties.
 
 ### create_category
 
+```
+POST /api/app/create_category/v1
+```
+
+Create a new category. Requires the [create_categories](privileges.md#create_categories) privilege and category-level access to the specified ID (for category-limited accounts), plus a valid user session or API Key. Send as HTTP POST with JSON. See [Category](data-structures.md#category) for property details. The `id` may be omitted and will be auto-generated; `username`, `created`, `modified`, `revision`, and `sort_order` are set by the server.
+
+Example request:
+
+```json
+{
+    "title": "General",
+    "enabled": true,
+    "color": "plain",
+    "icon": "",
+    "notes": "For events that don't fit anywhere else.",
+    "limits": [],
+    "actions": []
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0,
+    "category": { /* full category object including auto-generated fields */ }
+}
+```
+
+In addition to the [Standard Response Format](#standard-response-format), this will include a `category` property containing the full category object including auto-generated fields.
+
+Notes:
+
+- The server validates [Limits](data-structures.md#limit) and [Actions](data-structures.md#action).
+- `sort_order` is automatically assigned at the end of the current list.
+
 ### update_category
+
+```
+POST /api/app/update_category/v1
+```
+
+Update an existing category by ID. Requires the [edit_categories](privileges.md#edit_categories) privilege and category-level access to the specified ID (for category-limited accounts), plus a valid user session or API Key. Send as HTTP POST with JSON. The request is shallow-merged into the existing category, so you can provide a sparse set of properties to update. The server updates `modified` and increments `revision` automatically.
+
+Parameters:
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `id` | String | **(Required)** The category ID to update. |
+| other fields | Various | Any updatable [Category](data-structures.md#category) fields (e.g. `title`, `enabled`, `color`, `notes`, `limits`, `actions`). |
+
+Example request:
+
+```json
+{
+    "id": "general",
+    "title": "General Jobs",
+    "color": "blue"
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0
+}
+```
+
+See [Limit](data-structures.md#limit) and [Action](data-structures.md#action) for nested structures.
 
 ### delete_category
 
+```
+POST /api/app/delete_category/v1
+```
+
+Delete an existing category by ID. Requires the [delete_categories](privileges.md#delete_categories) privilege and category-level access to the specified ID (for category-limited accounts), plus a valid user session or API Key. Deletion is blocked if any [Events](data-structures.md#event) are assigned to the category.
+
+Parameters:
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `id` | String | **(Required)** The category ID to delete. |
+
+Example request:
+
+```json
+{
+    "id": "general"
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0
+}
+```
+
+Deletions are permanent and cannot be undone.
+
 ### multi_update_category
+
+```
+POST /api/app/multi_update_category/v1
+```
+
+Update multiple categories in a single call. This endpoint is intended for updating `sort_order` only (e.g., after drag-and-drop reordering in the UI). Requires the [edit_categories](privileges.md#edit_categories) privilege and category-level access to all categories (`*`), plus a valid user session or API Key.
+
+Parameters:
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `items` | Array<Object> | **(Required)** Array of objects, each with an `id` and the new `sort_order`. |
+
+Example request:
+
+```json
+{
+    "items": [
+        { "id": "general", "sort_order": 0 },
+        { "id": "logs",    "sort_order": 1 }
+    ]
+}
+```
+
+Example response:
+
+```json
+{
+    "code": 0
+}
+```
+
+Notes:
+
+- Only `sort_order` is updated by this endpoint.
+- `modified` and `revision` are not updated by design for multi-updates of sort order.
 
 
 
