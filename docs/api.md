@@ -60,7 +60,9 @@ Example error response:
 
 ## Alerts
 
-See [Monitoring](monitors.md) for details on the xyOps monitoring and alert system.
+Alert APIs manage alert definitions. Use these endpoints to list, fetch, create, update, and delete alerts that evaluate monitor data and trigger actions (email, web hooks, snapshots, and more). Alerts run on the master and evaluate incoming monitor samples from servers; results appear in monitoring views and the activity log. Editing alerts typically requires appropriate privileges; read operations only require a valid session or API Key.
+
+See [Alerts](alerts.md) for details on the xyOps alert system.
 
 ### get_alerts
 
@@ -279,6 +281,8 @@ Deletions are permanent and cannot be undone.
 ## Buckets
 
 A storage bucket is a logical container for storing files, for use in events and workflows. Buckets can hold an arbitrary number of files, and JSON data.
+
+Bucket APIs define and manage buckets, their metadata, data blobs and file lists. Use them to list, fetch, create, update, and delete buckets; and to upload/download/delete files associated with a bucket. Jobs and workflows can read and write bucket content at runtime (e.g., exchange inputs/outputs). Metadata operations typically require create/edit/delete privileges; listing and fetching only require a valid session or API Key.
 
 ### get_buckets
 
@@ -502,6 +506,8 @@ And an example response:
 Deletions are permanent and cannot be undone.
 
 ## Categories
+
+Category APIs organize events into logical groups for navigation, access control and search. Use them to list, fetch, create, update, reorder, and delete categories. Assigning an event to a category affects user visibility (via roles) and search filtering. Editing categories typically requires privileges; reading only requires a valid session or API Key.
 
 ### get_categories
 
@@ -732,6 +738,8 @@ Notes:
 
 ## Channels
 
+Channel APIs manage notification channels (e.g., email lists, user mentions, optional web hook or follow-up job). Use them to list, fetch, create, update, and delete channels that alerts or actions can target. Channels centralize how notifications are delivered so events and alerts can reference them by ID. Editing channels requires privileges; listing and fetching require a valid session or API Key.
+
 ### get_channels
 
 ```
@@ -928,6 +936,8 @@ Deletions are permanent and cannot be undone.
 
 
 ## Events
+
+Event APIs define jobs to run (what, when, and how). Use them to list, fetch, create, update, delete events, and to trigger runs immediately. Events reference plugins, categories, secrets, schedules/triggers and actions; creating or editing events enforces parameter validation and user privileges. Running events launches jobs on target servers based on the scheduler and routing configuration.
 
 ### get_events
 
@@ -1255,6 +1265,8 @@ In addition to the [Standard Response Format](#standard-response-format), this w
 
 ## Files
 
+File APIs upload user files, attach files to running jobs, upload job input files before launch, serve files, and delete files associated with a job. These endpoints are designed for both browser uploads and programmatic use; most require only a valid session or API Key, while job-specific operations may require additional privileges.
+
 ### upload_files
 
 ```
@@ -1429,6 +1441,8 @@ Examples:
 
 
 ## Groups
+
+Group APIs manage server groups used for organizing infrastructure, routing jobs, targeting monitor plugins, and access control. Use them to list, fetch, create, update, and delete groups. Groups influence where jobs and monitors run, and factor into user access restrictions and search filters. Editing groups requires privileges; reading requires a valid session or API Key.
 
 ### get_groups
 
@@ -1724,6 +1738,8 @@ See [Snapshots](snapshots.md) for more details.
 
 
 ## Jobs
+
+Job APIs provide visibility and control over job executions. Use them to search, fetch details, watch progress, stream or fetch logs/files, and manage lifecycle (e.g., abort). Jobs are created by running events or workflows; job data includes parameters, inputs (data/files), outputs and result codes. Access is constrained by category/group permissions and specific job privileges.
 
 ### get_active_jobs
 
@@ -2154,6 +2170,8 @@ In addition to the [Standard Response Format](#standard-response-format), this w
 
 ## Monitors
 
+Monitor APIs manage the definitions of server-side metrics collectors and their output format. Use them to list, fetch, create, update, and delete monitors. Monitors run via agents on servers (xySat) and feed time-series data and alerts. Reading monitor data requires a valid session or API Key; editing definitions requires privileges.
+
 ### get_monitors
 
 ```
@@ -2490,6 +2508,8 @@ See [Monitors](monitors.md) for more details on the monitoring subsystem.
 
 ## Plugins
 
+Plugin APIs manage extensions that implement custom behavior in xyOps (event runners, monitors, actions, and scheduler triggers). Use them to list, fetch, create, update, and delete plugins. Plugins encapsulate executables and parameters and can receive secrets; they are referenced by events and the monitoring system. Creating/updating plugins requires privileges; list/fetch requires a valid session or API Key.
+
 ### get_plugins
 
 ```
@@ -2676,6 +2696,8 @@ Example response:
 
 
 ## Roles
+
+Role APIs define collections of privileges and optional category/group constraints that can be assigned to users. Use them to list, fetch, create, update, and delete roles. Roles simplify permission management across teams. Editing roles requires admin privileges; listing and fetching requires a valid session or API Key.
 
 ### get_roles
 
@@ -2874,6 +2896,8 @@ Example response:
 
 
 ## Search
+
+Search APIs provide read-only querying over indexed datasets (jobs, servers, alerts, snapshots, activity, and stats). Use them to paginate through results, retrieve summaries, and filter by fields. Results are automatically scoped by the caller’s category/group access. Some endpoints (e.g., activity) are admin-only; others require only a valid session or API Key.
 
 ### search_jobs
 
@@ -3138,6 +3162,16 @@ In addition to the [Standard Response Format](#standard-response-format), this w
 
 ## Secrets
 
+Secrets are passed to jobs as environment variables when access is granted via any of the following metadata lists on the secret:
+
+- `events`: Grant to specific [Event.id](data-structures.md#event-id) jobs.
+- `categories`: Grant to all events in selected [Category.id](data-structures.md#category-id)s.
+- `plugins`: Grant to specific [Plugin.id](data-structures.md#plugin-id) jobs when these plugins are launched.
+
+Jobs automatically receive the variables without calling any API; the system decrypts and injects them at launch time. Variable names follow POSIX environment rules and are listed in [Secret.names](data-structures.md#secret-names). To view or edit values in the UI, an administrator can use [decrypt_secret](#decrypt_secret); accesses are recorded in the activity log.
+
+Web hooks can expand secret variables using template syntax like `{{ secrets.VAR_NAME }}` when the secret grants access via the `web_hooks` list. See [Secret.web_hooks](data-structures.md#secret-web_hooks).
+
 ### get_secrets
 
 ```
@@ -3379,6 +3413,8 @@ Example response:
 
 ## Servers
 
+Server APIs can list active servers, fetch a server, update server metadata, delete a server, watch for changes, and trigger snapshots. Server data powers monitoring dashboards and routing. Editing or destructive operations require admin privileges; read operations require a valid session or API Key.
+
 ### get_active_servers
 
 ### get_active_server
@@ -3397,6 +3433,10 @@ Example response:
 
 ## Tags
 
+### Usage
+
+Tag APIs manage free-form labels that can be applied to jobs, events and tickets to aid organization and search. Use them to list, fetch, create, update, and delete tags. Tagging enables search and filtering in the UI. Editing tags requires specific privileges; listing and fetching requires a valid session or API Key.
+
 ### get_tags
 
 ### get_tag
@@ -3410,6 +3450,10 @@ Example response:
 
 
 ## Tickets
+
+### Usage
+
+Ticket APIs manage lightweight issue tracking and comments within xyOps. Use them to create, search, fetch, update tickets, and add changes/comments. Tickets can be linked to jobs or alerts for incident response. Editing tickets requires specific privileges; searching and reading requires a valid session or API Key.
 
 ### get_ticket
 
@@ -3432,6 +3476,10 @@ Example response:
 
 
 ## Users
+
+### Usage
+
+User APIs manage user accounts. Use them to list, fetch, create, update, and delete users, and to manage avatars or passwords where applicable. User changes are audited in the activity log. Creating and updating users requires administrative privileges; read operations require appropriate permissions.
 
 ### create_user
 
@@ -3461,6 +3509,10 @@ Example response:
 
 ## Web Hooks
 
+### Usage
+
+Web Hook APIs manage outbound HTTP callbacks used by alerts, job actions and workflows. Use them to list, fetch, create, update, and delete web hook definitions, which can include headers, authentication and templated payloads (including secret expansion). Executions are logged with job activity; editing requires specific privileges.
+
 ### get_web_hooks
 
 ### get_web_hook
@@ -3476,6 +3528,10 @@ Example response:
 
 
 ## Administrative
+
+### Usage
+
+Administrative APIs provide system-wide maintenance and export/import utilities intended for administrators. Use them to bulk import/export data, manage configuration, and perform maintenance tasks. These endpoints are admin-only and all operations are audited in the activity log.
 
 ### get_servers
 
