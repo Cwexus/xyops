@@ -33,7 +33,6 @@
 	"ping_timeout_sec": 20,
 	
 	"max_jobs_per_min": 100,
-	"child_kill_timeout": 10,
 	"dead_job_timeout": 120,
 	
 	"job_env": {},
