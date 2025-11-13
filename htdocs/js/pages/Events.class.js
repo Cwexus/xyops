@@ -3157,9 +3157,6 @@ Page.Events = class Events extends Page.PageUtils {
 					if (trigger.start && trigger.end && (trigger.start > trigger.end)) {
 						return app.badField('#fe_et_range_start', "Invalid date range entered.  The start date cannot come after the end date.");
 					}
-					if ((idx == -1) && trigger.enabled && find_object(self.event.triggers, { type: 'range', enabled: true })) {
-						return app.doError("Sorry, you can only have one date/time range defined per event.");
-					}
 				break;
 				
 				case 'blackout':
