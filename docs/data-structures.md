@@ -2666,11 +2666,11 @@ The `scheduler` object contains properties specific to the job scheduler subsyst
 
 ## State.events
 
-The `events` object holds state information about all events, namely their cursor for [Catch-Up](events.md#catch-up) mode, and information about previously completed jobs.  Here are the properties stored per event, each in `events.EVENTID.`:
+The `events` object holds state information about all events, namely their cursor for [Catch-Up](triggers.md#catch-up) mode, and information about previously completed jobs.  Here are the properties stored per event, each in `events.EVENTID.`:
 
 | Property Name | Type | Description |
 |---------------|------|-------------|
-| `cursor` | Number | For [Catch-Up](events.md#catch-up) events, this contains the event's current timestamp, which is used to run all missed jobs during an outage window. |
+| `cursor` | Number | For [Catch-Up](triggers.md#catch-up) events, this contains the event's current timestamp, which is used to run all missed jobs during an outage window. |
 | `last_code` | Mixed | The [Job.code](#job-code) from the last completed job, if any. |
 | `last_job` | String | The [Job.id](#job-id) of the last completed job, if any. |
 | `total_elapsed` | Number | The total job elapsed time across all completed jobs (used to compute average). |

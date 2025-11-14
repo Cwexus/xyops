@@ -171,7 +171,23 @@ Example:
 
 ### Catch‑Up
 
-When present and enabled, ensures that every scheduled job runs, even after outages. The scheduler maintains a per‑event cursor and “replays” missed minutes sequentially until caught up.
+Catch-up mode is an optional feature designed to ensure that an event always runs on schedule, even when certain situations arise that may temporarily prevent its execution. This can include scenarios such as:
+
+- Shutting down the xyOps service
+- Pausing the scheduler
+- Disabling the scheduler or catch-up triggers in the event
+- Disabling the entire event
+
+When catch-up mode is enabled, xyOps will execute **all** the scheduled jobs for the event, including any missed ones that should have run during the "downtime".
+
+Internally, catch-up mode maintains a "cursor" in the xyOps database for every event, which points to a specific timestamp.  Whenever a job runs on schedule, the following occurs:
+
+- The cursor advances to the next minute, stopping at the current time.
+- In the event of a time gap, the cursor advances minute-by-minute up to the current time, to ensure that no scheduled jobs are missed.
+
+You can manually set the cursor time by editing the catch-up trigger option for an event.  Use this to replay past events, or jump ahead to the current time.
+
+Catch-Up mode will **not** re-run jobs that failed or were aborted.  This is by design.  If you would like failed jobs to automatically re-run, set a [Max Retry Limit](limits.md#max-retry-limit).
 
 Parameters: None
 

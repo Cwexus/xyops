@@ -1,6 +1,15 @@
 # Limits
 
-Limits in xyOps control resources and concurrency for jobs and workflows. They let you cap CPU and memory, bound log output, set a max run time, constrain parallel jobs and queueing, control retries, and prune inbound files. Limits can be defined directly on events and workflows, inherited from categories, and even applied universally from the server configuration.
+Limits are self-imposed restrictions you can place on your events, to govern resource usage as the job runs, as well as specify options such as max number of retries, or max allowed jobs to queue up.  Limits can be defined at several different levels, including directly on events, attached as workflow nodes, inherited from categories, or inherited from your global configuration file (a.k.a "universal" limits).
+
+In some cases when multiple limits of the same type are present for a job, only one limit will apply.  This is true for [Max Concurrent Jobs](#max-concurrent-jobs), [Max Retry Limit](#max-retry-limit), [Max Queue Limit](#max-queue-limit), and [Max File Limit](#max-file-limit).  For these limits xyOps will pick the first enabled limit it finds of the selected type, with the limits presorted in this order:
+
+- Event defined limits *(highest priority)*
+- Workflow limit nodes
+- Category inherited limits
+- Universal inherited limits *(lowest priority)*
+
+For other limit types, e.g. [Max Run Time](#max-run-time), [Max Output Size](#max-output-size), [Max CPU Limit](#max-cpu-limit) and [Max Memory Limit](#max-memory-limit), when multiple limits are present, all of them are applied.  For example, you may want to emit a warning when a job uses 500MB of memory, but abort the job if the memory usage reaches 1GB.  You can achieve this by adding two separate limits, and they will both be honored.
 
 This document explains how limits work, where they are defined, precedence and inheritance, and details each limit type with parameters and examples.
 

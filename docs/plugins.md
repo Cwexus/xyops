@@ -16,7 +16,7 @@ xy, type, ...job
 
 ## Action Plugins
 
-Action Plugins are designed to be custom actions that take place in response to jobs starting, completing, or completing with specific result codes (e.g. success, error, warning, critical, etc.).  You can already assign a number of [built-in actions](events.md#actions) including sending an email, firing a web hook, launching another job, taking a server snapshot, and more.  But with Plugins you can write your own actions that do anything you want.  They can even be configured to accept a custom set of parameters that are configured by the user in the event.
+Action Plugins are designed to be custom actions that take place in response to jobs starting, completing, or completing with specific result codes (e.g. success, error, warning, critical, etc.).  You can already assign a number of [built-in actions](actions.md) including sending an email, firing a web hook, launching another job, taking a server snapshot, and more.  But with Plugins you can write your own actions that do anything you want.  They can even be configured to accept a custom set of parameters that are configured by the user in the event.
 
 Action Plugins run *on the master server*, as they are part of the job engine.  However, you can still write them in any language, as the communication API is JSON over STDIO.  To create an Action Plugin, navigate to the **Plugins** page, and click the **New Plugin** button.  For the Plugin type, select "Action Plugin".
 
@@ -252,7 +252,7 @@ If you would like to delay a job launch, send back a `delay` property alongside 
 }
 ```
 
-Note that this mechanism works similarly to the built-in [Delay](events.md#delay) scheduler option.  Meaning, the job still "launches" but is set to a special pending state until the specified delay elapses, at which time the job becomes active and runs proper.  Also note that the delay value is computed relative to the job's original start time (i.e. the [Job.now](data-structures.md#job-now) actual on-the-minute time).
+Note that this mechanism works similarly to the built-in [Delay](triggers.md#delay) scheduler option.  Meaning, the job still "launches" but is set to a special pending state until the specified delay elapses, at which time the job becomes active and runs proper.  Also note that the delay value is computed relative to the job's original start time (i.e. the [Job.now](data-structures.md#job-now) actual on-the-minute time).
 
 ## Plugin Marketplace
 

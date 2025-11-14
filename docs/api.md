@@ -1146,7 +1146,7 @@ Example response:
 }
 ```
 
-The `update_state` is used to reset the event's time cursor for [Catch-Up](events.md#catch-up) mode.
+The `update_state` is used to reset the event's time cursor for [Catch-Up](triggers.md#catch-up) mode.
 
 ### delete_event
 
