@@ -608,6 +608,10 @@ When a server is chosen, that server's assigned groups are copied into the job.
 
 Which executable to run for the job.  This cannot be set -- it is copied from the [Plugin](#plugin).
 
+## Job.script
+
+The script which, if present, is written and cached on disk, and then appended onto the [Job.command](#job-command) as a file argument.  This cannot be set -- it is copied from the [Plugin](#plugin).
+
 ## Job.uid
 
 Which UID (User ID) to run the job process as.  This cannot be set -- it is copied from the [Plugin](#plugin).
@@ -888,7 +892,7 @@ An array of server group IDs that the monitor will keep track of.
 
 ## Monitor.source
 
-An expression that points to the data source for the monitor's value.  This can point to any server data value, for example: `cpu.currentLoad`.  The format of the expression is JavaScript.
+An expression that points to the data source for the monitor's value.  This can point to any server data value, for example: `cpu.currentLoad`.  The format of the expression is JavaScript.  See [ServerMonitorData](#servermonitordata) for the data structure this pulls from.
 
 ## Monitor.data_match
 
@@ -997,7 +1001,7 @@ Enter the filesystem path to your executable, including any command-line argumen
 
 ## Plugin.script
 
-The script to execute for the plugin. This can be a shell command, a Python script, or any other executable.  This is passed to the [Plugin.command](#plugin-command) (via a temp file) when the Plugin is launched.
+The script to execute for the plugin, which is optional and depends on the command. This can be a shell script, a Python script, or any other source code.  This is appended onto the [Plugin.command](#plugin-command) (via a temp file) when the Plugin is launched.
 
 ## Plugin.params
 
@@ -2727,12 +2731,12 @@ Each action object should have the following properties:
 | Property Name | Type | Description |
 |---------------|------|-------------|
 | `enabled` | Boolean | Specifies whether the action is enabled (`true`) or disabled (`false`). |
-| `condition` | String | Specifies the condition which runs the action.  See [Action Conditions](#action-conditions) below. |
-| `type` | String | Specifies which action will take place when the condition fires.  See [Action Types](#action-types) below. |
+| `condition` | String | Specifies the condition which runs the action.  See [Action.conditions](#action-condition) below. |
+| `type` | String | Specifies which action will take place when the condition fires.  See [Action.type](#action-type) below. |
 
 Additional properties may be present based on the type.
 
-### Action Conditions
+### Action.condition
 
 Each action has a `condition` property which specifies when it should fire.  The value may be one of:
 
@@ -2749,7 +2753,7 @@ Each action has a `condition` property which specifies when it should fire.  The
 | `alert_new` | Fires when a new alert is triggered on a server. |
 | `alert_cleared` | Fires when an active alert has cleared. |
 
-### Action Types
+### Action.type
 
 Each action has a `type` property which dictates what will happen when the condition fires.  The different types are listed below:
 
@@ -2787,13 +2791,13 @@ Each limit object should have the following properties:
 | Property Name | Type | Description |
 |---------------|------|-------------|
 | `enabled` | Boolean | Specifies whether the limit is enabled (`true`) or disabled (`false`). |
-| `type` | String | Specifies the type of limit.  See [Limit Types](#limit-types) below. |
+| `type` | String | Specifies the type of limit.  See [Limit.type](#limit-type) below. |
 
 Additional properties may be present based on the type.
 
 When limits are assigned to categories, they act as defaults for events in that category.  Events may still override limits set in their categories.
 
-### Limit Types
+### Limit.type
 
 Each limit has a `type` property which specifies what it governs.  The different types are described below:
 
@@ -2840,11 +2844,11 @@ Each trigger object should have the following properties:
 | Property Name | Type | Description |
 |---------------|------|-------------|
 | `enabled` | Boolean | Specifies whether the trigger is enabled (`true`) or disabled (`false`). |
-| `type` | String | Specifies the type of trigger.  See [Trigger Types](#trigger-types) below. |
+| `type` | String | Specifies the type of trigger.  See [Trigger.type](#trigger-type) below. |
 
 Additional properties may be present based on the type.
 
-### Trigger Types
+### Trigger.type
 
 Each trigger has a `type` property which describes its behavior.  The different types are listed below:
 
@@ -3096,7 +3100,7 @@ The [WorkflowNode.id](#workflownode-id) of the destination node.
 
 ### WorkflowConnection.condition
 
-Some connections have a `condition` which dictates when control will flow through to the destination node (namely from a job or event to another node).  See [Action Conditions](#action-conditions) for a list of possible conditions.
+Some connections have a `condition` which dictates when control will flow through to the destination node (namely from a job or event to another node).  See [Action.conditions](#action-condition) for a list of possible conditions.
 
 ## JobWorkflow
 
@@ -3283,15 +3287,16 @@ When job actions are executed, including firing web hooks and sending emails, th
 
 ## AlertHookData
 
-When alerts fire and clear, the following data structure is used to expand macros in the web hook text and email body content:
+When alerts fire and clear, the following data structure is used to expand macros in the web hook text and email body content.  It is also passed to Action Plugins:
 
 | Property Path | Type | Description |
 |---------------|------|-------------|
-| `template` | String | The current action taking place, will be one of `alert_new` or `alert_cleared`. |
+| `condition` | String | The current action taking place, will be one of `alert_new` or `alert_cleared`. |
 | `alert_def` | Object | The current [Alert](#alert) definition object. |
 | `alert` | Object | The current [AlertInvocation](#alertinvocation) object. |
 | `params` | Object | The current [ServerMonitorData](#servermonitordata) data from the server. |
 | `server` | Object | The [Server](#server) object for the server on which the alert fired or cleared. |
+| `active_jobs` | Array | An array of the current active jobs on the server, each with an `id` ([Job.id](#job-id)) and `event` ([Event.id](#event-id)) property. |
 | `date_time` | String | A human-readable localized date/time string, in the server's timezone. |
 | `nice_group` | String | A string representing the title of the primary server group. |
 | `nice_elapsed` | String | A human-readable representation of the alert elapsed time (if `alert_cleared`). |
