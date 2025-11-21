@@ -326,6 +326,23 @@ Set the `enabled` property to `true` to enable air-gapped mode, and set the `out
 
 The air-gapped rules apply to both xyOps itself, and automatically propagate to all connected worker servers, to govern things like the [HTTP Plugin](plugins.md#http-request-plugin).  However, it is important to point out that they do **not** govern your own Plugin code, your own shell scripts, nor marketplace Plugins.
 
-For handling air-gapped software upgrades safely, please contact [xyOps Support](mailto:support@pixlcore.com).  As part of the enterprise plan we can send you signed, encrypted packages with instructions on how to install them.
+For handling air-gapped software upgrades safely, please contact [xyOps Support](mailto:support@pixlcore.com).  As part of the enterprise plan we can send you digitally signed, encrypted packages with instructions on how to install them.
 
 All xyOps documentation is available offline inside the xyOps app.
+
+# Key Rotation
+
+scheduler will be paused, all queued jobs flushed, and all active jobs aborted
+
+all secrets will be re-encrypted
+
+all xySat servers will be re-authed
+
+secret key will be dist'ed to all masters (encrypted using previous key)
+
+new secret will be written to overrides.json -- config.json not touched by design (mounted :ro usually anyway)
+
+MAKE SURE all servers are online!  and masters too.
+	- If servers were offline and a key rotation was necessary, servers need to be manually re-authed.  show how to SHA-256 the server ID + new secret key.
+	- If masters were offline, user just needs to manually copy over the new key and restart it.
+
