@@ -1102,6 +1102,7 @@
 	"ticket_types": [
 		{ "id": "issue", "title": "Issue", "icon": "bug-outline" },
 		{ "id": "feature", "title": "Feature", "icon": "lightbulb-outline" },
+		{ "id": "release", "title": "Release", "icon": "package-variant" },
 		{ "id": "change", "title": "Change", "icon": "swap-horizontal-circle-outline" },
 		{ "id": "maintenance", "title": "Maintenance", "icon": "wrench-outline" },
 		{ "id": "question", "title": "Question", "icon": "help-circle-outline" },
