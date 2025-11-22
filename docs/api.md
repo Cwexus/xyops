@@ -4124,6 +4124,53 @@ Example response:
 
 In addition to the [Standard Response Format](#standard-response-format), this includes the updated [Ticket](data.md#ticket) object. Comment bodies are sanitized and edits record an `edited` timestamp. See [Ticket.changes](data.md#ticket-changes).
 
+### upload_user_ticket_files
+
+```
+POST /api/app/upload_user_ticket_files/v1
+```
+
+Upload ticket files. Requires the [edit_tickets](privileges.md#edit_tickets) privilege and a valid user session or API Key. Send as HTTP POST with `Content-Type: multipart/form-data` and include a `json` field containing the full JSON payload (as a string), plus one or more file fields. Uploaded files can be attached to the ticket via the `save` param.
+
+Parameters (JSON):
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `ticket` | String | **(Required)** The [Ticket.id](data.md#ticket-id) to attach files to. |
+| `save` | Boolean | Optional. If present and `true` the files will be attached to the ticket.  Otherwise, they are considered to be user content dropped onto the body. |
+
+Attach one or more file fields (any field names). Files are saved and added to [Ticket.files](data.md#ticket-files) with metadata. Files auto-expire per [file_expiration](config.md#file_expiration) configuration setting.
+
+Example request (JSON):
+
+```json
+{
+  "id": "tmi9kl02hbb",
+  "save": true
+}
+```
+
+Example response:
+
+```json
+{
+	"code": 0,
+	"files": [
+		{
+			"id": "fmi4us46yno",
+			"date": 1763487257,
+			"filename": "report-optimized.png",
+			"path": "files/tmhzbmbagig/admin/tQq3xZEQR2_vhvhh4L8WnA/report-optimized.png",
+			"size": 29959,
+			"username": "admin",
+			"ticket": "tmhzbmbagig"
+		}
+	]
+}
+```
+
+In addition to the [Standard Response Format](#standard-response-format), this includes a `files` array containing all the [Ticket.files](data.md#ticket.files), including the newly uploaded ones.
+
 ### delete_ticket_file
 
 ```
