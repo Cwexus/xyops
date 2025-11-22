@@ -330,6 +330,22 @@ For handling air-gapped software upgrades safely, please contact [xyOps Support]
 
 All xyOps documentation is available offline inside the xyOps app.
 
+## Air-Gapped Satellite Installs
+
+xyOps supports fully air-gapped server installs and upgrades.  Here is how it works:
+
+1. As part of your [enterprise plan](https://xyops.io/enterprise), request a signed xySat software package from us.
+2. In your xyOps instance, create a [Storage Bucket](buckets.md) and note the Bucket ID.
+3. Upload the files you received into the bucket.  The filenames will be in this format: `satellite-OS-ARCH.tar.gz`.
+4. Edit your master config file, and set the `satellite.bucket` property to the Bucket ID.
+5. Install or upgrade your servers as per usual.
+6. xyOps will use the xySat install packages from the bucket, and not request anything over the internet.
+
+For Docker containers, make sure that your local Docker has our images stored locally, so they aren't pulled from the repository.  Our official containers are available at the following locations:
+
+- **xyOps**: https://github.com/pixlcore/xyops/pkgs/container/xyops
+- **xySat**: https://github.com/pixlcore/xysat/pkgs/container/xysat
+
 # Key Rotation
 
 xyOps uses a single secret key on every master server. This key encrypts stored secrets, signs temporary UI tokens, and issues authentication tokens for worker servers (xySat). Rotating this key is fully automated and performed from the UI.
