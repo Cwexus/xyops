@@ -285,7 +285,7 @@
 	},
 	
 	"workflow_controller_descriptions": {
-		"multiplex": "The **Multiplex** controller allows you to run an event job multiple times in parallel, across multiple servers.  Specifically, it will launch one parallel job for each configured target server in the event.  Make sure your event targets multiple servers, otherwise this will only launch a single job.",
+		"multiplex": "The **Multiplex** controller allows you to run an event job multiple times in series or parallel, across multiple servers.  Specifically, it will launch one job for each configured target server in the event.  Make sure your event targets multiple servers, otherwise this will only launch a single job.",
 		"wait": "The **Wait** controller waits for a specific amount of time before passing control to all the connected nodes.",
 		"repeat": "The **Repeat** controller will run a job multiple times in series or in parallel, based on the configured limits on the event.  You can specify the exact number of iterations below.  This is useful for running the same job a set number of times.",
 		"split": "The **Split** controller will run a job multiple times in series or in parallel, but it will split the input data into multiple chunks, and run each chunk in its own job.  This is useful for processing large datasets in parallel, such as splitting a large file into smaller parts.  Use the expression field to specify the input data to split, which should point to an array.",
