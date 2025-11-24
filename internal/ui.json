@@ -56,7 +56,8 @@
 		{ "id": "edit_web_hooks", "title": "Edit Web Hooks", "icon": "webhook" },
 		{ "id": "delete_web_hooks", "title": "Delete Web Hooks", "icon": "webhook" },
 		
-		{ "id": "create_snapshots", "title": "Create Snapshots", "icon": "monitor-screenshot" }
+		{ "id": "create_snapshots", "title": "Create Snapshots", "icon": "monitor-screenshot" },
+		{ "id": "add_servers", "title": "Add Servers", "icon": "server-plus-outline" }
 	],
 	
 	"globalMemoryLists": ["groups", "plugins", "categories", "events", "channels", "web_hooks", "buckets", "secrets", "monitors", "alerts", "tags", "roles"],

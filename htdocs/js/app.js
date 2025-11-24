@@ -475,6 +475,12 @@ app.extend({
 		if (!this.hasAnyPrivilege('create_tags', 'edit_tags', 'delete_tags')) $('#tab_Tags').removeClass('enabled').hide();
 		if (!this.hasAnyPrivilege('create_buckets', 'edit_buckets', 'delete_buckets')) $('#tab_Buckets').removeClass('enabled').hide();
 		
+		// shortcuts
+		if (!this.hasPrivilege('create_tickets')) $('#tab_NewTicket').removeClass('enabled').hide();
+		if (!this.hasPrivilege('create_events')) $('#tab_NewEvent').removeClass('enabled').hide();
+		if (!this.hasPrivilege('create_events')) $('#tab_NewWorkflow').removeClass('enabled').hide();
+		if (!this.hasPrivilege('add_servers')) $('#tab_NewServer').removeClass('enabled').hide();
+		
 		// admin section
 		if (!this.hasAnyPrivilege('create_alerts', 'edit_alerts', 'delete_alerts')) $('#tab_AlertSetup').removeClass('enabled').hide();
 		if (!this.hasAnyPrivilege('create_channels', 'edit_channels', 'delete_channels')) $('#tab_Channels').removeClass('enabled').hide();

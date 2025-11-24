@@ -30,14 +30,36 @@ You can add servers in three ways:
 	- The server appears immediately in the cluster, begins streaming metrics, and can run jobs.
 2. **Automated bootstrap** (API Key)
 	- For autoscaling or ephemeral hosts, generate an API Key and use your provisioning to call the bootstrap endpoint to fetch a server token and installer command during first boot.
-	- See [API](api.md) for authentication and server APIs. You can include this in cloud-init, AMIs, Packer templates, or custom init scripts.
+	- See below for details. You can include this in cloud-init, AMIs, Packer templates, or custom init scripts.
 3. **Manual install**
-	- Install xySat on the host and configure it with your cluster URL and secret key. The secret is exchanged for a permanent auth token. Start the service to join the cluster.
+	- Install xySat on the host and configure it with your cluster URL and secret key. The secret key is used to generate an auth token. Start the service to join the cluster.
+	- This method is typically only used for development, testing and home labs.
 
 Notes:
 
 - Server auth tokens do not expire. You can, however, [rotate your secret key](hosting.md#secret-key-rotation) (which also regenerates all tokens) from the UI if needed.
 - Software upgrades for xySat are orchestrated from the UI and are designed to avoid interrupting running jobs.
+
+### Automated Server Bootstrap
+
+To automate adding new ephemeral servers to your cluster, follow these steps:
+
+First, create a new [API Key](api.md#api-keys) in the UI, and assign it the [add_servers](privileges.md#add_servers) privilege (remove all the default privileges).  Next, click "Add Server" in the UI and copy the Linux installation command.  Do not enter any server options like label, icon or group.
+
+Replace the auth token value (which expires after 24 hours) with your new API Key (which won't expire).  The token is the value of the `t` query string parameter in the URL.  Example:
+
+```sh
+curl -s "https://xyops01.mycompany.com/api/app/satellite/install?t=API_KEY_HERE" | sudo sh
+```
+
+Finally, paste the new command into your server provisioning script, specifically in the first-boot sequence, so it runs on initial startup.
+
+Notes:
+
+- Make sure the new server's networking stack is up before running the bootstrap command.
+- After initial download, xySat will install from a local cache and not have to hit the internet for anything (or just use [Air-Gapped Mode](hosting.md#air-gapped-mode)).
+- Make sure your servers have `curl` preinstalled.  Alternatively, you can rewrite the command to use `wget`.
+- In automated mode your server's hostname will dictate which server groups it gets added to.
 
 ## Groups and Auto‑Assignment
 
@@ -138,4 +160,3 @@ Deletions are permanent and cannot be undone.
 - Data: [Server](data.md#server), [ServerMonitorData](data.md#servermonitordata), [Snapshot](data.md#snapshot), [Group](data.md#group).
 - Servers API: [get_active_servers](api.md#get_active_servers), [get_active_server](api.md#get_active_server), [get_server](api.md#get_server), [update_server](api.md#update_server), [delete_server](api.md#delete_server), [watch_server](api.md#watch_server), [create_snapshot](api.md#create_snapshot).
 - Search: [search_servers](api.md#search_servers), server summaries, and snapshots search.
-- Automation: See [API](api.md) for API Keys and bootstrap patterns for autoscaling and ephemeral workers.

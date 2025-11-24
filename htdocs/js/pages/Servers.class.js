@@ -198,7 +198,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		
 		html += '<div class="box_buttons">';
 			html += '<div class="button secondary" onClick="$P().go_server_search()"><i class="mdi mdi-magnify">&nbsp;</i>Search History...</div>';
-			html += '<div class="button default" onClick="$P().showAddServerDialog()"><i class="mdi mdi-plus-circle-outline">&nbsp;</i>Add Server...</div>';
+			if (app.hasPrivilege('add_servers')) html += '<div class="button default" onClick="$P().showAddServerDialog()"><i class="mdi mdi-plus-circle-outline">&nbsp;</i>Add Server...</div>';
 		html += '</div>'; // box_buttons
 		
 		html += '</div>'; // box
@@ -207,7 +207,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		this.applyTableFilters();
 		SingleSelect.init( this.div.find('#fe_es_filter') );
 		
-		if (this.args.add) {
+		if (this.args.add && app.hasPrivilege('add_servers')) {
 			this.showAddServerDialog();
 			delete this.args.add;
 		}

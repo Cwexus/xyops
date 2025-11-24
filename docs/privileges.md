@@ -160,5 +160,8 @@ Delete web hooks from the system.
 
 ## Servers
 
+### add_servers
+Add new servers on-demand in the UI, and also allow access to the API to dynamically register ephemeral servers.
+
 ### create_snapshots
 Create on-demand server snapshots and set/cancel watches that take periodic snapshots.
