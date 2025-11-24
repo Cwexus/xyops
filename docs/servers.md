@@ -44,7 +44,7 @@ Notes:
 
 To automate adding new ephemeral servers to your cluster, follow these steps:
 
-First, create a new [API Key](api.md#api-keys) in the UI, and assign it the [add_servers](privileges.md#add_servers) privilege (remove all the default privileges).  Next, click "Add Server" in the UI and copy the Linux installation command.  Do not enter any server options like label, icon or group.
+First, create a new [API Key](api.md#api-keys) in the UI, and assign it the [add_servers](privileges.md#add_servers) privilege only (remove all the default privileges).  Next, click "Add Server" in the UI and copy the Linux installation command.  Do not enter any server options like label, icon or group.
 
 Replace the auth token value (which expires after 24 hours) with your new API Key (which won't expire).  The token is the value of the `t` query string parameter in the URL.  Example:
 
