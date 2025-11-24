@@ -85,9 +85,9 @@ Parameters:
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `years` | Array<Number> | Optional | One or more years in YYYY format. |
-| `months` | Array<Number> | Optional | Months 1-12 (Jan=1 … Dec=12). |
+| `months` | Array<Number> | Optional | Months 1-12 (Jan=1 ... Dec=12). |
 | `days` | Array<Number> | Optional | Month days 1-31, or reverse month days −1 to −7 (−1 = last day, −2 = second‑to‑last, etc.). |
-| `weekdays` | Array<Number> | Optional | Weekdays 0-6 (Sun=0 … Sat=6). |
+| `weekdays` | Array<Number> | Optional | Weekdays 0-6 (Sun=0 ... Sat=6). |
 | `hours` | Array<Number> | Optional | Hours 0-23 (24‑hour clock). |
 | `minutes` | Array<Number> | Optional | Minutes 0-59. |
 | `timezone` | String | Optional | IANA timezone for evaluating the schedule (defaults to server timezone). |
@@ -346,7 +346,7 @@ When you save or run an event, xyOps validates triggers:
 
 - Types and required parameters must be present and well‑formed.
 - Ranges: `start` ≤ `end` where applicable. Blackout requires both.
-- Schedule lists must contain numbers in valid ranges; `days` may include −1…−7 to represent reverse month days.
+- Schedule lists must contain numbers in valid ranges; `days` may include −1...−7 to represent reverse month days.
 - Enabled uniqueness and mutual exclusion rules are enforced (see Composition Rules).
 
 For complete data structure details, see [Trigger](data.md#trigger) and [Trigger.type](data.md#trigger-type).

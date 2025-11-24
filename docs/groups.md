@@ -16,7 +16,7 @@ This document explains what groups are, how servers join groups (manually and au
 ## Creating and Editing Groups
 
 - **Location**: Sidebar → Monitoring → Groups.
-- **Create**: Click "New Group…", set a title, optional icon, and an optional hostname regex for auto-assignment. You can also add default alert actions and notes.
+- **Create**: Click "New Group...", set a title, optional icon, and an optional hostname regex for auto-assignment. You can also add default alert actions and notes.
 - **Edit**: Click a group → Edit Group to change fields; ID is immutable.
 - **Reorder**: Drag rows in the list to change sort order.
 - **Import/Export**: Use the Import/Export buttons on the list and editor.
@@ -41,7 +41,7 @@ Servers can be added to groups in two ways, and a server may belong to multiple 
 	- To match all servers, use `.+`.
 
 2. **Manual Assignment per Server**
-	- From any Server page, choose "Edit Server…" and set Groups explicitly, or use "Add Server…" on a Group view.
+	- From any Server page, choose "Edit Server..." and set Groups explicitly, or use "Add Server..." on a Group view.
 	- When you manually assign groups to a server, the server's "Auto Group" behavior is disabled for that server.
 	- To return a server to automatic assignment, clear its manual group list and re-enable Auto Group in the server editor.
 

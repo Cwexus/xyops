@@ -47,7 +47,7 @@ Go to Admin → Monitors.
 
 Tips:
 
-- Use the "Test…" button to evaluate your expression on a live server before saving.
+- Use the "Test..." button to evaluate your expression on a live server before saving.
 - Click the search icon to open the Server Data Explorer and browse live ServerMonitorData paths.
 - You can import/export monitors as JSON (see the stock examples below).
 

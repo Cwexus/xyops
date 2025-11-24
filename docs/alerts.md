@@ -107,7 +107,7 @@ Click on "Alert Setup" in the sidebar. Creating and editing requires appropriate
 - **Alert Actions**: Optional actions to run on `alert_new` and/or `alert_cleared`.
 - **Notes**: Optional text included in emails and other notifications.
 
-Testing: Use the "Test…" button to evaluate the current Expression and Message against a selected live server. The dialog shows whether it would trigger right now and previews the computed message.
+Testing: Use the "Test..." button to evaluate the current Expression and Message against a selected live server. The dialog shows whether it would trigger right now and previews the computed message.
 
 ## Actions on Fire and Clear
 
