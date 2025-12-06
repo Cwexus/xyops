@@ -366,9 +366,16 @@ Page.Workflows = class Workflows extends Page.Events {
 		var self = this;
 		var $cont = this.wfGetContainer();
 		
-		$cont.find('div.wf_node').on( 'pointerdown', function(event) {
+		$cont.find('div.wf_node').attr({ role: 'group', tabindex: '0' }).on( 'pointerdown keypress', function(event) {
 			var native = event.originalEvent;
-			if (native.button !== 0) return; // only capture left-clicks
+			if ('button' in native) {
+				// pointer event
+				if (native.button !== 0) return; // only capture left-clicks
+			}
+			else {
+				// keypress event
+				if ((native.key !== 'Enter') && (native.key !== ' ')) return; // only capture enter/space
+			}
 			
 			var $this = $(this);
 			var id = this.id.replace(/^d_wfn_/, '');
@@ -398,7 +405,7 @@ Page.Workflows = class Workflows extends Page.Events {
 			}
 			
 			// prepare for dragging entire selection
-			self.prepareForDrag(this, event);
+			if ('button' in native) self.prepareForDrag(this, event);
 		} ); // pointerdown (nodes)
 		
 		$cont.find('div.wf_node').on( 'dblclick', function(event) {
@@ -407,20 +414,27 @@ Page.Workflows = class Workflows extends Page.Events {
 		}); // dblclick (nodes)
 		
 		// add mouse handler for condition entities
-		$cont.find('div.wf_condition').on( 'pointerdown', function(event) {
+		$cont.find('div.wf_condition').attr({ role: 'button', tabindex: '0' }).on( 'pointerdown keydown', function(event) {
 			var native = event.originalEvent;
-			if (native.button !== 0) return; // only capture left-clicks
+			if ('button' in native) {
+				// pointer event
+				if (native.button !== 0) return; // only capture left-clicks
+			}
+			else {
+				// keyboard event
+				if ((native.key !== 'Enter') && (native.key !== ' ')) return; // only capture enter/space
+			}
 			if (self.wfSoldering) return; // no clicky during solder
 			
-			this.setPointerCapture(native.pointerId);
+			if ('button' in native) this.setPointerCapture(native.pointerId);
 			var conn_id = this.id.replace(/^d_wft_/, '');
 			var $elem = $(this);
 			
 			event.stopPropagation();
 			event.preventDefault();
 			
-			$elem.on( 'pointerup.quick', function() {
-				$elem.off( 'pointerup.quick' );
+			$elem.on( 'pointerup.quick, keyup.quick', function() {
+				$elem.off( '.quick' );
 				self.quickEditCondition( $elem, conn_id );
 			} );
 		}); // pointerdown (conditions)
@@ -529,8 +543,8 @@ Page.Workflows = class Workflows extends Page.Events {
 		// update node css classes
 		workflow.nodes.forEach( function(node) {
 			var $elem = $cont.find('#d_wfn_' + node.id);
-			if (selection[node.id] && !$elem.hasClass('selected')) $elem.addClass('selected');
-			else if (!selection[node.id] && $elem.hasClass('selected')) $elem.removeClass('selected');
+			if (selection[node.id] && !$elem.hasClass('selected')) $elem.addClass('selected').attr('aria-selected', 'true');
+			else if (!selection[node.id] && $elem.hasClass('selected')) $elem.removeClass('selected').removeAttr('aria-selected');
 		} );
 		
 		// add effect for freshly added nodes
@@ -585,7 +599,7 @@ Page.Workflows = class Workflows extends Page.Events {
 			
 			$elem.find('.wf_pole').each( function() {
 				var $pole = $(this);
-				var $btn = $pole.clone().removeClass('wf_pole').addClass('wf_pole_button').on('pointerdown', function(event) {
+				var $btn = $pole.clone().removeClass('wf_pole').addClass('wf_pole_button').attr({ role: 'button', tabindex: '0' }).on('pointerdown keypress', function(event) {
 					event.stopPropagation();
 					event.preventDefault();
 					
@@ -729,7 +743,7 @@ Page.Workflows = class Workflows extends Page.Events {
 			
 			$elem.find('.wf_pole.' + end_pole).each( function() {
 				var $pole = $(this);
-				var $btn = $pole.clone().removeClass('wf_pole').addClass('wf_pole_button').html('<i class="mdi mdi-plus"></i>').on('pointerdown', function(event) {
+				var $btn = $pole.clone().removeClass('wf_pole').addClass('wf_pole_button').attr({ role: 'button', tabindex: '0' }).html('<i class="mdi mdi-plus"></i>').on('pointerdown keypress', function(event) {
 					event.stopPropagation();
 					event.preventDefault();
 					self.completeSolder($btn, node.id);

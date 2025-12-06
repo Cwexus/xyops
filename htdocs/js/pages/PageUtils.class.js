@@ -3080,7 +3080,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		var icon = event.icon || default_icon;
 		var none = '<span>(None)</span>';
 		
-		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;">
+		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;" aria-label="${encode_attrib_entities(event.title)}">
 			<div class="wf_event_title"><i class="mdi mdi-drag"></i><i class="mdi mdi-${icon}"></i>${event.title}</div>
 			<div class="wf_body">
 				<div class="wf_fallback_icon"><i class="mdi mdi-${icon}"></i></div>
@@ -3191,7 +3191,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		var icon = plugin.icon || config.ui.data_types.plugin.icon;
 		var none = '<span>(None)</span>';
 		
-		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;">
+		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;" aria-label="${encode_attrib_entities(title)}">
 			<div class="wf_event_title"><i class="mdi mdi-drag"></i><i class="mdi mdi-${icon}"></i>${title}</div>
 			<div class="wf_body">
 				<div class="wf_fallback_icon"><i class="mdi mdi-${icon}"></i></div>
@@ -3392,7 +3392,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		
 		if (!action.enabled) label = '(Disabled)';
 		
-		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;">
+		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;" aria-label="${encode_attrib_entities(title)}">
 			<div class="wf_ent_action">
 				<i class="mdi mdi-${icon}"></i>
 				<div class="wf_pole wf_input_pole"><i class="mdi mdi-chevron-right"></i></div>
@@ -3417,7 +3417,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		
 		if (!limit.enabled) short_desc = '(Disabled)';
 		
-		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;">
+		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;" aria-label="${encode_attrib_entities(nice_title)}">
 			<div class="wf_ent_limit">
 				<i class="mdi mdi-${icon}"></i>
 				<div class="wf_pole wf_up_pole"><i class="mdi mdi-chevron-up"></i></div>
@@ -3454,7 +3454,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			pole = '';
 		}
 		
-		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;">
+		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;" aria-label="${encode_attrib_entities(nice_title)}">
 			<div class="${inner_classes.join(' ')}">
 				<i class="mdi mdi-${icon}"></i>
 				${pole}
@@ -3499,7 +3499,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			break;
 		} // switch type
 		
-		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;">
+		html += `<div id="d_wfn_${node.id}" class="${classes.join(' ')}" style="left:${pos.x}px; top:${pos.y}px;" aria-label="${encode_attrib_entities(title)}">
 			<div class="wf_ent_controller">
 				<i class="mdi mdi-${icon}"></i>
 				<div class="wf_pole wf_input_pole"><i class="mdi mdi-chevron-right"></i></div>
