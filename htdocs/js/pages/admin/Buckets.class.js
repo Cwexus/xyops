@@ -463,7 +463,7 @@ Page.Buckets = class Buckets extends Page.PageUtils {
 		var self = this;
 		var html = '';
 		var rows = sort_by( this.bucketFiles, 'filename' ); // sort in place, so idx works below
-		var cols = ['Filename', 'Size', 'Modified', 'Author', 'Actions'];
+		var cols = ['Filename', 'Size', 'Modified', 'Source', 'Actions'];
 		
 		var add_link = this.bucket.id ? 
 			'<div class="button small secondary" onClick="$P().uploadBucketFiles()"><i class="mdi mdi-cloud-upload-outline">&nbsp;</i>Upload Files...</div>' : 
