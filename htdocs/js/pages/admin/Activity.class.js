@@ -489,7 +489,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 			}
 			
 			var tds = [
-				'' + self.getRelativeDateTime( item.epoch ) + '',
+				'<span title="' + self.getNiceDateTimeText(item.epoch, true) + '">' + self.getRelativeDateTime(item.epoch) + '</span>',
 				'<div class="td_big" style="white-space:nowrap; font-weight:normal;"><i class="mdi mdi-' + item_type.icon + '">&nbsp;</i>' + item_type.label + '</div>',
 				'' + desc + '',
 				'' + self.getNiceUser(item.admin || item.username, true) + '',
