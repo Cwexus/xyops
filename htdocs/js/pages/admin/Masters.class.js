@@ -56,7 +56,7 @@ Page.Masters = class Masters extends Page.Base {
 		html += this.getBasicGrid( rows, cols, 'conductor', function(item, idx) {
 			var actions = [
 				// '<button class="link" onClick="$P().upgrade_master(' + idx + ')"><b>Upgrade</b></button>',
-				// '<button class="link" onClick="$P().restart_master(' + idx + ')"><b>Restart</b></button>',
+				'<button class="link" onClick="$P().restart_master(' + idx + ')"><b>Restart</b></button>',
 				'<button class="link" onClick="$P().shutdown_master(' + idx + ')"><b>Shutdown</b></button>',
 				// '<button class="link" onClick="$P().remove_master(' + idx + ')"><b>Remove</b></button>'
 			];
