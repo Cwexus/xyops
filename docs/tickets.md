@@ -1,5 +1,7 @@
 # Tickets
 
+## Overview
+
 Tickets in xyOps provide a lightweight, integrated way to track issues, releases, changes, incidents, and any operational work that benefits from an audit trail, comments, files, and automation. Tickets live alongside jobs, alerts, servers, and workflows, and can both react to the system (auto-created from jobs or alerts) and drive the system (run events/jobs directly from a ticket).
 
 
@@ -124,7 +126,7 @@ Programmatic searches are available via [search_tickets](api.md#search_tickets) 
 - [edit_tickets](privileges.md#edit_tickets): Edit tickets, add comments, attach/remove files, run ticket events.
 - [delete_tickets](privileges.md#delete_tickets): Permanently delete tickets.
 
-Standard authentication applies for UI and API usage (sessions or API Keys). See [API](privileges.md) and [API](api.md) for details.
+Standard authentication applies for UI and API usage (sessions or API Keys). See [Privileges](privileges.md) and [API](api.md) for details.
 
 
 ## See Also

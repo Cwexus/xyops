@@ -1,8 +1,10 @@
 # Buckets
 
+## Overview
+
 Storage Buckets provide durable, shareable storage for jobs and workflows. A bucket can hold structured JSON data and any number of files. Jobs can fetch from and store to buckets at well-defined points in their lifecycle so outputs from one job are available as inputs to another, even when the jobs are not directly connected in a chain.
 
-## Overview
+## Key Points
 
 - Purpose: Persistent data/files exchange between jobs and workflows.
 - Content types: JSON data object and file collection (zero or more files).

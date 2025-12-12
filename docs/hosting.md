@@ -1,8 +1,10 @@
 # Self-Hosting
 
+## Overview
+
 This guide covers self-hosting xyOps on your own infrastructure.  However, please note that for live production installs, it is dangerous to go alone.  While we provide all necessary documentation here, we strongly recommend our [Enterprise Plan](https://xyops.io/enterprise). This gives you access to our white-glove onboarding service, where our team will guide you through every step, validate your configuration, and ensure your integration is both secure and reliable.  This also gets you priority ticket support, and live chat support from a xyOps engineer.
 
-# Quick-Start
+## Quick-Start
 
 To start quickly and just get xyOps up and running to test it out, you can use the following Docker command:
 
@@ -32,7 +34,7 @@ A few notes:
 
 As an aside, when you add worker servers via the UI, secret keys are not used (nor are they *ever* sent over the wire).  Instead, a special cryptographic token is used to authenticate new worker servers.  You can also add batches of servers in bulk via API Keys.  See [Adding Servers](servers.md#adding-servers) for more details.
 
-## Configuration
+### Configuration
 
 The xyOps main configuration file is located at `/opt/xyops/conf/config.json`.  Grab our [sample file](https://github.com/pixlcore/xyops/sample_conf/config.json) to use as a starting point for building yours.  You can bind a local file to this path on your Docker container by adding this to your Docker run command:
 
@@ -42,7 +44,7 @@ The xyOps main configuration file is located at `/opt/xyops/conf/config.json`.  
 
 See the [Configuration Guide](config.md) for full details on how to customize this file.
 
-# Manual Install
+## Manual Install
 
 This section covers manually installing xyOps on a server (outside of Docker).
 
@@ -70,11 +72,11 @@ bin/control.sh start
 
 Replace `v1.0.0` with the desired xyOps version from the [official release list](https://github.com/pixlcore/xyops/releases), or `main` for the head revision (unstable).
 
-## Command Line
+### Command Line
 
 See our [Command Line Guide](cli.md) for controlling the xyOps service via command-line.
 
-## Adding Conductors Manually
+### Adding Conductors Manually
 
 When you manually install xyOps, it creates a cluster of one, and promotes itself to primary.  To add additional servers, follow these instructions.
 
@@ -106,7 +108,7 @@ Note that conductor server hostnames **cannot change**.  If they do, you will ne
 
 For fully transparent auto-failover using a single user-facing hostname, see [Multi-Conductor with Nginx](#multi-conductor-with-nginx) below.
 
-## Uninstall
+### Uninstall
 
 To uninstall xyOps, simply stop the service and delete the `/opt/xyops` directory.
 
@@ -120,7 +122,7 @@ cd -
 
 Make sure you [decommission your servers](servers.md#decommissioning-servers) first.
 
-# Environment Variables
+## Environment Variables
 
 xyOps supports a special environment variable syntax, which can specify command-line options as well as override any configuration settings.  The variable name syntax is `XYOPS_key` where `key` is one of several command-line options (see table below) or a JSON configuration property path.  These can come in handy for automating installations, and using container systems.  
 
@@ -139,7 +141,7 @@ For overriding configuration properties by environment variable, you can specify
 
 Almost every [configuration property](config.md) can be overridden using this environment variable syntax.  The only exceptions are things like arrays, e.g. [log_columns](config.md#log_columns).
 
-# Daily Backups
+## Daily Backups
 
 Here is how you can generate daily backups of critical xyOps data, regardless of your backend storage engine.  First, create an [API Key](api.md#api-keys) and grant it full administrator privileges (this is required to use the [admin_export_data](api.md#admin_export_data) API).  You can then request a backup using a [curl](https://curl.se/) command like this:
 
@@ -157,7 +159,7 @@ xyops-data-export-YYYY-MM-DD-UNIQUEID.txt.gz
 
 Please note that this example will only export **critical** data, and is not a full backup (notably absent is job history, alert history, snapshot history, server history, and activity log).  To backup *everything*, change the JSON in the curl request to: `{"lists":"all","indexes":"all","extras":"all"}`.  Note that this can take quite a while and produce a very large file depending on your xyOps database size.  To limit what exactly gets included in the backup, consult the [admin_export_data](api.md#admin_export_data) API docs.
 
-# TLS
+## TLS
 
 The xyOps built-in web server ([pixl-server-web](https://github.com/jhuckaby/pixl-server-web)) supports TLS.  Please read the following guide for setup instructions:
 
@@ -165,7 +167,7 @@ The xyOps built-in web server ([pixl-server-web](https://github.com/jhuckaby/pix
 
 Alternatively, you can setup a proxy to sit in front of xyOps and handle TLS for you (see next section).
 
-# Multi-Conductor with Nginx
+## Multi-Conductor with Nginx
 
 For a load balanced multi-conductor setup with Nginx w/TLS, please read this section.  This is a complex setup, and requires advanced knowledge of all the components used.  Let me recommend our [Enterprise Plan](https://xyops.io/enterprise) here, as we can set all this up for you.  Now, the way this configuration works is as follows:
 
@@ -276,13 +278,13 @@ A few things to note here:
 
 Grab our sample [config.json](https://github.com/pixlcore/xyops/blob/main/sample_conf/config.json) file to use as a starting point to create yours.  See the [xyOps Configuration Guide](config.md) for details on how to customize this file.
 
-# Satellite
+## Satellite
 
 **xyOps Satellite ([xySat](https://github.com/pixlcore/xysat))** is a companion to the xyOps system.  It is both a job runner, and a data collector for server monitoring and alerting.  xySat is designed to be installed on *all* of your servers, so it is lean, mean, and has zero dependencies.
 
 For instructions on how to install xySat, see [Adding Servers](servers.md#adding-servers).
 
-## Configuration
+### Configuration
 
 xySat is configured automatically via the xyOps conductor server.  The [satellite.config](config.md#satellite-config) object is automatically sent to each server after it connects and authenticates, so you can keep a conductor version of the xySat configuration which is auto-synced to all servers.  Here is the default config:
 
@@ -324,7 +326,7 @@ Here are descriptions of the configuration properties:
 | `monitoring_enabled` | Boolean | Enable or disable the monitoring subsystem (i.e. send monitoring metrics every minute). |
 | `quickmon_enabled` | Boolean | Enable or disable the quick monitors, which send lightweight metrics every second. |
 
-### Overriding The Connect URL
+#### Overriding The Connect URL
 
 When xySat is first installed, it is provided an array of hosts to connect to, which becomes a `hosts` array in the xySat config file on each server.  When xySat starts up, it connects to a *random host* from this array, and figures out which conductor is primary, and reconnects to that host.  If the conductor cluster changes, a new `hosts` array is automatically distributed to all servers by the current conductor.
 
@@ -340,7 +342,7 @@ Note that you should **not** add a `host` property into the [satellite.config](c
 
 When both `hosts` and `host` exist in the config file, `host` takes precedence.
 
-# Proxy Servers
+## Proxy Servers
 
 To send all outbound requests through a proxy (for e.g. web hooks), simply set one or more of the [de-facto standard environment variables](https://curl.se/docs/manpage.html#ENVIRONMENT) used for this purpose:
 
@@ -378,7 +380,7 @@ The types of proxies supported are:
 
 Make sure to set the environment variables across your server fleet, so things like the [HTTP Request Plugin](plugins.md#http-request-plugin) will also adhere.
 
-# Air-Gapped Mode
+## Air-Gapped Mode
 
 xyOps supports air-gapped installs, which prevent it from making unauthorized outbound connections beyond a specified IP range.  You can configure which IP ranges it is allowed to connect to, via whitelist and/or blacklist.  The usual setup is to allow local LAN requests so servers can communicate with each other in your infra.
 
@@ -400,7 +402,7 @@ For handling air-gapped software upgrades safely, please contact [xyOps Support]
 
 All xyOps documentation is available offline inside the xyOps app.
 
-## Air-Gapped Satellite Installs
+### Air-Gapped Satellite Installs
 
 xyOps supports fully air-gapped server installs and upgrades.  Here is how it works:
 
@@ -416,11 +418,11 @@ For Docker containers, make sure that your local Docker has our images stored lo
 - **xyOps**: https://github.com/pixlcore/xyops/pkgs/container/xyops
 - **xySat**: https://github.com/pixlcore/xysat/pkgs/container/xysat
 
-# Secret Key Rotation
+## Secret Key Rotation
 
 xyOps uses a single secret key on every conductor server. This key encrypts stored secrets, signs temporary UI tokens, and issues authentication tokens for worker servers (xySat). Rotating this key is fully automated and performed from the UI.
 
-## Overview
+### Overview
 
 - **Secure generation**: A new cryptographically secure key is generated by the primary conductor and is never transmitted in plaintext.
 - **Orchestrated rotation**: The scheduler is paused, queued jobs are flushed, and active jobs are aborted before rotation proceeds.
@@ -430,7 +432,7 @@ xyOps uses a single secret key on every conductor server. This key encrypts stor
 - **Persistent config**: The new key is written to `/opt/xyops/conf/overrides.json`. The base `config.json` is not modified by design (often mounted read-only in Docker).
 - **Not impacted**: Existing user sessions and API keys remain valid and are not affected by key rotation.
 
-## Pre-Checks
+### Pre-Checks
 
 Before starting a rotation, ensure that all conductors and all worker servers are online and healthy:
 
@@ -439,7 +441,7 @@ Before starting a rotation, ensure that all conductors and all worker servers ar
 
 If a node is offline during rotation, it will not receive updates automatically. See [Offline Recovery](#offline-recovery) below.
 
-## Rotation Process
+### Rotation Process
 
 1. Click on the "System" link in the Admin section in the sidebar, and start Key Rotation.
 2. The system pauses the scheduler, flushes queued jobs, and aborts active jobs.
@@ -451,11 +453,11 @@ If a node is offline during rotation, it will not receive updates automatically.
 
 No manual edits or restarts are required when all nodes are online.
 
-## Offline Recovery
+### Offline Recovery
 
 If a server or conductor was offline during the rotation window, you will need to perform the appropriate recovery action.
 
-### Re-authenticate an Offline Worker Server
+#### Re-authenticate an Offline Worker Server
 
 If a worker server missed the rotation, you can recover it by deriving a new auth token manually.
 
@@ -467,7 +469,7 @@ What you need:
 Compute the SHA-256 of the concatenation: `SERVER_ID + SECRET_KEY`, and use the hex digest as the new auth token. Example:
 
 ```sh
-# OpenSSL
+## OpenSSL
 printf "%s" "SERVER_IDSECRET_KEY" | openssl dgst -sha256 -r | awk '{print $1}'
 ```
 
@@ -479,7 +481,7 @@ Then edit the satellite config on the worker:
 
 Set the `auth_token` property to the computed SHA-256 hex string. Save the file -- the satellite will auto-reload and attempt to reconnect within ~30 seconds. Check the satellite logs for troubleshooting.
 
-### Update an Offline Conductor
+#### Update an Offline Conductor
 
 If a conductor was offline during rotation, SSH to it and update the key by hand:
 
@@ -489,7 +491,7 @@ If a conductor was offline during rotation, SSH to it and update the key by hand
 
 After the update, the conductor will rejoin the cluster with the correct key.
 
-## Best Practices
+### Best Practices
 
 - Schedule rotations during a maintenance window to tolerate job aborts.
 - Confirm node health beforehand to avoid manual recovery steps.

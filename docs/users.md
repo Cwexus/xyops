@@ -1,5 +1,7 @@
 # Users and Roles
 
+## Overview
+
 This document explains how user accounts, roles, and permissions work in xyOps. The platform includes account management (creation, login, sessions, password reset) and extends it with roles, resource restrictions, security logging, avatars, and admin tooling.
 
 - Core account system: built-in authentication, session management, and password workflows.

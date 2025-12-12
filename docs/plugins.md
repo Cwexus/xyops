@@ -1,5 +1,7 @@
 # Plugins
 
+## Overview
+
 This document describes the xyOps Plugin System.  You can extend xyOps with the inclusion of Plugins, either by writing them yourself (in any language!), or by finding one on the [Plugin Marketplace](marketplace.md).
 
 ## Plugin Types
@@ -17,6 +19,7 @@ Several built-in Event Plugins ship with xyOps.  They are:
 | **[Shell Plugin](#shell-plugin)** | The Shell Plugin allows you to easily create events that execute arbitrary shell code, without having to learn the xyOps Plugin API. |
 | **[HTTP Request Plugin](#http-request-plugin)** | The HTTP Plugin can send HTTP requests to any URL, and supports a variety of protocols and options, including custom headers and custom body content. |
 | **[Test Plugin](#test-plugin)** | The Test Plugin exists mainly to test xyOps, but it can also be useful for testing pieces of workflows.  It outputs sample data and optionally a sample file, which are passed to downstream events, if connected. |
+| **[Docker Plugin](#docker-plugin)** | The Docker Plugin allows you to run custom scripts inside a Docker container.  Similar to the [Shell Plugin](#shell-plugin), you can specify any custom code to run, and in any language, as long as it supports a [Shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29) line. |
 
 To write your own Event Plugin, all you need is to provide a command-line executable, and have it read and write JSON over [STDIN and STDOUT](https://en.wikipedia.org/wiki/Standard_streams).  Information about the current job is passed as a JSON document to your STDIN, and you can send back status updates and completion events simply by writing JSON to your STDOUT.
 
@@ -85,45 +88,7 @@ Here is an example JSON document sent to an Event Plugin's STDIN as part of a jo
 	"progress": 0,
 	"cwd": "/opt/xyops/satellite/temp/jobs/jmi11fqevei",
 	"log_file": "/opt/xyops/satellite/logs/jobs/job-jmi11fqevei.log",
-	"pid": 1789701,
-	"activity": [
-		{
-			"id": "mmi11fqexej",
-			"epoch": 1763256572.025,
-			"msg": "xyOps job starting: #jmi11fqevei",
-			"server": "joemax.lan"
-		},
-		{
-			"id": "mmi11fqeyek",
-			"epoch": 1763256572.026,
-			"msg": "Source: User",
-			"server": "joemax.lan"
-		},
-		{
-			"id": "mmi11fqeyel",
-			"epoch": 1763256572.026,
-			"msg": "Event ID: #emi11ejdlde",
-			"server": "joemax.lan"
-		},
-		{
-			"id": "mmi11fqf0em",
-			"epoch": 1763256572.028,
-			"msg": "Chosen server: raspberrypi (random)",
-			"server": "joemax.lan"
-		},
-		{
-			"id": "mmi11fqf5en",
-			"epoch": 1763256572.033,
-			"msg": "Moving job state from {starting} to {active}",
-			"server": "joemax.lan"
-		},
-		{
-			"id": "mmi11fqf5eo",
-			"epoch": 1763256572.033,
-			"msg": "Sending launch command to remote server",
-			"server": "joemax.lan"
-		}
-	]
+	"pid": 1789701
 }
 ```
 
@@ -480,7 +445,7 @@ And here is an example JSON document sent to an Action Plugin's STDIN as part of
 
 ```json
 {
-	"xyops": 1,
+	"xy": 1,
 	"type": "action",
 	"condition": "alert_new",
 	"alert_def": {
@@ -628,7 +593,10 @@ Here are descriptions of all the `dargs` date/time properties:
 The JSON will be provided to your plugin as a single line on STDIN.  You will need to read and parse the JSON to iterate over the `items` array.  Here is an example in Node.js (but you can use any language you want):
 
 ```js
-const data = JSON.parse(require('fs').readFileSync(process.stdin.fd, 'utf8'));
+// read JSON from STDIN
+const chunks = [];
+for await (const chunk of process.stdin) { chunks.push(chunk); }
+const data = JSON.parse( chunks.join('') );
 
 data.items.forEach( function(item) {
 	// do something with item...
@@ -672,8 +640,10 @@ Now, instead of a simple Boolean, the items can also be objects containing a `la
 In fact, what you can do instead of constructing a new `items` array for the output, is to modify in place the existing `items` array you received via STDIN (i.e. just add `launch` and other properties directly to it), and then echo the modified object back out via STDOUT.  To illustrate this, here is a silly example that randomly launches jobs based on a 50% probability:
 
 ```js
-// read from STDIN
-const data = JSON.parse(require('fs').readFileSync(process.stdin.fd, 'utf8'));
+// read JSON from STDIN
+const chunks = [];
+for await (const chunk of process.stdin) { chunks.push(chunk); }
+const data = JSON.parse( chunks.join('') );
 
 data.items.forEach( function(item) {
 	// randomly launch a job or not (silly example)

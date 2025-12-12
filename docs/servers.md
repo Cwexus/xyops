@@ -1,10 +1,12 @@
 # Servers
 
+## Overview
+
 Servers are the worker nodes in a xyOps cluster. Each server runs our lightweight satellite agent (xySat), maintains a persistent WebSocket connection to the conductor, collects monitoring metrics, and executes jobs on demand. A server may be a physical host, virtual machine, or container, and can run Linux, macOS, or Windows.
 
 This document explains how servers fit into xyOps, how to add and organize them, how events target servers, what you can see on each server's UI page, and how the system scales to large fleets.
 
-## Overview
+## Key Points
 
 - Servers run xySat and act as job runners and metrics collectors.
 - Conductors run the full xyOps stack and coordinate scheduling, routing, storage, and UI.

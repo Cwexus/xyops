@@ -1,12 +1,10 @@
 # Plugin Marketplace
 
-xyOps has an integrated Plugin Marketplace, so you can expand the app's feature set by leveraging Plugins published both by PixlCore (the makers of xyOps), as well as the developer community.  To visit the marketplace, click the "**Marketplace**" link in the sidebar.
-
-This document explains how to create and publish your own xyOps Plugin on the marketplace.
-
 ## Overview
 
-Marketplace Plugins are essentially cloud-hosted code libraries that self-download and self-execute, along with metadata to populate the marketplace listing, and define Plugin parameters for configuration.
+xyOps has an integrated Plugin Marketplace, so you can expand the app's feature set by leveraging Plugins published both by PixlCore (the makers of xyOps), as well as the developer community.  To visit the marketplace, click the "**Marketplace**" link in the sidebar.
+
+This document explains how to create and publish your own xyOps Plugins.  Marketplace Plugins are essentially cloud-hosted code libraries that self-download and self-execute, along with metadata to populate the marketplace listing, and define Plugin parameters for configuration.
 
 The marketplace doesn't actually "host" Plugins -- it merely provides a search mechanism to discover them.  The Plugins themselves are hosted elsewhere on package repositories like NPM or GitHub, and the marketplace links to them.
 
@@ -43,7 +41,7 @@ Your Plugin will need to be able to self-download and self-launch using a combo 
 - [go run](https://pkg.go.dev/cmd/go#hdr-Compile_and_run_Go_program) - If your Plugin is written in Go, use `go run` which can download and run your Plugin using one command.
 - [docker run](https://docs.docker.com/reference/cli/docker/container/run/) - If your Plugin ships as a docker container on a public container registry, then use `docker run`.
 
-#### npx
+### npx
 
 Here is an example command using `npx`.  The `-y` flag skips the user prompt.
 
@@ -63,7 +61,7 @@ This variant uses `npx` with a GitHub repo link, and an inline version tag (`#v1
 
 To learn more about how to package up your Node.js project for NPX, and to see a live working demo, check out [xyplug-sample-npx](https://github.com/pixlcore/xyplug-sample-npx) on GitHub.
 
-#### uvx
+### uvx
 
 Here is an example command using `uvx`:
 
@@ -73,7 +71,7 @@ uvx git+https://github.com/myorg/xyplug-example@v1.0.0
 
 To learn more about how to package up your Python project for UVX, and to see a live working demo, check out [xyplug-sample-uvx](https://github.com/pixlcore/xyplug-sample-uvx) on GitHub.
 
-#### go run
+### go run
 
 Here is an example command using `go run`:
 
@@ -83,7 +81,7 @@ go run github.com/myorg/xyplug-example@v1.0.0
 
 To learn more about how to package up your Go project for `go run`, and to see a live working demo, check out [xyplug-sample-go](https://github.com/pixlcore/xyplug-sample-go) on GitHub.
 
-#### docker run
+### docker run
 
 Here is an example using `docker run`:
 

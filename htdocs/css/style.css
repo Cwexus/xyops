@@ -627,6 +627,26 @@ body.dark div.maint_unit {
 	color: var(--theme-color);
 }
 
+.doc-body h1,
+.doc-body h2,
+.doc-body h3,
+.doc-body h4,
+.doc-body h5,
+.doc-body h6 {
+	scroll-margin-top: 75px;
+	position: relative;
+	margin-top: 32px;
+	margin-bottom: 16px;
+	font-weight: 600;
+	line-height: 1.25;
+	color: var(--theme-color);
+	clear: both;
+}
+
+.doc-body h5 {
+	font-size: 1em;
+}
+
 .markdown-body p,
 .markdown-body blockquote,
 .markdown-body ul,
@@ -714,6 +734,7 @@ body.dark .dialog .markdown-body table tr th {
 }
 
 .markdown-body p code, .markdown-body td code, .markdown-body li code, .fr_caption code {
+	font-family: var(--font-family-monospace);
 	background-color: var(--shadow-color);
 	border-radius: 4px;
 	padding: 2px 4px 2px 4px;
@@ -735,6 +756,7 @@ body.dark .fr_caption code {
 
 .markdown-body pre {
 	white-space: pre-wrap;
+	word-break: break-word;
 	/* background-color: var(--border-color);
 	border: 1px solid var(--icon-color); */
 	border-radius: 2px;
@@ -749,6 +771,7 @@ body.dark .fr_caption code {
 
 .markdown-body .blocknote {
 	border-left: 3px solid var(--active-color);
+	margin-top: 1.5em;
 	margin-left: 0;
 	margin-bottom: 16px;
 	padding-left: 30px;
@@ -776,6 +799,54 @@ body.dark .fr_caption code {
 }
 .markdown-body .blocknote.caution {
 	--active-color: var(--purple);
+}
+
+.box_title.doc {
+	font-size: 18px;
+}
+.box_title.doc .box_title_widget {
+	height: 28px;
+}
+.box_title.doc .box_title_widget input {
+	width: 140px;
+	line-height: 26px;
+	font-size: 14px;
+	border-radius: 14px;
+}
+
+.doc-body {
+	margin-left: 180px;
+	margin-right: 180px;
+	font-size: 16px;
+}
+
+.doc-body ul > li > p {
+	margin-top: 16px;
+	margin-bottom: 0;
+}
+
+.doc-body li code {
+	word-break: break-word;
+}
+
+.markdown-body a.anchor {
+	position: absolute;
+	margin-left: -1.5em;
+	padding-right: 4px;
+	color: var(--icon-color);
+	opacity: 0;
+}
+.markdown-body .heading:hover > a.anchor {
+	opacity: 1;
+}
+.markdown-body a.anchor:hover {
+	opacity: 1;
+	color: var(--theme-color);
+}
+
+.article_fin {
+	font-size: 20px;
+	color: var(--icon-color);
 }
 
 /* Swatch / Table Row Colors */
@@ -1867,6 +1938,12 @@ pre code.hljs {
 	overflow-x: hidden;
 	white-space: pre-wrap;
 	word-break: break-word;
+}
+
+div.doc-body pre code.hljs {
+	font-size: 14px;
+	line-height: 18px;
+	padding: 0.3em;
 }
 
 span.hljs-number {

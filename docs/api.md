@@ -1,6 +1,8 @@
-# Overview
+# API Reference
 
-This section details the xyOps REST API and API Key system.  All API calls expect JSON as input (unless they are simple HTTP GETs), and will return JSON as output.  The main API endpoint is:
+## Overview
+
+This document details the xyOps REST API and API Key system.  All API calls expect JSON as input (unless they are simple HTTP GETs), and will return JSON as output.  The main API endpoint is:
 
 ```
 https://SERVER/api/app/NAME/v1
@@ -55,8 +57,6 @@ Example error response:
 	"description": "No Session ID or API Key could be found"
 }
 ```
-
-# API Reference
 
 ## Alerts
 
@@ -235,6 +235,7 @@ Here is an example request:
 	"expression": "monitors.load_avg >= (cpu.cores + 1)",
 	"message": "CPU load average is too high: {{float(monitors.load_avg)}} ({{cpu.cores}} CPU cores)"
 }
+```
 
 And an example response:
 

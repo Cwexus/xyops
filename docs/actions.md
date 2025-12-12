@@ -1,10 +1,12 @@
 # Actions
 
+## Overview
+
 Actions in xyOps handle responses to job outcomes and alert state changes. You attach actions to events (jobs) and alerts so when specific conditions occur, xyOps executes one or more actions in parallel. Typical actions include sending email, firing a web hook, running a job, creating a ticket, taking a snapshot, and more.
 
 This document explains how actions work, the conditions they support, and details each action type with parameters and examples.
 
-## Overview
+## Key Points
 
 - Actions are small definition objects with three core fields: `enabled`, `condition`, and `type`. Extra fields depend on the type.
 - Job actions live in events and may fire when the job starts or completes with a specific outcome. Some action types are job-only.  Categories and universal defaults can add actions.
@@ -509,5 +511,5 @@ Example (job start):
 
 ## See Also
 
-- Data structures: [Action](data.md#action)
-- Alerts: [Alerts](alerts.md)
+- [Action](data.md#action) data structure
+- [Alerts](alerts.md)

@@ -1,10 +1,12 @@
 # Snapshots
 
+## Overview
+
 Snapshots capture a point-in-time view of everything happening on one server (or across a server group). They're designed for fast forensics, side-by-side comparisons (before/after a deploy, during an incident), and long-term audit trails.
 
 This page explains what snapshots are, what they contain, how to create them (manually or automatically), how watches work, and a few tips for using them effectively.
 
-## Overview
+## Key Points
 
 - A snapshot records the current state of a server (processes, connections, mounts, devices, metrics, jobs, alerts, and more).
 - Group snapshots record a whole group at once (all current members, plus recently offline servers), enabling fleet-level forensics.

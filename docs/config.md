@@ -1,5 +1,7 @@
 # Configuration
 
+## Overview
+
 xyOps is configured primarily by a single JSON file located here: `/opt/xyops/conf/config.json` (the location may vary for custom installs).
 
 However, if the configuration is modified using the UI, overrides are saved in a separate file: `/opt/xyops/conf/overrides.json`

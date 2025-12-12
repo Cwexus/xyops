@@ -1,5 +1,7 @@
 # Alerts
 
+## Overview
+
 Alerts evaluate live server data and trigger actions when conditions are met. In xyOps, an alert is defined once (the "definition") and may fire many times across servers (each firing is an "invocation"). Alerts are evaluated every minute on the conductor using the most recent [ServerMonitorData](data.md#servermonitordata) collected from each server.
 
 Use alerts to detect system conditions (e.g., high CPU, low memory, disk full, job spikes), notify teams, attach context via snapshots, open tickets, run jobs, and optionally limit or abort jobs on affected servers.

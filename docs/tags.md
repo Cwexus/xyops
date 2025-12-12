@@ -1,5 +1,7 @@
 # Tags
 
+## Overview
+
 Tags are user-defined labels you can attach to events, jobs, and tickets. They serve as lightweight metadata for organization and search, and can also drive automation by triggering conditional job actions. Tags are defined once (with a title, optional icon, and optional notes) and then referenced by ID anywhere tags are supported.
 
 - **Visual**: Tags display alongside events, running jobs, and tickets to quickly convey state such as environment or priority.

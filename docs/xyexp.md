@@ -1,5 +1,7 @@
 # xyOps Expression Format
 
+## Overview
+
 xyOps uses a custom expression syntax built upon the open-source [JavaScript Expression Language](https://www.npmjs.com/package/jexl) (or JEXL).  We extend JEXL by adding a set of custom functions you can call from inside your expressions (see below), and also allow for inline macro expansion in string evaluations, using the popular `{{ mustache }}` syntax.  This is used to power the following xyOps subsystems:
 
 - Monitor Expressions
@@ -10,8 +12,6 @@ xyOps uses a custom expression syntax built upon the open-source [JavaScript Exp
 - Workflow Split Controllers
 - Web Hook Messages
 - Email Templates
-
-## Overview
 
 The xyOps Expression Format is a JavaScript-style syntax with dot paths, array indexing, arithmetic and boolean operators.  Using it you can traverse deep object trees (e.g. [ServerMonitorData](data.md#servermonitordata)), pull out individual values, and perform operations on one or more values.
 

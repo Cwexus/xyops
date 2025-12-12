@@ -1,5 +1,7 @@
 # Monitors
 
+## Overview
+
 Monitors track a single numeric server metric over time. Each monitor points to one value in the live server data, casts it to a specific data type (integer, float, bytes, seconds, or milliseconds), and xyOps stores the samples in a time-series database. Monitors power the per-server and per-group graphs, and they can be used to trigger alerts.
 
 - A monitor evaluates its expression once per minute on each matching server.

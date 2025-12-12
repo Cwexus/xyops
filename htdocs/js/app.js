@@ -60,7 +60,8 @@ app.extend({
 		marked.use({ renderer: {
 			link(href, title, text) {
 				const titleAttr = title ? ` title="${title}"` : '';
-				return `<a href="${href}" target="_blank"${titleAttr}>${text}<i style="padding-left:3px" class="mdi mdi-open-in-new"></i></a>`;
+				if (href.match(/^\w+\:\/\//)) return `<a href="${href}" target="_blank"${titleAttr}>${text}<i style="padding-left:3px" class="mdi mdi-open-in-new"></i></a>`;
+				else return `<a href="${href}" ${titleAttr}>${text}</a>`;
 			},
 			checkbox(checked) {
 				const icon = checked ? 'mdi-checkbox-marked-outline' : 'mdi-checkbox-blank-outline';
@@ -114,7 +115,7 @@ app.extend({
 		
 		this.config.Page = [
 			{ ID: 'Dashboard' },
-			{ ID: 'Document' },
+			{ ID: 'Docs' },
 			{ ID: 'Login' },
 			{ ID: 'Events' },
 			{ ID: 'Workflows' },

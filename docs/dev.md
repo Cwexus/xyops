@@ -1,5 +1,7 @@
 # Development
 
+## Overview
+
 xyOps runs as a component in the [pixl-server](https://github.com/jhuckaby/pixl-server) framework.  It is highly recommended to read and understand that module and its component system before attempting to work on xyOps.  The following server components are also used:
 
 | Module Name | Description | License |
@@ -30,11 +32,11 @@ In addition, xyOps uses the following server-side PixlCore utility modules:
 | [pixl-tools](https://github.com/jhuckaby/pixl-tools) | A set of miscellaneous utility functions for Node.js. | MIT |
 | [pixl-unit](https://github.com/jhuckaby/pixl-unit) | A very simple unit test runner for Node.js. | MIT |
 
-For the client-side, the xyOps web application is built on the [xyapp](https://github.com/pixlcore/xyapp) HTML5/CSS/JavaScript framework:
+For the client-side, the xyOps web application is built on the [pixl-xyapp](https://github.com/pixlcore/pixl-xyapp) HTML5/CSS/JavaScript framework:
 
 | Module Name | Description | License |
 |-------------|-------------|---------|
-| [xyapp](https://github.com/pixlcore/xyapp) | A client-side JavaScript framework, designed to be a base for web applications. | MIT |
+| [pixl-xyapp](https://github.com/pixlcore/pixl-xyapp) | A client-side JavaScript framework, designed to be a base for web applications. | MIT |
 
 ## Installing Dev Tools
 

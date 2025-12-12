@@ -1,5 +1,7 @@
 # Security
 
+## Overview
+
 The xyOps team takes security very seriously. Due to the nature of how xyOps is installed on large server fleets a lot of decisions are made with security being the priority, and we always aim to implement security by design.
 
 ## Coordinated vulnerability disclosure

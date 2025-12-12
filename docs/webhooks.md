@@ -1,5 +1,7 @@
 # Web Hooks
 
+## Overview
+
 Web hooks in xyOps are outbound HTTP requests that fire in response to job and alert activity. They integrate xyOps with external systems such as Slack, Discord, Pushover, incident and chat systems, or any custom HTTP endpoint you control.
 
 - **Fully customizable request**: URL, method, headers, and body are user-defined and support templating (macros).

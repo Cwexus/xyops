@@ -1,12 +1,14 @@
 # Channels
 
+## Overview
+
 Notification Channels in xyOps let you bundle multiple notification targets and follow-up actions under a single reusable name. Instead of attaching individual emails, web hooks, or run-event actions everywhere, you reference a channel from your event/workflow or alert action and xyOps executes the channel's configured actions together.
 
 Typical use case: Create a channel named "Severity 1" that emails your on-call team, sends a Slack/web hook, runs a remediation event, and plays an audible alert in the UI for connected users.
 
 This document explains how channels work, where they are used, what they can do, and provides an example configuration.
 
-## Overview
+## Key Points
 
 - Channels are reusable notification/action bundles that you define once and reference from actions.
 - Attach a channel via an action of type "Notify Channel" on events/workflows or alerts. See [Actions](actions.md).

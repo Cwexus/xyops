@@ -1,5 +1,7 @@
 # xyOps Wire Protocol
 
+## Overview
+
 This document describes the **xyOps Wire Protocol** (XYWP) v1.0, which is a standard method of communication between two processes that may know nothing about each other.  The processes may be written in different languages, or be binary executables.  The wire protocol simply defines a means of exchanging structured data between them in a language-agnostic way.
 
 xyOps uses the wire protocol to communicate with its Plugins, which may be written in any language.
@@ -9,8 +11,6 @@ xyOps uses the wire protocol to communicate with its Plugins, which may be writt
 - **Version**: 1.0
 - **Date**: November 16, 2025
 - **Authors**: Joseph Huckaby (PixlCore)
-
-## Overview
 
 XYWP uses [JSON](https://en.wikipedia.org/wiki/JSON) over [STDIO](https://en.wikipedia.org/wiki/Standard_streams) pipes for the basis of communication.  Specifically, [NDJSON](https://github.com/ndjson/ndjson-spec) is utilized, meaning a full JSON message is compacted onto a single line.  The sender needs to delimit the JSON with a single EOL character (ASCII 10), and the receiver needs to line-read to delimit the incoming message.  XYWP builds on this base protocol by introducing a few key properties into the top-level JSON, which allow the receiver to learn more about the message (see below).
 

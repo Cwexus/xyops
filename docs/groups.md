@@ -1,10 +1,12 @@
 # Server Groups
 
+## Overview
+
 Server Groups (often simply called "Groups") let you organize multiple servers into logical sets and operate on them as a unit. A single server may belong to any number of groups. Groups power event targeting (run jobs against a group rather than a specific host), aggregate live and historical views in the UI, provide default alert actions, and enable group snapshots and watches.
 
 This document explains what groups are, how servers join groups (manually and automatically), how events target groups and choose servers, how default alert actions work, how to take group snapshots and watches, and what you can do on the group UI pages.
 
-## Overview
+## Key Points
 
 - Groups are named collections of servers; a server can be in multiple groups.
 - Servers can join groups automatically via a hostname regular expression match, or you can assign groups manually on each server.
@@ -39,7 +41,6 @@ Servers can be added to groups in two ways, and a server may belong to multiple 
 	- When a server connects (or its hostname changes), xyOps tests it against all groups and assigns any matching groups.
 	- This automatic assignment is re-evaluated whenever groups change (create/edit/delete) and propagated to servers and storage.
 	- To match all servers, use `.+`.
-
 2. **Manual Assignment per Server**
 	- From any Server page, choose "Edit Server..." and set Groups explicitly, or use "Add Server..." on a Group view.
 	- When you manually assign groups to a server, the server's "Auto Group" behavior is disabled for that server.

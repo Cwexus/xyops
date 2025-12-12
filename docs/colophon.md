@@ -36,13 +36,4 @@ Additionally, we would like to thank:
 - [V8](https://v8.dev/) - The JavaScript engine that powers Node.js.
 - [Git](https://git-scm.com/): The version control system that tracks our history.
 - [Docker](https://www.docker.com/): How we deploy our software.
-- [Linux](https://kernel.org/): The OS on which we all stand.
-
-## AI Disclosure
-
-Artificial intelligence was used to assist development of this project, but 99.999% of the code was hand-written by a human.  Specifically, AI only assisted with:
-
-- Documentation
-- Windows PowerShell scripts for auto-installing xySat
-- Dockerfiles and Docker Compose YAMLs
-- A few CSS tricks
+- [Linux](https://kernel.org/): The incredible OS on which we all stand.

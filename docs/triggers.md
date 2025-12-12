@@ -1,10 +1,12 @@
 # Triggers
 
+## Overview
+
 Triggers in xyOps define when and how an event (or workflow) is allowed to run jobs. You compose one or more triggers on an event to describe automatic schedules, one-time launches, manual control, blackout windows, and optional behaviors like catch-up, delays, and sub-minute precision. The scheduler evaluates triggers once per minute (with optional second-level precision), launches matching jobs, and enforces any options.
 
 This document explains how triggers work, how they combine, and details each trigger type with parameters and examples.
 
-## Overview
+## Key Points
 
 - Each trigger is a small definition object with two core fields: `enabled` and `type`. Extra fields depend on the type.
 - An event may have multiple triggers. Some types produce launches (schedule, interval, single, plugin). Others augment or constrain scheduling (manual, catchup, range, blackout, delay, precision).

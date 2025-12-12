@@ -1,8 +1,10 @@
 # Events
 
+## Overview
+
 Events are the core building block of xyOps. An event describes what to run (a Plugin with parameters), where to run it (one or more target servers or groups), when to run it (Triggers), and how to constrain and react to runs (Limits and Actions). Each time an event "runs" it launches a job. Jobs have full lifecycle state, logs, metrics, limits, and actions.
 
-## Overview
+## Key Points
 
 - An event is a saved configuration for launching jobs. It has an `id`, `title`, `category`, `plugin`, `params`, optional `fields`, `tags`, `targets`, `algo`, `triggers`, `limits`, and `actions`.
 - When a trigger fires (schedule, interval, single-shot, plugin, or manual), the scheduler creates a job from the event and launches it on a chosen target server.

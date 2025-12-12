@@ -1,5 +1,7 @@
 # Logging
 
+## Overview
+
 This document explains how logging works in xyOps, lists every application log file, and shows an example line from each. xyOps uses the [pixl-server](https://github.com/jhuckaby/pixl-server) logging service (powered by [pixl-logger](https://github.com/jhuckaby/pixl-logger)) which writes plain text, `[bracket][delimited][columns]`.
 
 ## Log Format

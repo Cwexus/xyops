@@ -1,4 +1,6 @@
-# Scaling xyOps
+# Scaling
+
+## Overview
 
 Running xyOps in live production with lots of servers and/or lots of running jobs? Please read these best practices for scaling your deployment. This guide complements Self-Hosting -- start there first: see [Self-Hosting](hosting.md).
 

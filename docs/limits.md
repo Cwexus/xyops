@@ -1,5 +1,7 @@
 # Limits
 
+## Overview
+
 Limits are self-imposed restrictions you can place on your events, to govern resource usage as the job runs, as well as specify options such as max number of retries, or max allowed jobs to queue up.  Limits can be defined at several different levels, including directly on events, attached as workflow nodes, inherited from categories, or inherited from your global configuration file (a.k.a "universal" limits).
 
 In some cases when multiple limits of the same type are present for a job, only one limit will apply.  This is true for [Max Concurrent Jobs](#max-concurrent-jobs), [Max Retry Limit](#max-retry-limit), [Max Queue Limit](#max-queue-limit), and [Max File Limit](#max-file-limit).  For these limits xyOps will pick the first enabled limit it finds of the selected type, with the limits presorted in this order:
@@ -13,7 +15,7 @@ For other limit types, e.g. [Max Run Time](#max-run-time), [Max Output Size](#ma
 
 This document explains how limits work, where they are defined, precedence and inheritance, and details each limit type with parameters and examples.
 
-## Overview
+## Key Points
 
 - Limits apply to both events and workflows. Workflows are just events in this context and support all limit types.
 - Categories can define default limits that auto-inherit to all events in the category. Events can override category defaults.
@@ -69,7 +71,7 @@ Parameters:
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `type` | String | Set to `time` for max run time. |
+| `type` | String | Yes | Set to `time` for max run time. |
 | `duration` | Number | Yes | Maximum runtime in seconds. |
 | `tags` | Array<String> | Optional | Apply these [Tag.id](data.md#tag-id) values when exceeded. |
 | `users` | Array<String> | Optional | Email these [User.username](data.md#user-username) users. |

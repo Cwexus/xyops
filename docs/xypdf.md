@@ -1,5 +1,7 @@
 # xyOps Portable Data Format
 
+## Overview
+
 This document describes the **xyOps Portable Data Format** (XYPDF) v1.0, which is a method of storage for data objects in xyOps.  It enables users to export, store, transfer, and import objects to and from xyOps installations.  Export and import functions are facilitated from the xyOps UI.
 
 - **Title**: xyOps Portable Data Format
@@ -7,8 +9,6 @@ This document describes the **xyOps Portable Data Format** (XYPDF) v1.0, which i
 - **Version**: 1.0
 - **Date**: November 16, 2025
 - **Authors**: Joseph Huckaby (PixlCore)
-
-## Overview
 
 XYPDF is a [JSON](https://en.wikipedia.org/wiki/JSON) formatted text file with a specific layout.  The file can be plain text (with a `.json` file extension), or [Gzip](https://en.wikipedia.org/wiki/Gzip)-compressed (with a `.json.gz` file extension).  The JSON itself may be compacted or pretty-printed.
 

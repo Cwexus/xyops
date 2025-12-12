@@ -1,8 +1,10 @@
-# Overview
+# Data Structures
 
-This document details all of the data structures used in xyOps.
+## Overview
 
-# Alert
+This document details all of the internal data structures used in xyOps.
+
+## Alert
 
 An alert definition is a trigger that specifies conditions under which the alert should fire, and what actions should take place.  The alert expression can use any server data values to determine when to fire, for e.g. `cpu.currentLoad > 80`.  Here is an example alert in JSON format:
 
@@ -25,73 +27,73 @@ An alert definition is a trigger that specifies conditions under which the alert
 }
 ```
 
-## Alert.id
+### Alert.id
 
 A unique alphanumeric ID for the alert.
 
-## Alert.title
+### Alert.title
 
 A visual title for the alert, displayed in the UI, and in notifications.
 
-## Alert.enabled
+### Alert.enabled
 
 A boolean flag indicating if the alert is enabled or not.
 
-## Alert.icon
+### Alert.icon
 
 An optional icon ID for the alert, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Alert.expression
+### Alert.expression
 
 The expression that defines the conditions under which the alert should fire.  This can use any server data values, for example: `cpu.currentLoad > 80`.  The format of the expression is JavaScript.
 
-## Alert.message
+### Alert.message
 
 The message to include in the alert notification. This can include mustache placeholders for inserting dynamic content.  Example: `CPU load average is too high: {{float(monitors.load_avg)}} ({{cpu.cores}} CPU cores)`.  See [Monitoring](monitors.md) for more on this syntax.
 
-## Alert.groups
+### Alert.groups
 
 The server groups where the alert is active.  Leave blank to apply to all groups.
 
-## Alert.actions
+### Alert.actions
 
 A set of [Actions](#action) to perform when the alert fires and/or clears.  This list may be augmented by the server group as well.
 
-## Alert.monitor_id
+### Alert.monitor_id
 
 Optionally link the alert to a monitor given its [ID](#monitor-id).  This will show the alert tag on top of the specified monitor graph.
 
-## Alert.samples
+### Alert.samples
 
 The number of consecutive times the expression must evaluate to `true` before the alert fires.  Similarly, this is also the alert "cooldown" (the expression must evaluate to `false` the same number of times before the alert is considered inactive).
 
-## Alert.notes
+### Alert.notes
 
 Optional notes or comments about the alert.
 
-## Alert.username
+### Alert.username
 
 The user or API Key who created the alert.
 	
-## Alert.modified
+### Alert.modified
 
 The Unix timestamp when the alert was last modified.
 
-## Alert.created
+### Alert.created
 
 The Unix timestamp when the alert was created.
 
-## Alert.revision
+### Alert.revision
 
 An internal revision number for the alert, incremented with each change.
 
-# APIKey
+## APIKey
 
 An API Key is a unique identifier used to authenticate requests.  Here is an API key in JSON format:
 
 ```json
 {
-	"key": "rPEu2GRpK3TPgVnmSFVPFTT9",
+	"key": "ee39a49a200fc9c9be6122f46e49f7172c389d813dac360dc1b1173cd43e5328",
 	"active": 1,
 	"privileges": {
 		"create_events": 1,
@@ -111,55 +113,55 @@ An API Key is a unique identifier used to authenticate requests.  Here is an API
 }
 ```
 
-## APIKey.id
+### APIKey.id
 
 A unique alphanumeric ID for the API Key.
 
-## APIKey.key
+### APIKey.key
 
-The actual key used to authenticate requests.
+A salted SHA256 hash of the key used to authenticate requests.  The actual key is never stored in plaintext.
 
-## APIKey.title
+### APIKey.title
 
 A visual title for the API Key, displayed in the UI.
 
-## APIKey.description
+### APIKey.description
 
 A brief description of the API Key and its purpose.
 
-## APIKey.active
+### APIKey.active
 
 A boolean flag indicating if the API Key is active or disabled.
 
-## APIKey.expires
+### APIKey.expires
 
 An optional expiration date for the API Key, in Unix seconds.  After this date/time comes to pass the API Key can no longer be used.
 
-## APIKey.username
+### APIKey.username
 
 The user or API Key who created the API Key.
 
-## APIKey.modified
+### APIKey.modified
 
 The Unix timestamp when the API Key was last modified.
 
-## APIKey.created
+### APIKey.created
 
 The Unix timestamp when the API Key was created.
 
-## APIKey.revision
+### APIKey.revision
 
 An internal revision number for the API Key, incremented with each change.
 
-## APIKey.privileges
+### APIKey.privileges
 
 The privileges assigned to the API Key, specified as object keys.  See [Privileges](#privileges) for details.
 
-## APIKey.roles
+### APIKey.roles
 
 The roles assigned to the API Key, specified as an array.  Roles can auto-assign privileges.  See [Role](#role) for details.
 
-# Bucket
+## Bucket
 
 A storage bucket is a logical container for storing files, for use in events and workflows. Buckets can hold an arbitrary number of files, and JSON data.  Here is a bucket in JSON format:
 
@@ -179,51 +181,51 @@ A storage bucket is a logical container for storing files, for use in events and
 
 Note that the bucket user data and files are stored separately, outside of the bucket object.
 
-## Bucket.id
+### Bucket.id
 
 A unique alphanumeric ID for the bucket.
 
-## Bucket.title
+### Bucket.title
 
 A visual title for the bucket, displayed in the UI.
 
-## Bucket.enabled
+### Bucket.enabled
 
 A boolean flag indicating if the bucket is enabled or not.
 
-## Bucket.icon
+### Bucket.icon
 
 An optional icon ID for the bucket, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Bucket.notes
+### Bucket.notes
 
 Optional notes or comments about the bucket.
 
-## Bucket.username
+### Bucket.username
 
 The user or API Key who created the bucket.
 
-## Bucket.modified
+### Bucket.modified
 
 The Unix timestamp when the bucket was last modified.
 
-## Bucket.created
+### Bucket.created
 
 The Unix timestamp when the bucket was created.
 
-## Bucket.revision
+### Bucket.revision
 
 An internal revision number for the bucket, incremented with each change.
 
-## Bucket.data
+### Bucket.data
 
 The user data stored in the bucket.  This is stored separately from the bucket object.
 
-## Bucket.files
+### Bucket.files
 
 An array of [File](#file) objects in the bucket.  This is stored separately from the bucket object.
 
-# Category
+## Category
 
 A category is a way to group related events together.  Each event can belong to a single category.  Here is an example category in JSON format:
 
@@ -245,59 +247,59 @@ A category is a way to group related events together.  Each event can belong to 
 }
 ```
 
-## Category.id
+### Category.id
 
 A unique alphanumeric ID for the category.
 
-## Category.enabled
+### Category.enabled
 
 A boolean flag indicating if the category is enabled or not.
 
-## Category.title
+### Category.title
 
 A visual title for the category, displayed in the UI.
 
-## Category.icon
+### Category.icon
 
 An optional icon ID for the category, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Category.color
+### Category.color
 
 A visual color for the category, displayed in the UI for all events assigned to the category.  The available color values are: `plain`,  `red`, `green`, `blue`, `skyblue`, `yellow`, `purple`, and `orange`.
 
-## Category.notes
+### Category.notes
 
 Optional notes or comments about the category.
 
-## Category.username
+### Category.username
 
 The user or API Key who created the category.
 
-## Category.modified
+### Category.modified
 
 The Unix timestamp when the category was last modified.
 
-## Category.created
+### Category.created
 
 The Unix timestamp when the category was created.
 
-## Category.revision
+### Category.revision
 
 An internal revision number for the category, incremented with each change.
 
-## Category.sort_order
+### Category.sort_order
 
 An internal sort order for the category, used to determine its position in lists.
 
-## Category.actions
+### Category.actions
 
 An array of [Action](#action) items to invoke at various points during job runs.  These are automatically applied to all events assigned to the category.  Events may define additional actions which are appended to this list at job run time.
 
-## Category.limits
+### Category.limits
 
 An array of [Limit](#limit) items to apply to running jobs, e.g. CPU and memory limits.  In the UI these are referred to as "Resource Limits".  These are automatically applied to all events assigned to the category as defaults.  Events may define additional limits *or override category limits* (matched by type).
 
-# Channel
+## Channel
 
 A notification channel is a way to send notifications to a group of users, and trigger other system actions such as web hooks, when certain event actions occur.  Here is an example channel in JSON format:
 
@@ -323,55 +325,55 @@ A notification channel is a way to send notifications to a group of users, and t
 }
 ```
 
-## Channel.id
+### Channel.id
 
 A unique alphanumeric ID for the channel.
 
-## Channel.title
+### Channel.title
 
 A visual title for the channel, displayed in the UI.
 
-## Channel.enabled
+### Channel.enabled
 
 A boolean flag indicating if the channel is enabled or not.
 
-## Channel.icon
+### Channel.icon
 
 An optional icon ID for the channel, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Channel.users
+### Channel.users
 
 An array of [User.username](#user-username)s who are subscribed to the channel, and will receive email and UI notifications for channel events.
 
-## Channel.email
+### Channel.email
 
 An optional email address (or a comma-separated list) to which notifications for channel events will be sent.
 
-## Channel.web_hook
+### Channel.web_hook
 
 An optional [WebHook.id](#webhook-id) to which notifications for channel events will be sent.
 
-## Channel.run_event
+### Channel.run_event
 
 An optional [Event.id](#event-id) to run when the channel is triggered.
 
-## Channel.sound
+### Channel.sound
 
 An optional sound effect to play to all subscribed users when the channel is triggered.  This should be a filename with a `.mp3` file extension.  See [Sound Effects](https://github.com/pixlcore/xyops/htdocs/sounds/) for the list of available sound effects to choose from.
 
-## Channel.max_per_day
+### Channel.max_per_day
 
 An optional maximum number of times the channel can be triggered per day.
 
-## Channel.notes
+### Channel.notes
 
 Optional notes or comments about the channel.
 
-## Channel.revision
+### Channel.revision
 
 An internal revision number for the channel, incremented with each change.
 
-# Event
+## Event
 
 An event is an item on the schedule which launches [Jobs](#job).  It may or may not be scheduled to run at specific times (i.e. it may be on-demand only).  Here is an example event in JSON format:
 
@@ -431,49 +433,49 @@ An event is an item on the schedule which launches [Jobs](#job).  It may or may 
 
 Events have the following properties:
 
-## Event.id
+### Event.id
 
 A unique alphanumeric ID for the event.
 
-## Event.title
+### Event.title
 
 A visual title for the event, displayed in the UI.
 
-## Event.enabled
+### Event.enabled
 
 A boolean flag indicating if the event is enabled (can run jobs) or disabled.
 
-## Event.icon
+### Event.icon
 
 An optional icon ID for the event, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Event.category
+### Event.category
 
 The [Category.id](#category-id) of the category to which the event belongs.
 
-## Event.plugin
+### Event.plugin
 
 The [Plugin.id](#plugin-id) of the plugin which will handle running jobs.
 
-## Event.params
+### Event.params
 
 An object containing key/value pairs which is passed to the job process.  These are typically defined by the [Plugin](#plugin) and populated in the UI.
 
-## Event.fields
+### Event.fields
 
 An optional array of user-defined parameter definitions that are collected when a job is started manually in the UI, and then the values are merged into the [Event.params](#event-params) object.
 
 See [Plugin.params](#plugin-params) for details on the format of the objects in this array.
 
-## Event.tags
+### Event.tags
 
 An array of [Tag](#tag) IDs which can be used to search for historical jobs.  The running job may also modify this list.
 
-## Event.targets
+### Event.targets
 
 An array of server or group targets to run the event.  Each item of the array is a string, and can can either be a [Server.id](#server-id) or a [Group.id](#group-id).
 
-## Event.algo
+### Event.algo
 
 When multiple servers are in the [Event.targets](#event-targets) array, xyOps uses a select algorithm to select a server to run the job.  The available algorithms are:
 
@@ -486,35 +488,35 @@ When multiple servers are in the [Event.targets](#event-targets) array, xyOps us
 | `prefer_first` | Prefer the first server when alphabetically sorted by hostname. |
 | `prefer_last` | Prefer the last server when alphabetically sorted by hostname. |
 
-## Event.notes
+### Event.notes
 
 Optional notes for the event, which are included in email notifications for event actions.
 
-## Event.actions
+### Event.actions
 
 An array of [Action](#action) items to invoke at various points during job runs.
 
 The event's [Category](#category) can define additional actions which are appended to this list at job run time.
 
-## Event.limits
+### Event.limits
 
 An array of [Limit](#limit) items to apply to running jobs, e.g. CPU and memory limits.  In the UI these are referred to as "Resource Limits".
 
 The event's [Category](#category) can define limits which act as defaults to the event limits.
 
-## Event.triggers
+### Event.triggers
 
 An array of [Trigger](#trigger) items to schedule future job runs and set rules, e.g. blackout dates.
 
-## Event.workflow
+### Event.workflow
 
 If the event is a workflow, this contains detailed information about the nodes and connections.  See the [Workflow](#workflow) section for details.
 
-## Event.revision
+### Event.revision
 
 An internal revision number for the event, incremented with each change.
 
-# Group
+## Group
 
 A server group is a collection of servers, usually auto-matched by hostname, but you can also manually assign servers to groups.  Here is an example group in JSON format:
 
@@ -531,39 +533,39 @@ A server group is a collection of servers, usually auto-matched by hostname, but
 }
 ```
 
-## Group.id
+### Group.id
 
 A unique alphanumeric ID for the group.
 
-## Group.title
+### Group.title
 
 A visual name for the group, displayed in the UI.
 
-## Group.icon
+### Group.icon
 
 An optional icon ID for the group, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Group.hostname_match
+### Group.hostname_match
 
 A hostname pattern used to match servers to the group.  This should be a [regular expression](https://en.wikipedia.org/wiki/Regular_expression) wrapped in a string.
 
-## Group.alert_actions
+### Group.alert_actions
 
 A set of [Actions](#action) to perform when **any** alert fires and/or clears on a server in the group.
 
-## Group.notes
+### Group.notes
 
 Optional notes for the group, which are included in email notifications for group actions.
 
-## Group.revision
+### Group.revision
 
 An internal revision number for the group, incremented with each change.
 
-## Group.sort_order
+### Group.sort_order
 
 An integer value representing the sort order of the group.  Lower values are sorted first.
 
-# Job
+## Job
 
 A job is a running (or previously ran) instance of an event.  The job structure has nearly all the same properties as [Event](#event) with these differences:
 
@@ -579,11 +581,11 @@ A job is a running (or previously ran) instance of an event.  The job structure 
 
 And these additions:
 
-## Job.id
+### Job.id
 
 An auto-generated, unique, alphanumeric ID for the job, which will always start with a `j`.
 
-## Job.type
+### Job.type
 
 An optional string representing a custom job type.  Values include:
 
@@ -592,39 +594,39 @@ An optional string representing a custom job type.  Values include:
 | `workflow` | Job is a top-level workflow control job, which will spawn sub-jobs. | 
 | `adhoc` | Job is running as an ad-hoc under a workflow, with no event attached. | 
 
-## Job.event
+### Job.event
 
 The [Event.id](#event-id) of the event which spawned the job.
 
-## Job.server
+### Job.server
 
 Which [Server.id](#server-id) that was chosen to run the job, based on the [Event.algo](#event-algo).
 
-## Job.groups
+### Job.groups
 
 When a server is chosen, that server's assigned groups are copied into the job.
 
-## Job.command
+### Job.command
 
 Which executable to run for the job.  This cannot be set -- it is copied from the [Plugin](#plugin).
 
-## Job.script
+### Job.script
 
 The script which, if present, is written and cached on disk, and then appended onto the [Job.command](#job-command) as a file argument.  This cannot be set -- it is copied from the [Plugin](#plugin).
 
-## Job.uid
+### Job.uid
 
 Which UID (User ID) to run the job process as.  This cannot be set -- it is copied from the [Plugin](#plugin).
 
-## Job.cwd
+### Job.cwd
 
 Which CWD (Current Working Directory) run the job process under.  This cannot be set -- it is copied from the [Plugin](#plugin).
 
-## Job.env
+### Job.env
 
 Custom job environment variables to inject into the executable when spawning it.  If unset, this is copied from the `job_env` global configuration property.
 
-## Job.state
+### Job.state
 
 Specifies which state the job is currently in.  Here is a list of all the possible states:
 
@@ -638,27 +640,27 @@ Specifies which state the job is currently in.  Here is a list of all the possib
 | `finishing` | Job is finishing (uploading logs and/or files). |
 | `complete` | Job is complete. |
 
-## Job.started
+### Job.started
 
 The timestamp at which the job was started (Unix seconds).  Specifically this is when the job was moved to a `ready` state.
 
-## Job.updated
+### Job.updated
 
 The timestamp at which the job was last updated (Unix seconds).
 
-## Job.completed
+### Job.completed
 
 The timestamp at which the job was completed (Unix seconds).
 
-## Job.elapsed
+### Job.elapsed
 
 The duration of the job run in seconds (calculated as the difference between [Job.started](#job-started) and [Job.completed](#job-completed)).  This does not include time spent in queue or start delay.
 
-## Job.now
+### Job.now
 
 The job's "now" time, as an Unix timestamp, which is the time at which the job was originally scheduled to launch.  This timestamp may be in the past if the job is running as part of a catch-up operation.
 
-## Job.code
+### Job.code
 
 When a job completes, the `code` denotes the result.  Zero (`0`) means success, any other value means the job failed.  You can use this to specify your own internal error code, or just specify `1` for a generic error.  Any number or string is acceptable.  There are a few special values that xyOps recognizes:
 
@@ -668,39 +670,39 @@ When a job completes, the `code` denotes the result.  Zero (`0`) means success, 
 | `critical` | This denotes that the job failed critically, and needs immediate attention. |
 | `abort` | This denotes that the job was manually aborted, either by a user or an API call. |
 
-## Job.description
+### Job.description
 
 When a job fails, the `description` property can contain a summary of the error message.
 
-## Job.remote
+### Job.remote
 
 Set to `true` when the job has an active remote server connection (job request was sent to remote server).
 
-## Job.until
+### Job.until
 
 Specifies the timestamp at which point the job can be moved into a ready state.  This property is used by the `start_delay` and `retry_delay` states.
 
-## Job.progress
+### Job.progress
 
 User-populated progress indicator, should be a floating point number between `0.0` to `1.0`.  Both extremes (`0.0` and `1.0`) display as "indeterminate" in the UI.
 
-## Job.reconnected
+### Job.reconnected
 
 A Unix timestamp of when the primary server socket was reconnected, during a job run.  The presence of this property indicates that the worker server lost its connection to the primary during the job, and then reconnected later.
 
-## Job.log_file
+### Job.log_file
 
 An optional log file for the user to write/append to, during a job.  This is a legacy carryover from Cronicle.  If present at the completion of a job, the file will be uploaded as an attachment.
 
-## Job.log_file_size
+### Job.log_file_size
 
 The size of the actual job output, in bytes, and updated continuously as job runs.  This is the STDOUT and STDERR captured from the job process, and is not associated with the legacy [Job.log_file](#job-log_file) property.
 
-## Job.activity
+### Job.activity
 
 An array of meta log entries for the job.
 
-## Job.source
+### Job.source
 
 A string ID indicating what spawned the job.  This will be one of:
 
@@ -714,7 +716,7 @@ A string ID indicating what spawned the job.  This will be one of:
 | `alert` | Job was spawned by an alert notification from the server monitoring system. |
 | `workflow` | Job was spawned as part of a workflow sequence. |
 
-## Job.parent
+### Job.parent
 
 When the job was launched from another job (custom action or workflow step), this will contain information about the parent job which spawned the current job.  It will be an object with the following properties:
 
@@ -725,7 +727,7 @@ When the job was launched from another job (custom action or workflow step), thi
 | `code` | Mixed | The [Job.code](#job-code) of the job which launched the current job. |
 | `description` | String | The [Job.description](#job-description) of the job which launched the current job. |
 
-## Job.input
+### Job.input
 
 When another job passes data or files to the current job, an `input` object is populated.  The object may have the following properties:
 
@@ -736,43 +738,43 @@ When another job passes data or files to the current job, an `input` object is p
 
 The format of the `data` object is freeform, and completely user-defined.  The `files` array will be formatted the same as [Job.files](#job-files).
 
-## Job.retried
+### Job.retried
 
 Boolean, will be set to `true` when a job was retried, and another job exists in the same set.
 
-## Job.retry_count
+### Job.retry_count
 
 For retried jobs, a retry counter is present that counts upwards for each new retry.  It will not exceed the retry [limit](#limit) set in the event.
 
-## Job.retry_prev
+### Job.retry_prev
 
 When a job is a retry, this property will contain the [Job.id](#job-id) of the previous attempt.
 
-## Job.jobs
+### Job.jobs
 
 When a job launches other jobs, either by retry or action condition, the newly launched jobs will be added to a `jobs` array in the parent (source) job.  Each item in the array is an object with `id` and `reason` properties.  The reason can be one of `action` or `retry`.
 
-## Job.cpu
+### Job.cpu
 
 This will contain information about the job process CPU usage.
 
-## Job.mem
+### Job.mem
 
 This will contain information about the job process memory usage.
 
-## Job.disk
+### Job.disk
 
 This will contain information about the job process disk usage.
 
-## Job.net
+### Job.net
 
 This will contain information about the job process network usage (open TCP connections).
 
-## Job.data
+### Job.data
 
 This is a place where the job can store arbitrary data, which will be passed to the next job (if part of a workflow, or launched via an action).
 
-## Job.files
+### Job.files
 
 This will contain information about all uploaded files for the job.  While the job is running, the user can populate this array to attach files for the job.  Each item in the array can be a simple string (file path or glob), a sub-array of file path and filename, a sub-array of file path, filename, and a `true` boolean to delete the file after uploading, or an object with the following properties:
 
@@ -784,7 +786,7 @@ This will contain information about all uploaded files for the job.  While the j
 
 Once the job is complete, the files will be uploaded and the array will be recreated as an array of objects, one per file, with each object following the [File](#file) structure.
 
-## Job.update_event
+### Job.update_event
 
 This allows the user job code to update the event at time of completion.  For example, here is how you would disable the event:
 
@@ -792,7 +794,7 @@ This allows the user job code to update the event at time of completion.  For ex
 echo '{ "xy":true, "update_event": { "enabled": false } }'
 ```
 
-## Job.push
+### Job.push
 
 A system by which the user code can push new [actions](#action) and [limits](#limit) onto the job while it is still running.  For example:
 
@@ -800,67 +802,67 @@ A system by which the user code can push new [actions](#action) and [limits](#li
 echo '{ "xy":true, "push": { "actions": [ { "condition":"success", "type":"email", "email":"you@yourdomain.com" } ] } }'
 ```
 
-## Job.procs
+### Job.procs
 
 An array of process IDs (PIDs) and additional process information that are associated with the job.
 
-## Job.conns
+### Job.conns
 
 An array of network connections (TCP/UDP) and additional metadata that are associated with the job.
 
-## Job.timelines
+### Job.timelines
 
 An array of timeline events that occurred during the job's execution.  This data is used to plot the CPU/Mem/Disk/Net graphs for the job.
 
-## Job.table
+### Job.table
 
 User writable property for providing a table of data.  Should be specified as an object with `title`, `rows`, `cols` and `caption` properties.  The `title` and `caption` may be omitted.
 
-## Job.html
+### Job.html
 
 User writable property for providing a HTML-formatted report.  Should be specified as an object with `title`, `content` and `caption` properties.  The `title` and `caption` may be omitted.
 
-## Job.markdown
+### Job.markdown
 
 User writable property for providing a markdown-formatted report.  Should be specified as an object with `title`, `content` and `caption` properties.  The `title` and `caption` may be omitted.  This gets converted to HTML on the back-end.
 
-## Job.text
+### Job.text
 
 User writable property for providing a text-formatted report.  Should be specified as an object with `title`, `content` and `caption` properties.  The `title` and `caption` may be omitted.  This gets converted to HTML using a `<pre>` element.
 
-## Job.stype
+### Job.stype
 
 This is set to a string when a job is launched via a special scheduler trigger like "single" (single-shot) or "interval".  Only used for UI hinting.
 
-## Job.splugin
+### Job.splugin
 
 This is set to a Plugin ID by the scheduler when a job was launched from a Plugin based trigger configuration.  Only used for UI hinting.
 
-## Job.pid
+### Job.pid
 
 When the job starts running on a server, this will contain the local PID of the process directly spawned by xySat.
 
-## Job.rpid
+### Job.rpid
 
 When the job is running via a remote script layer (i.e. Docker container or remote SSH via [xyRun](https://github.com/pixlcore/xyrun)), this will contain the actual root PID of the remote job process group.
 
-## Job.label
+### Job.label
 
 User writable property for providing a visual label for the Job.  Should be specified as a string, and will be displayed alongside the Job ID on completion screens and history lists.
 
-## Job.test
+### Job.test
 
 This is set to `true` when the job was fired from an event test.  This is used to override the event enabled check, and add hints to the UI.
 
-## Job.secrets
+### Job.secrets
 
 If any secrets were assigned to the job, this object will *temporarily* hold the decrypted key/value pairs for the job code to use.  They are **not** stored anywhere, and only passed to the Event Plugin running the job for immediate use.
 
-## Job.workflow
+### Job.workflow
 
 When the job is itself a workflow, or a sub-job inside a workflow, this object will contain additional information.  See [JobWorkflow](#jobworkflow) for details.
 
-# Monitor
+## Monitor
 
 A monitor keeps track on a specific numeric server metric.  These are graphed in the UI so you can see trends over time, and you can also point alerts at them.  Here is an example monitor in JSON format:
 
@@ -882,73 +884,73 @@ A monitor keeps track on a specific numeric server metric.  These are graphed in
 }
 ```
 
-## Monitor.id
+### Monitor.id
 
 A unique alphanumeric ID for the monitor.
 
-## Monitor.title
+### Monitor.title
 
 A visual title for the monitor, displayed in the UI.
 
-## Monitor.display
+### Monitor.display
 
 A boolean flag indicating if the monitor is displayed in the UI or not.
 
-## Monitor.icon
+### Monitor.icon
 
 An optional icon ID for the monitor, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Monitor.groups
+### Monitor.groups
 
 An array of server group IDs that the monitor will keep track of.
 
-## Monitor.source
+### Monitor.source
 
 An expression that points to the data source for the monitor's value.  This can point to any server data value, for example: `cpu.currentLoad`.  The format of the expression is JavaScript.  See [ServerMonitorData](#servermonitordata) for the data structure this pulls from.
 
-## Monitor.data_match
+### Monitor.data_match
 
 If the monitor source points at a text string, you can supply a regular expression in this field to pull out a single numerical data value from the text.  This is commonly used with custom commands (Monitor Plugins).
 
-## Monitor.data_type
+### Monitor.data_type
 
 The data type of the monitor's value.  This can be one of: `integer`, `float`, `bytes`, `seconds`, or `milliseconds`.
 
-## Monitor.min_vert_scale
+### Monitor.min_vert_scale
 
 This allows you to set the minimum vertical scale (range) in the visual charts for the monitor.  For example, monitors that show a percentage (i.e. CPU usage) might want a minimum vertical scale of `100`.
 
-## Monitor.suffix
+### Monitor.suffix
 
 Optionally show a suffix for the monitor's value.  This can be useful for indicating units (e.g. `%`, `MB`, `ms`, etc.).
 
-## Monitor.delta
+### Monitor.delta
 
 When set to true, this will treat the monitor's value as a delta (i.e. the change in value over time) rather than an absolute value.  This is useful for server metrics that are measured as absolute counters, such as Linux network traffic or disk I/O.
 
-## Monitor.divide_by_delta
+### Monitor.divide_by_delta
 
 When set, this will divide the monitor's value by the time duration between samples before displaying it.  This is useful for converting absolute values into rates (e.g. bytes per second).
 
-## Monitor.delta_min_value
+### Monitor.delta_min_value
 
 When set, this will specify the minimum value for the monitor's computed delta. This is useful for preventing a delta monitor from showing a huge negative spike due to a brief drop in the absolute monitored value (such as when a server is rebooted, or resets its absolute counter).
 
 This should be set to `false` for disabled, or a any valid number to enable it, including `0`.
 
-## Monitor.notes
+### Monitor.notes
 
 Optional notes or comments about the monitor's purpose or configuration.
 
-## Monitor.revision
+### Monitor.revision
 
 An internal revision number for the monitor, incremented with each change.
 
-## Monitor.sort_order
+### Monitor.sort_order
 
 An integer value representing the sort order of the monitor.  Lower values are sorted first.
 
-# Plugin
+## Plugin
 
 Plugins are used to extend xyOps in a variety of ways, including custom event actions, server monitors, and schedule extensions.  For more details see [Plugins](plugins.md).  Here is an example plugin in JSON format:
 
@@ -987,35 +989,35 @@ Plugins are used to extend xyOps in a variety of ways, including custom event ac
 }
 ```
 
-## Plugin.id
+### Plugin.id
 
 A unique alphanumeric ID for the plugin.
 
-## Plugin.title
+### Plugin.title
 
 A visual title for the plugin, displayed in the UI.
 
-## Plugin.enabled
+### Plugin.enabled
 
 A boolean flag indicating if the plugin is enabled or not.
 
-## Plugin.icon
+### Plugin.icon
 
 An optional icon ID for the plugin, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Plugin.type
+### Plugin.type
 
 The type of the plugin, which determines its behavior and capabilities. Supported types include `event`, `monitor`, `action` and `scheduler`.
 
-## Plugin.command
+### Plugin.command
 
 Enter the filesystem path to your executable, including any command-line arguments you require.  This can be an interpreter like `/bin/sh` or `/usr/bin/python`, or your own custom binary.  Do not include any pipes or redirects here.
 
-## Plugin.script
+### Plugin.script
 
 The script to execute for the plugin, which is optional and depends on the command. This can be a shell script, a Python script, or any other source code.  This is appended onto the [Plugin.command](#plugin-command) (via a temp file) when the Plugin is launched.
 
-## Plugin.params
+### Plugin.params
 
 A set of custom parameters to pass to the plugin when it is executed (for non-monitor Plugins only).  These are the parameter definitions, which users then populate in the UI when setting up events / workflows.  Each item in the `params` array should be an object with the following properties:
 
@@ -1031,23 +1033,23 @@ A set of custom parameters to pass to the plugin when it is executed (for non-mo
 | `required` | Boolean | Set this to `true` to require a value to be entered for the parameter. |
 | `locked` | Boolean | Set this to `true` to lock editing to administrators only. |
 
-## Plugin.groups
+### Plugin.groups
 
 For monitor plugins only, this defines the server groups that the plugin will run on every minute, to gather metrics.
 
-## Plugin.format
+### Plugin.format
 
 For monitor plugins only, this defines the output format that the Plugin generates.  Supported formats are `text`, `json` and `xml`.
 
-## Plugin.uid
+### Plugin.uid
 
 This is the UID (user account) to run the plugin under.  The UID may be either numerical or a string ('root', 'www', etc.).
 
-## Plugin.gid
+### Plugin.gid
 
 This is the GID (group account) to run the plugin under.  The GID may be either numerical or a string ('wheel', 'admin', etc.).
 
-## Plugin.kill
+### Plugin.kill
 
 This string specifies how xySat should terminate processes when a job is aborted.  This is only used for Event Plugins.  The accepted values are as follows:
 
@@ -1055,21 +1057,21 @@ This string specifies how xySat should terminate processes when a job is aborted
 - `parent` means that only the **parent** process is killed on abort.  This is the default behavior for new Plugins.
 - `all` means that **all** processes are killed on abort.  Meaning, xySat will traverse the process tree from the parent process down, and kill everything.
 
-## Plugin.runner
+### Plugin.runner
 
 This boolean, when `true`, indicates that the job will be running remotely (i.e. not a direct child process of xySat).  This is only used for Event Plugins.
 
 The idea is that when a job is running remotely, we cannot monitor system resources for it.  Also, input and output files simply do not work in these cases (because xySat expects them to be on the local filesystem where it is running).  The `runner` property tells xyOps (and ultimately xySat) that the job is running remotely out if its reach, and it should not perform the usual process and network monitoring, and file management.  Those duties get delegated to a tool such as [xyRun](https://github.com/pixlcore/xyrun).
 
-## Plugin.notes
+### Plugin.notes
 
 Optional notes or comments about the plugin's purpose or configuration.
 
-## Plugin.revision
+### Plugin.revision
 
 An internal revision number for the plugin, incremented with each change.
 
-# Role
+## Role
 
 A user role is a set of privileges assigned to a user within the system.  A user may be assigned multiple roles, and all of the role privileges are merged and passed to the user.  A role may also include category and/or group restrictions, which are also applied to the assigned users.  Here is an example role in JSON format:
 
@@ -1095,55 +1097,55 @@ A user role is a set of privileges assigned to a user within the system.  A user
 }
 ```
 
-## Role.id
+### Role.id
 
 A unique alphanumeric ID for the role.
 
-## Role.title
+### Role.title
 
 A visual title for the role, displayed in the UI.
 
-## Role.enabled
+### Role.enabled
 
 A boolean flag indicating if the role is enabled or not.
 
-## Role.icon
+### Role.icon
 
 An optional icon ID for the role, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Role.privileges
+### Role.privileges
 
 A list of privileges assigned to the role.  Each privilege is represented as a key-value pair, where the key is the privilege name and the value is unused.  See [Privileges](privileges.md) for more information.
 
-## Role.categories
+### Role.categories
 
 A list of categories that the role is allowed to access.
 
-## Role.groups
+### Role.groups
 
 A list of groups that the role is allowed to access.
 
-## Role.notes
+### Role.notes
 
 Optional notes or comments about the role's purpose or configuration.
 
-## Role.username
+### Role.username
 
 The user or API Key who created the role.
 
-## Role.modified
+### Role.modified
 
 The Unix timestamp when the role was last modified.
 
-## Role.created
+### Role.created
 
 The Unix timestamp when the role was created.
 
-## Role.revision
+### Role.revision
 
 An internal revision number for the role, incremented with each change.
 
-# Secret
+## Secret
 
 A secret is a collection of key/value pairs which are all stored using strong encryption.  See [Secrets](secrets.md) for more details.  Here is an example secret in JSON format:
 
@@ -1174,23 +1176,23 @@ A secret is a collection of key/value pairs which are all stored using strong en
 }
 ```
 
-## Secret.id
+### Secret.id
 
 A unique alphanumeric ID for the secret.
 
-## Secret.title
+### Secret.title
 
 A visual title for the secret, displayed in the UI.
 
-## Secret.enabled
+### Secret.enabled
 
 A boolean flag indicating if the secret is enabled or not.
 
-## Secret.icon
+### Secret.icon
 
 An optional icon ID for the role, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Secret.fields
+### Secret.fields
 
 An array of secret fields.  These are stored encrypted.  Each element of the array must be an object with the following properties:
 
@@ -1201,47 +1203,47 @@ An array of secret fields.  These are stored encrypted.  Each element of the arr
 
 Secret values are always stored as strings (as they are delivered via environment variables).  If you need to store binary data in a secret, you can encode it with [Base64](https://en.wikipedia.org/wiki/Base64).
 
-## Secret.names
+### Secret.names
 
 An auto-generated list of field names, stored in plaintext (for display purposes).
 
-## Secret.events
+### Secret.events
 
 An array of [Event.id](#event.id) strings, specifying which events' jobs will receive the secret as environment variables.
 
-## Secret.categories
+### Secret.categories
 
 An array of [Category.id](#category.id) strings, specifying which categories' events' jobs will receive the secret as environment variables.
 
-## Secret.plugins
+### Secret.plugins
 
 An array of [Plugin.id](#plugin.id) strings, specifying which plugins' jobs will receive the secret as environment variables.
 
-## Secret.web_hooks
+### Secret.web_hooks
 
 An array of [WebHook.id](#webhook-id) strings, specifying which web hooks will have access to the secret.
 
-## Secret.notes
+### Secret.notes
 
 Optional notes or comments about the secret (stored in plaintext).
 
-## Secret.username
+### Secret.username
 
 The user or API Key who created the secret.
 
-## Secret.modified
+### Secret.modified
 
 The Unix timestamp when the secret was last modified.
 
-## Secret.created
+### Secret.created
 
 The Unix timestamp when the secret was created.
 
-## Secret.revision
+### Secret.revision
 
 An internal revision number for the secret, incremented with each change.
 
-# Server
+## Server
 
 A server is a physical or virtual machine that connects to the conductor xyOps server, provides metrics for monitoring, and can execute jobs.  The server object represents a server instance within the xyOps ecosystem.  Here is an example server in JSON format:
 
@@ -1334,59 +1336,59 @@ A server is a physical or virtual machine that connects to the conductor xyOps s
 }
 ```
 
-## Server.id
+### Server.id
 
 A unique alphanumeric identifier for the server, automatically assigned at first join.
 
-## Server.hostname
+### Server.hostname
 
 The hostname of the server, used for displaying in the UI, and possibly for automatically assigning to groups.
 
-## Server.ip
+### Server.ip
 
 The IP address of the server (if the server has multiple network interfaces, this is the IP that was used to connect to the conductor server).
 
-## Server.title
+### Server.title
 
 An optional, user-defined title for the server, used for display purposes in the UI.
 
-## Server.icon
+### Server.icon
 
 An optional icon ID for the server, displayed in the UI. Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Server.autoGroup
+### Server.autoGroup
 
 A boolean flag indicating if the server should be automatically assigned to groups based on its hostname.
 
-## Server.created
+### Server.created
 
 The Unix timestamp (in seconds) when the server first joined the cluster.
 
-## Server.modified
+### Server.modified
 
 The Unix timestamp (in seconds) when the server was last modified.
 
-## Server.groups
+### Server.groups
 
 A list of groups that the server is a member of.
 
-## Server.enabled
+### Server.enabled
 
 A boolean flag indicating if the server is enabled or not.  Enabled servers will be chosen to run jobs, disabled servers will not.
 
-## Server.keywords
+### Server.keywords
 
 A list of keywords associated with the server, used for search and filtering.
 
-## Server.socket_id
+### Server.socket_id
 
 The internal identifier for the server's socket connection.
 
-## Server.info
+### Server.info
 
 Additional information about the server, such as its operating system, architecture, and other relevant details, used primarily in the UI.
 
-# Tag
+## Tag
 
 A tag is a user-defined label that can be assigned to jobs for the purpose of organization, categorization, and searchability.  Here is an example tag in JSON format:
 
@@ -1401,35 +1403,35 @@ A tag is a user-defined label that can be assigned to jobs for the purpose of or
 }
 ```
 
-## Tag.id
+### Tag.id
 
 A unique alphanumeric identifier for the tag.
 
-## Tag.title
+### Tag.title
 
 The display title for the tag.
 
-## Tag.icon
+### Tag.icon
 
 An optional icon ID for the tag, displayed in the UI. Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## Tag.notes
+### Tag.notes
 
 Optional notes or comments about the tag, for your own use.
 
-## Tag.username
+### Tag.username
 
 The username of the user who created the tag.
 
-## Tag.created
+### Tag.created
 
 The Unix timestamp (in seconds) when the tag was created.
 
-## Tag.modified
+### Tag.modified
 
 The Unix timestamp (in seconds) when the tag was last modified.
 
-# Ticket
+## Ticket
 
 A ticket can be an issue, feature, change, or other record for tracking changes or incidents.  See [Tickets](tickets.md) for more details.  Here is an example ticket in JSON format:
 
@@ -1477,59 +1479,59 @@ A ticket can be an issue, feature, change, or other record for tracking changes 
 }
 ```
 
-## Ticket.id
+### Ticket.id
 
 A unique alphanumeric identifier for the ticket.
 
-## Ticket.num
+### Ticket.num
 
 An auto-assigned ticket number.
 
-## Ticket.subject
+### Ticket.subject
 
 A short summary of the ticket.
 
-## Ticket.body
+### Ticket.body
 
 The full body content of the ticket, in Markdown source format.
 
-## Ticket.type
+### Ticket.type
 
 The ticket type identifier, which should be one of: `issue`, `feature`, `change`, `maintenance`, `question` or `other`.
 
-## Ticket.status
+### Ticket.status
 
 The ticket status identifier, which should be one of: `open`, `closed` or `draft`.
 
-## Ticket.category
+### Ticket.category
 
 An optional [Category.id](#category-id) to associate the ticket with.
 
-## Ticket.server
+### Ticket.server
 
 An optional [Server.id](#server-id) to associate the ticket with.
 
-## Ticket.assignees
+### Ticket.assignees
 
 An array of [User.username](#user-username)s which are responsible for the ticket (updates and overdue reminders are sent to them).
 
-## Ticket.cc
+### Ticket.cc
 
 An array of [User.username](#user-username)s which are Cc'ed for ticket updates via email.
 
-## Ticket.notify
+### Ticket.notify
 
 An array of email addresses to also receive ticket updates.
 
-## Ticket.due
+### Ticket.due
 
 An optional due date for the ticket, in Unix seconds.  Daily reminders will be sent out to all assignees after this date.
 
-## Ticket.tags
+### Ticket.tags
 
 An array of [Tag.id](#tag-id)s to associate with the ticket.
 
-## Ticket.events
+### Ticket.events
 
 An array of objects representing [Event](#event)s attached to the ticket.  Each event can be customized to run jobs from the ticket, and contain the following properties:
 
@@ -1541,11 +1543,11 @@ An array of objects representing [Event](#event)s attached to the ticket.  Each 
 | `tags` | Array | An optional array of [Tag.id](#tag-id)s to apply to jobs that run from the ticket event, overriding the event defaults. |
 | `params` | Object | If the event has [Event.fields](#event-fields) defined, this object will override the defaults and be merged into [Event.params](#event-params) when jobs run. |
 
-## Ticket.files
+### Ticket.files
 
 An array of [File](#file) objects uploaded to the ticket.
 
-## Ticket.changes
+### Ticket.changes
 
 This array contains a list of all the changes made to the ticket, including things like changing status, assignees, and also comments added.  Each element in the array should be an object with the following properties:
 
@@ -1560,19 +1562,19 @@ This array contains a list of all the changes made to the ticket, including thin
 | `body` | String | For `comment` types, this is the comment body in Markdown source format. |
 | `edited` | Number | When comments are edited, this is present and set to the last modified date, in Unix seconds. |
 
-## Ticket.username
+### Ticket.username
 
 The username of the user who created the ticket.
 
-## Ticket.created
+### Ticket.created
 
 The Unix timestamp (in seconds) when the ticket was created.
 
-## Ticket.modified
+### Ticket.modified
 
 The Unix timestamp (in seconds) when the ticket was last modified.
 
-# User
+## User
 
 A user account is a representation of an individual user within the system.  The user object contains basic information about the user account, their roles & privileges, as well as their UI preferences.  Here is an example user in JSON format:
 
@@ -1642,103 +1644,103 @@ A user account is a representation of an individual user within the system.  The
 }
 ```
 
-## User.username
+### User.username
 
 The username of the user.  Allowed characters are alphanumerics, underscores, periods and dashes.  If the username was automatically generated from an email address (i.e. via SSO), characters outside the supported set are converted to underscores.
 
-## User.password
+### User.password
 
 The hashed password of the user, using salted [bcrypt](https://en.wikipedia.org/wiki/Bcrypt).  The user's plaintext password is **never** stored.
 
-## User.salt
+### User.salt
 
 A unique salt value used for hashing the user's password.
 
-## User.full_name
+### User.full_name
 
 The full name of the user, used for display purposes.
 
-## User.email
+### User.email
 
 The email address of the user.
 
-## User.icon
+### User.icon
 
 An optional icon ID for the user, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## User.active
+### User.active
 
 A boolean flag indicating if the user account is active or disabled.
 
-## User.created
+### User.created
 
 The Unix timestamp (in seconds) when the user was created.
 
-## User.modified
+### User.modified
 
 The Unix timestamp (in seconds) when the user was last modified.
 
-## User.language
+### User.language
 
 The preferred language (locale) of the user, e.g. `en-US`.  If not set, will be auto-detected by the browser.
 
-## User.region
+### User.region
 
 The geographical region of the user, e.g. `US`, `GB`, etc.  If not set, will be auto-detected by the browser.
 
-## User.num_format
+### User.num_format
 
 The preferred numbering system of the user, e.g. `latn` (Latin digits), etc.  If not set, will be auto-detected by the browser.
 
-## User.hour_cycle
+### User.hour_cycle
 
 The preferred hour cycle of the user, e.g. `h12` (12-hour clock) or `h24` (24-hour clock).  If not set, will be auto-detected by the browser.
 
-## User.timezone
+### User.timezone
 
 The preferred timezone of the user, e.g. `America/New_York`.  If not set, will be auto-detected by the browser.
 
-## User.color_acc
+### User.color_acc
 
 A boolean, which indicates the user uses "color accessibility mode".  This adjusts the UI colors for better visibility.
 
-## User.privacy_mode
+### User.privacy_mode
 
 A boolean, which indicates the user uses "privacy mode" (a.k.a "streamer mode").  This automatically blurs sensitive information in the UI, including usernames, full names, email addresses, server hostnames, IP Address, API keys, and more.
 
-## User.effects
+### User.effects
 
 A boolean, indicating the user has enabled animated visual effects in the UI.
 
-## User.page_info
+### User.page_info
 
 A boolean, indicating the user has "page descriptions" enabled in the UI.  This shows an explanation of each page in the UI.
 
-## User.contrast
+### User.contrast
 
 A string indicating the user's preferred contrast mode.  Possible values are `auto`, `high`, `normal`, and `low`.
 
-## User.motion
+### User.motion
 
 A string indicating the user's preferred motion setting.  Possible values are `auto`, `full` and `reduced`.
 
-## User.volume
+### User.volume
 
 A number indicating the user's preferred sound volume, from 0 (muted) to 10 (loudest).
 
-## User.privileges
+### User.privileges
 
 A list of privileges assigned to the user.  Each privilege is represented as a key-value pair, where the key is the privilege name and the value is unused.  See [Privileges](privileges.md) for more information.
 
-## User.roles
+### User.roles
 
 A list of roles assigned to the user.  See [Role](#role).
 
-## User.searches
+### User.searches
 
 A list of search presets for the user.
 
-# WebHook
+## WebHook
 
 A web hook is a user-defined HTTP callback that is triggered by specific actions in xyOps. When the specified action occurs, the web hook sends a HTTP request to the specified URL with an optional payload containing information about the event. Web hooks are commonly used for real-time notifications, integrations with other services, and automating workflows.  Here is an example Web Hook in JSON format:
 
@@ -1774,67 +1776,67 @@ A web hook is a user-defined HTTP callback that is triggered by specific actions
 }
 ```
 
-## WebHook.id
+### WebHook.id
 
 The unique identifier for the web hook.
 
-## WebHook.title
+### WebHook.title
 
 The title of the web hook.
 
-## WebHook.enabled
+### WebHook.enabled
 
 A boolean indicating whether the web hook is enabled or disabled.
 
-## WebHook.icon
+### WebHook.icon
 
 An optional icon ID for the web hook, displayed in the UI.  Icons are sourced from [Material Design Icons](https://materialdesignicons.com/).
 
-## WebHook.url
+### WebHook.url
 
 The URL to which the web hook will send its request.
 
-## WebHook.method
+### WebHook.method
 
 The HTTP method to use when sending the request. Common methods are `GET`, `POST`, `PUT`, and `DELETE`.
 
-## WebHook.headers
+### WebHook.headers
 
 An optional list of HTTP headers to include in the request.  This is formatted as an array of objects, where each object has a `name` and `value` property.
 
-## WebHook.body
+### WebHook.body
 
 The optional body of the request to send with the web hook.  This is typically a JSON string, and may include placeholders (e.g. `{{text}}`) that will be replaced with actual values when the web hook is triggered.
 
-## WebHook.timeout
+### WebHook.timeout
 
 The maximum time to wait for a response from the web hook before timing out. This is specified in seconds.
 
-## WebHook.retries
+### WebHook.retries
 
 The number of times to retry the web hook request if it fails. This is specified as an integer.
 
-## WebHook.follow
+### WebHook.follow
 
 A boolean indicating whether to follow redirects for the web hook request.
 
-## WebHook.ssl_cert_bypass
+### WebHook.ssl_cert_bypass
 
 A boolean indicating whether to bypass SSL certificate verification for the web hook request.
 
-## WebHook.max_per_day
+### WebHook.max_per_day
 
 The maximum number of times the web hook can be triggered in a single day (i.e. anti-flood). This is specified as an integer.
 
-## WebHook.notes
+### WebHook.notes
 
 An optional field for adding notes or comments about the web hook.
 
-## WebHook.revision
+### WebHook.revision
 
 An internal revision number for the web hook, used for tracking changes.
 
-# Activity
+## Activity
 
 When user or system actions are logged, an activity item is created and indexed in the DB for searchability.  Here is an example in JSON format:
 
@@ -1882,11 +1884,11 @@ When user or system actions are logged, an activity item is created and indexed 
 
 Each activity type (denoted by the `action` property) may have different custom properties.  However, see below for the common properties.
 
-## Activity.id
+### Activity.id
 
 A unique alphanumeric ID which is automatically assigned when the activity is logged.
 
-## Activity.action
+### Activity.action
 
 A string identifying the action which took place.  Here is the list of possible actions, along with a template string used to generate an action summary in the UI:
 
@@ -1969,35 +1971,35 @@ A string identifying the action which took place.  Here is the list of possible 
 | `state_update` | `Internal state updated: [description]` |
 | `internal_job` | `Internal job completed: [job.title]` |
 
-## Activity.description
+### Activity.description
 
 A short "description" of the action, which is typically a specific item ID.
 
-## Activity.epoch
+### Activity.epoch
 
 The date/time when the activity took place, represented in Unix seconds.
 
-## Activity.headers
+### Activity.headers
 
 If the activity was initiated by a HTTP request, this contains the incoming request headers (sans cookies).
 
-## Activity.ip
+### Activity.ip
 
 If the activity was initiated by a HTTP request, this contains the primary IP address of the client.
 
-## Activity.ips
+### Activity.ips
 
 If the activity was initiated by a HTTP request, this contains all of the IP addresses (including proxies).
 
-## Activity.keywords
+### Activity.keywords
 
 An array of keywords used to search for the activity in the UI.
 
-## Activity.username
+### Activity.username
 
 If the activity was initiated by a user, this contains the username (or API Key ID).
 
-# AlertInvocation
+## AlertInvocation
 
 An alert invocation is a specific instance of an alert being triggered. It contains information about the alert, the server it applies to, and the context in which it was triggered.  Here is an example alert invocation in JSON format:
 
@@ -2022,59 +2024,59 @@ An alert invocation is a specific instance of an alert being triggered. It conta
 }
 ```
 
-## AlertInvocation.id
+### AlertInvocation.id
 
 The unique identifier for the alert invocation.
 
-## AlertInvocation.alert
+### AlertInvocation.alert
 
 The [Alert.id](#alert-id) of the alert that triggered the invocation.
 
-## AlertInvocation.count
+### AlertInvocation.count
 
 An internal counter used to track the number of alert samples (warm-up and cool-down).
 
-## AlertInvocation.date
+### AlertInvocation.date
 
 The Unix epoch timestamp of when the alert was triggered.
 
-## AlertInvocation.exp
+### AlertInvocation.exp
 
 The expression that triggered the alert.
 
-## AlertInvocation.groups
+### AlertInvocation.groups
 
 The groups that the server that triggered the alert belongs to.
 
-## AlertInvocation.jobs
+### AlertInvocation.jobs
 
 The jobs that were running on the server at the time of the alert invocation.
 
-## AlertInvocation.message
+### AlertInvocation.message
 
 The message associated with the alert invocation.
 
-## AlertInvocation.modified
+### AlertInvocation.modified
 
 The Unix epoch timestamp of when the alert invocation was last modified.
 
-## AlertInvocation.notified
+### AlertInvocation.notified
 
 An internal boolean indicating whether the alert has been notified.
 
-## AlertInvocation.server
+### AlertInvocation.server
 
 The [Server.id](#server-id) that the alert is associated with.
 
-# ServerMonitorData
+## ServerMonitorData
 
 Server monitoring data is collected every minute on every server, and is the source for all monitors and alerts.  It is a verbose structure, split up into the following top-level properties.
 
-## ServerMonitorData.arch
+### ServerMonitorData.arch
 
 The architecture of the server (e.g. `x86_64`, `arm64`).
 
-## ServerMonitorData.commands
+### ServerMonitorData.commands
 
 The current raw output from all custom user commands (a.k.a Monitor Plugins), keyed by the [Plugin.id](#plugin-id).  Example:
 
@@ -2084,7 +2086,7 @@ The current raw output from all custom user commands (a.k.a Monitor Plugins), ke
 }
 ```
 
-## ServerMonitorData.conns
+### ServerMonitorData.conns
 
 An array of the current network connections on the server, including source and destination IP addresses, ports, and connection states.  Includes socket listeners.  Here is an example connection:
 
@@ -2100,7 +2102,7 @@ An array of the current network connections on the server, including source and 
 }
 ```
 
-## ServerMonitorData.cpu
+### ServerMonitorData.cpu
 
 The current CPU usage statistics and information for the server, including user, system, and idle times, as well as CPU hardware and virtualization information.  Here is an example `cpu` object:
 
@@ -2170,7 +2172,7 @@ The current CPU usage statistics and information for the server, including user,
 }
 ```
 
-## ServerMonitorData.deltas
+### ServerMonitorData.deltas
 
 Delta information for monitors that track changes over time.  This object is keyed by the [Monitor.id](#monitor-id), and the value is the current delta between the current and previous samples.  Example:
 
@@ -2184,7 +2186,7 @@ Delta information for monitors that track changes over time.  This object is key
 }
 ```
 
-## ServerMonitorData.interfaces
+### ServerMonitorData.interfaces
 
 An object containing information about the network interfaces on the server, including their names, IP addresses, and other relevant details.  The object properties are the interface names, e.g. `eth0` and the value is an object describing the interface.  Here is an example:
 
@@ -2224,11 +2226,11 @@ An object containing information about the network interfaces on the server, inc
 }
 ```
 
-## ServerMonitorData.jobs
+### ServerMonitorData.jobs
 
 The number of jobs currently running on the server.
 
-## ServerMonitorData.load
+### ServerMonitorData.load
 
 The three CPU load average readings as an array, measured over 1, 5, and 15 minutes.  Example:
 
@@ -2240,7 +2242,7 @@ The three CPU load average readings as an array, measured over 1, 5, and 15 minu
 ]
 ```
 
-## ServerMonitorData.memory
+### ServerMonitorData.memory
 
 Information about the server's current memory usage, including total, used, and free memory, as well as a variety of other readings.  Here is an example:
 
@@ -2288,7 +2290,7 @@ Information about the server's current memory usage, including total, used, and 
 }
 ```
 
-## ServerMonitorData.monitors
+### ServerMonitorData.monitors
 
 The current computed values of all the monitors on the server.  These are all the user-defined monitors that track a single value over time, for the purpose of graphing (and often alerting).  Example:
 
@@ -2313,7 +2315,7 @@ The current computed values of all the monitors on the server.  These are all th
 }
 ```
 
-## ServerMonitorData.mounts
+### ServerMonitorData.mounts
 
 Information about the mounted filesystems on the server.  Here is an example:
 
@@ -2352,7 +2354,7 @@ Information about the mounted filesystems on the server.  Here is an example:
 }
 ```
 
-## ServerMonitorData.os
+### ServerMonitorData.os
 
 Detailed information about the operating system running on the server.  Here is an example:
 
@@ -2375,11 +2377,11 @@ Detailed information about the operating system running on the server.  Here is 
 }
 ```
 
-## ServerMonitorData.platform
+### ServerMonitorData.platform
 
 The platform of the server, as reported by the Node.js [os.platform()](https://nodejs.org/api/os.html#osplatform) function.  Possible values are `aix`, `darwin`, `freebsd`, `linux`, `openbsd`, `sunos`, and `win32`.
 
-## ServerMonitorData.process
+### ServerMonitorData.process
 
 Information about the xyOps Satellite process itself.  Example:
 
@@ -2392,7 +2394,7 @@ Information about the xyOps Satellite process itself.  Example:
 }
 ```
 
-## ServerMonitorData.processes
+### ServerMonitorData.processes
 
 Detailed information about all of the processes running on the server.  First, here is the structure of the `processes` object, which contains some process state counters, as well as a `list` array:
 
@@ -2430,15 +2432,15 @@ And here is an example process, which would be an element inside the `list` arra
 }
 ```
 
-## ServerMonitorData.release
+### ServerMonitorData.release
 
 The operating system name, as reported by the Node.js [os.release()](https://nodejs.org/api/os.html#osrelease) function.  Example: `6.12.34+rpt-rpi-v8`.
 
-## ServerMonitorData.stats
+### ServerMonitorData.stats
 
 Contains information about filesystem, I/O and network throughput.  See below for details.
 
-## ServerMonitorData.stats.fs
+### ServerMonitorData.stats.fs
 
 Contains information about filesystem throughput on the server.  Example:
 
@@ -2454,7 +2456,7 @@ Contains information about filesystem throughput on the server.  Example:
 }
 ```
 
-## ServerMonitorData.stats.io
+### ServerMonitorData.stats.io
 
 Contains information about general I/O throughput on the server.  Example:
 
@@ -2476,7 +2478,7 @@ Contains information about general I/O throughput on the server.  Example:
 }
 ```
 
-## ServerMonitorData.stats.network
+### ServerMonitorData.stats.network
 
 Contains information about current network throughput on the server.  Example:
 
@@ -2502,11 +2504,11 @@ Contains information about current network throughput on the server.  Example:
 }
 ```
 
-## ServerMonitorData.stats.uptime_sec
+### ServerMonitorData.stats.uptime_sec
 
 The uptime of the server in seconds.
 
-# Snapshot
+## Snapshot
 
 A snapshot is a record of everything happening on a server for a specific instant in time, including all monitoring data, processes, network connections, and more.  See [Snapshots](snapshots.md) for more details.  Here is an example snapshot in JSON format, with the larger sections omitted for brevity:
 
@@ -2531,107 +2533,107 @@ A snapshot is a record of everything happening on a server for a specific instan
 }
 ```
 
-## Snapshot.id
+### Snapshot.id
 
 A unique alphanumeric ID automatically generated for the snapshot.
 
-## Snapshot.type
+### Snapshot.type
 
 The type of snapshot, which will be `server` for a single server, or `group` for a multi-server group snapshot.
 
-## Snapshot.server
+### Snapshot.server
 
 The [Server.id](#server-id) of the server that the snapshot was produced from.
 
-## Snapshot.version
+### Snapshot.version
 
 The version of the snapshot data format.
 
-## Snapshot.date
+### Snapshot.date
 
 The date/time when the snapshot was taken, in Unix seconds.
 
-## Snapshot.groups
+### Snapshot.groups
 
 An array of [Group.id](#group-id)s that the server belongs to.
 
-## Snapshot.hostname
+### Snapshot.hostname
 
 The hostname of the server which produced the snapshot.
 
-## Snapshot.ip
+### Snapshot.ip
 
 The IP address of the server which produced the snapshot.
 
-## Snapshot.source
+### Snapshot.source
 
 A string denoting how the snapshot was taken, which will be one of: `alert`, `watch`, `user`, or `job`.
 
-## Snapshot.username
+### Snapshot.username
 
 If the [Snapshot.source](#snapshot-source) is `user`, this is the [User.username](#user-username) of the user who snapped.
 
-## Snapshot.quickmon
+### Snapshot.quickmon
 
 An array of [QuickmonData](#quickmondata) samples for the server, representing the last 60 seconds leading up to the snapshot being taken.
 
-## Snapshot.jobs
+### Snapshot.jobs
 
 An array of [Job.id](#job-id)s representing active jobs on the server at the time of the snapshot.
 
-## Snapshot.alerts
+### Snapshot.alerts
 
 An array of [AlertInvocation.id](#alertinvocation-id)s representing active alerts on the server at the time of the snapshot.
 
-## Snapshot.data
+### Snapshot.data
 
 A copy of the [ServerMonitorData](#servermonitordata) for the server taken at the time of the snapshot.
 
-# GroupSnapshot
+## GroupSnapshot
 
 Snapshots may be taken of entire server groups, which uses the following structure to store the data.
 
-## GroupSnapshot.id
+### GroupSnapshot.id
 
 A unique alphanumeric ID automatically generated for the snapshot.
 
-## GroupSnapshot.type
+### GroupSnapshot.type
 
 The type of snapshot, which will be set to `group` in this case.
 
-## GroupSnapshot.date
+### GroupSnapshot.date
 
 The date/time when the snapshot was taken, in Unix seconds.
 
-## GroupSnapshot.groups
+### GroupSnapshot.groups
 
 Will be an array with exactly one element, the [Group.id](#group-id) for the group.
 
-## GroupSnapshot.group_def
+### GroupSnapshot.group_def
 
 A copy of the [Group](#group) object for the group, taken at the time of the snapshot.
 
-## GroupSnapshot.servers
+### GroupSnapshot.servers
 
 An array of [Server](#server) objects for the group.
 
-## GroupSnapshot.snapshots
+### GroupSnapshot.snapshots
 
 An array of [ServerMonitorData](#servermonitordata)s for the group, with indices matching up with [GroupSnapshot.servers](#groupsnapshot-servers).
 
-## GroupSnapshot.alerts
+### GroupSnapshot.alerts
 
 An array of [AlertInvocation.id](#alertinvocation-id)s representing active alerts in the group at the time of the snapshot.
 
-## GroupSnapshot.jobs
+### GroupSnapshot.jobs
 
 An array of [Job.id](#job-id)s representing active jobs in the group at the time of the snapshot.
 
-## GroupSnapshot.quickmons
+### GroupSnapshot.quickmons
 
 An array of [QuickmonData](#quickmondata) samples for the group, with indices matching up with [GroupSnapshot.servers](#groupsnapshot-servers).
 
-# Conductor
+## Conductor
 
 xyOps keep track of all online conductor (backup) servers in the cluster, using the following in-memory data structure (displayed as JSON):
 
@@ -2650,43 +2652,43 @@ xyOps keep track of all online conductor (backup) servers in the cluster, using 
 }
 ```
 
-## Conductor.id
+### Conductor.id
 
 This is the conductor server's internal ID, which is usually it's hostname.
 
-## Conductor.online
+### Conductor.online
 
 A boolean indicating whether the server is online (connected) or not.
 
-## Conductor.master
+### Conductor.master
 
 A boolean indicating whether the conductor is the current conductor primary or not.
 
-## Conductor.date
+### Conductor.date
 
 A timestamp in Unix seconds representing when the server came online.
 
-## Conductor.version
+### Conductor.version
 
 Currently unused, will always be set to "1.0".  For future use.
 
-## Conductor.ping
+### Conductor.ping
 
 The last ping time (in milliseconds) between the current conductor and the server (Websocket RTT).
 
-## Conductor.stats
+### Conductor.stats
 
 This object will contain basic stats about the server, including `mem` (current memory usage of the xyOps process), and `load` (minute load average).
 
-# State
+## State
 
 xyOps keeps state data in a `global/state` storage record.  This is so it can survive restarts, and survive conductor failover to a backup server.  It is used to store things like the scheduler switch, event state (time cursors), and server/group watches (snapshots).
 
-## State.scheduler
+### State.scheduler
 
 The `scheduler` object contains properties specific to the job scheduler subsystem.  Namely an `enabled` boolean, which will be `true` if the scheduler is active and running jobs, or `false` if it is paused.
 
-## State.events
+### State.events
 
 The `events` object holds state information about all events, namely their cursor for [Catch-Up](triggers.md#catch-up) mode, and information about previously completed jobs.  Here are the properties stored per event, each in `events.EVENTID.`:
 
@@ -2698,7 +2700,7 @@ The `events` object holds state information about all events, namely their curso
 | `total_elapsed` | Number | The total job elapsed time across all completed jobs (used to compute average). |
 | `total_count` | Number | Total completed jobs on record.  The `total_elapsed` is divided by this number to get an average job elapsed time for the event. |
 
-## State.watches
+### State.watches
 
 xyOps keeps track of server and group watches (automatic monitoring snapshots) in this object.  The data layout is as follows:
 
@@ -2721,15 +2723,15 @@ The property values are Unix seconds, set to when the watch should end.  Example
 }
 ```
 
-## State.next_ticket_num
+### State.next_ticket_num
 
 This property holds the next available [Ticket.num](#ticket-num), which is applied and incremented when a new ticket is created.
 
-# Sub-Objects
+## Sub-Objects
 
 These objects are nested under other data structures, usually items of an array.
 
-## Action
+### Action
 
 Actions can be assigned to job and alert related events such as job start, job completion, job errors, new alert, and other conditions.  Here is an example:
 
@@ -2754,7 +2756,7 @@ Each action object should have the following properties:
 
 Additional properties may be present based on the type.
 
-### Action.condition
+#### Action.condition
 
 Each action has a `condition` property which specifies when it should fire.  The value may be one of:
 
@@ -2771,7 +2773,7 @@ Each action has a `condition` property which specifies when it should fire.  The
 | `alert_new` | Fires when a new alert is triggered on a server. |
 | `alert_cleared` | Fires when an active alert has cleared. |
 
-### Action.type
+#### Action.type
 
 Each action has a `type` property which dictates what will happen when the condition fires.  The different types are listed below:
 
@@ -2790,7 +2792,7 @@ Each action has a `type` property which dictates what will happen when the condi
 | `ticket` | Create a ticket.  Requires `ticket_type` (see [Ticket.type](#ticket-type)), `ticket_assignees` (an array of [User.username](#user-username)s), and `ticket_tags` (an array of [Tag.id](#tag-id)s). |
 | `plugin` | Invoke a custom Plugin for the action.  Requires `plugin_id` (the [Plugin.id](#plugin-id)) and `params` (custom parameters defined by the Plugin). |
 
-## Limit
+### Limit
 
 Limits (otherwise known as "Resource Limits" in the UI) govern things like CPU, memory, and log size for running jobs.  They can be assigned to both events and categories, and each may have several different limits set.  Here is an example:
 
@@ -2815,7 +2817,7 @@ Additional properties may be present based on the type.
 
 When limits are assigned to categories, they act as defaults for events in that category.  Events may still override limits set in their categories.
 
-### Limit.type
+#### Limit.type
 
 Each limit has a `type` property which specifies what it governs.  The different types are described below:
 
@@ -2842,7 +2844,7 @@ The **Max Run Time** (`time`), **Max Memory Limit** (`mem`), **Max CPU % Limit**
 | `snapshot` | Boolean | If set to `true`, a [server snapshot](snapshots.md) is taken when the limit is exceeded. |
 | `abort` | Boolean | If set to `true`, the job is aborted when the limit is exceeded. |
 
-## Trigger
+### Trigger
 
 Events are scheduled using one or more trigger objects, which can define repeating invocations (hourly, daily, etc.), single-shots on an exact future date/time, and other misc. rules such as blackout dates.  Here is an example:
 
@@ -2866,7 +2868,7 @@ Each trigger object should have the following properties:
 
 Additional properties may be present based on the type.
 
-### Trigger.type
+#### Trigger.type
 
 Each trigger has a `type` property which describes its behavior.  The different types are listed below:
 
@@ -2883,7 +2885,7 @@ Each trigger has a `type` property which describes its behavior.  The different 
 | `precision` | **Precision** | Set an optional list of exact seconds to fire jobs within the current scheduled minute. |
 | `plugin` | **Plugin** | Custom scheduler Plugin (user-defined).  Requires an additional `plugin_id` property, as well as a `params` object, for Plugin-defined configuration. |
 
-#### Schedule Rules
+##### Schedule Rules
 
 The `schedule` type describes a repeating event (when and how frequent it should run jobs).  It works similarly to the [Unix Cron](https://en.wikipedia.org/wiki/Cron) system, with selections of years, months, days, weekdays, hours and/or minutes.  Each property should be an array of numerical values.  If omitted, it means the same as "all" in that category (i.e. asterisk `*` in Cron syntax).
 
@@ -2937,7 +2939,7 @@ Here is a list of all the `schedule` type trigger object properties and their de
 | `minutes` | 0 - 59 | One or more minutes, from 0 to 59. |
 | `timezone` | n/a | Optional timezone to evaluate the schedule entry in.  Defaults to the conductor server timezone. |
 
-## Workflow
+### Workflow
 
 Workflows are really just [Event](#event)s with an extra `workflow` property, which describes the flow.  See [Workflows](workflows.md) for more details about workflows.  Here is an example workflow object in JSON format:
 
@@ -3023,15 +3025,15 @@ Workflows are really just [Event](#event)s with an extra `workflow` property, wh
 }
 ```
 
-### Workflow.nodes
+#### Workflow.nodes
 
 An array of [WorkflowNode](#workflownode)s in the workflow.
 
-### Workflow.connections
+#### Workflow.connections
 
 An array of [WorkflowConnection](#workflowconnection)s in the workflow.
 
-## WorkflowNode
+### WorkflowNode
 
 A workflow node is an object which represents an event, an ad-hoc job, a trigger, a limit, an action, or a controller.  Here is an example node in JSON format:
 
@@ -3051,15 +3053,15 @@ A workflow node is an object which represents an event, an ad-hoc job, a trigger
 }
 ```
 
-### WorkflowNode.id
+#### WorkflowNode.id
 
 A unique alphanumeric ID for the node, which is automatically assigned when created.  Workflow Node IDs will always start with `n`.
 
-### WorkflowNode.type
+#### WorkflowNode.type
 
 A string constant representing the node type, which will be one of: `event`, `job`, `trigger`, `limit`, `action`, or `controller`.
 
-### WorkflowNode.data
+#### WorkflowNode.data
 
 Nodes may have a `data` property which contains information specific to the node type.  Here is a summary of how this property is used:
 
@@ -3083,15 +3085,15 @@ For controller nodes, see the following table for details on how the `data` prop
 | `join` | Not used. |
 | `decision` | Will contain `label` (custom title), `icon` (custom icon), and `decision` (expression to evaluate). |
 
-### WorkflowNode.x
+#### WorkflowNode.x
 
 The horizontal position of the top-left corner of the node in the UI, measured in CSS pixels at 1X zoom.
 
-### WorkflowNode.y
+#### WorkflowNode.y
 
 The vertical position of the top-left corner of the node in the UI, measured in CSS pixels at 1X zoom.
 
-## WorkflowConnection
+### WorkflowConnection
 
 A workflow connection object represents a connection between two nodes (rendered as a curved line in the UI).  Here is an example connection in JSON format:
 
@@ -3104,23 +3106,23 @@ A workflow connection object represents a connection between two nodes (rendered
 }
 ```
 
-### WorkflowConnection.id
+#### WorkflowConnection.id
 
 A unique alphanumeric ID for the connection, which is automatically assigned when created.  Workflow Connection IDs will always start with `c`.
 
-### WorkflowConnection.source
+#### WorkflowConnection.source
 
 The [WorkflowNode.id](#workflownode-id) of the source node.
 
-### WorkflowConnection.dest
+#### WorkflowConnection.dest
 
 The [WorkflowNode.id](#workflownode-id) of the destination node.
 
-### WorkflowConnection.condition
+#### WorkflowConnection.condition
 
 Some connections have a `condition` which dictates when control will flow through to the destination node (namely from a job or event to another node).  See [Action.conditions](#action-condition) for a list of possible conditions.
 
-## JobWorkflow
+### JobWorkflow
 
 When a job starts, if the job is itself a workflow, or a sub-job inside a workflow, it will be given a `workflow` object, which is described below.  Here is an example object in JSON format, for a workflow job, but with some properties removed for brevity:
 
@@ -3186,19 +3188,19 @@ When a job starts, if the job is itself a workflow, or a sub-job inside a workfl
 }
 ```
 
-## JobWorkflow.nodes
+### JobWorkflow.nodes
 
 An array of [WorkflowNode](#workflownode)s in the workflow.
 
-## JobWorkflow.connections
+### JobWorkflow.connections
 
 An array of [WorkflowConnection](#workflowconnection)s in the workflow.
 
-## JobWorkflow.start
+### JobWorkflow.start
 
 The [WorkflowNode.id](#workflownode-id) of the starting node (typically a trigger node).
 
-## JobWorkflow.state
+### JobWorkflow.state
 
 Contains state information for each node in the workflow.  Typically this is used to track which nodes executed, and to track performance.  The object is keyed by the [WorkflowNode.id](#workflownode-id)s of the nodes, with values being specific to each node.  Example in JSON format:
 
@@ -3217,7 +3219,7 @@ Contains state information for each node in the workflow.  Typically this is use
 }
 ```
 
-## JobWorkflow.jobs
+### JobWorkflow.jobs
 
 Contains information about all completed jobs inside the workflow.  The `jobs` object is keyed by the [WorkflowNode.id](#workflownode-id)s of the nodes which spawned the jobs, and the value is an array of objects (because each node may spawn multiple jobs inside one workflow).  Here is an example:
 
@@ -3243,23 +3245,23 @@ Contains information about all completed jobs inside the workflow.  The `jobs` o
 
 Each element of the array is a subset of properties copied from the [Job](#job) object.
 
-## JobWorkflow.job
+### JobWorkflow.job
 
 If the job is a sub-job inside of a parent workflow, the `workflow.job` property will point to the [Job.id](#job-id) of the parent workflow job.
 
-## JobWorkflow.event
+### JobWorkflow.event
 
 If the job is a sub-job inside of a parent workflow, the `workflow.event` property will point to the [Event.id](#event-id) of the parent workflow.
 
-## JobWorkflow.node
+### JobWorkflow.node
 
 If the job is a sub-job inside of a parent workflow, the `workflow.node` property will point to the [WorkflowNode.id](#workflownode-id) of the event or job node which started the job.
 
-## JobWorkflow.launcher
+### JobWorkflow.launcher
 
 If the job is a sub-job inside of a parent workflow, the `workflow.launcher` property will point to the [WorkflowNode.id](#workflownode-id) of the controller node which is governing the job.
 
-## Privileges
+### Privileges
 
 The Privileges object describes which actions are allowed for a [User](#user), a [Role](#role), or an [API Key](#api-key).  For more details, see [Privileges](privileges.md).  Here is an example set of privileges in JSON format:
 
@@ -3277,7 +3279,7 @@ The Privileges object describes which actions are allowed for a [User](#user), a
 
 Note that the `admin` privilege, when present, implicitly enables all other privileges.
 
-## JobHookData
+### JobHookData
 
 When job actions are executed, including firing web hooks and sending emails, the following data structure is used to expand macros in the web hook text and email body content.  It is also passed to custom action Plugins.
 
@@ -3303,7 +3305,7 @@ When job actions are executed, including firing web hooks and sending emails, th
 | `display.cpu` | String | A human-readable string representing the average CPU usage of the job, if available. |
 | `text` | String | A short summary of the action, using [hook_text_templates](config.md#hook_text_templates) as the template, and all macros expanded. |
 
-## AlertHookData
+### AlertHookData
 
 When alerts fire and clear, the following data structure is used to expand macros in the web hook text and email body content.  It is also passed to Action Plugins:
 
@@ -3333,7 +3335,7 @@ When alerts fire and clear, the following data structure is used to expand macro
 | `links.alert_url` | String | A fully-qualified URL to the job details page (requires login). |
 | `text` | String | A short summary of the action, using [hook_text_templates](config.md#hook_text_templates) as the template, and all macros expanded. |
 
-## QuickmonData
+### QuickmonData
 
 xyOps captures "quick" monitoring data every second on every server, in a few key areas (CPU / mem / net / disk).  This data is used to render the real-time server monitors, and is used in server snapshots as well.  Here is an example Quickmon data sample in JSON format:
 
@@ -3353,7 +3355,7 @@ xyOps captures "quick" monitoring data every second on every server, in a few ke
 
 The `date` is the sample time in Unix seconds.  The other properties correspond to the Quickmon monitor definitions in [quick_monitors](config.md#quick_monitors), and the values should all be raw numbers.
 
-## ServerTimelineData
+### ServerTimelineData
 
 Every minute, xyOps takes the current [ServerMonitorData](#servermonitordata) from every server, pulls out all the [Monitor](#monitor) values, and stores them in a specialized timeseries database.  Here is an example entry in JSON format:
 
@@ -3392,7 +3394,7 @@ The object consists of the following properties:
 | `epoch_div` | Number | The Unix seconds divided by a constant defined by the current system. |
 | `totals` | Object | An object containing all the [Monitor](#monitor) totals. |
 
-## File
+### File
 
 A file object is used to represent a file in storage.  It is used for [Job.files](#job-files), [Ticket.files](#ticket-files), and [Bucket.files](#bucket-files).  The object consists of the following properties:
 

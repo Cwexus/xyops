@@ -1,5 +1,7 @@
 # Privileges
 
+## Overview
+
 xyOps uses a simple, flexible privilege system to control access to features. Privileges can be assigned directly to Users and API Keys, and Roles can bundle sets of privileges that are then attached to Users and API Keys. The effective permission set is the union of all directly assigned privileges plus those granted by any roles. The special `admin` privilege grants full access to all features.
 
 Note: Some operations also enforce resource-level access (e.g., category, group, or target restrictions). Having a privilege is necessary, but certain actions may additionally require access to the specific resource.

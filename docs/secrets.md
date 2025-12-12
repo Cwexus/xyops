@@ -1,5 +1,7 @@
 # Secrets
 
+## Overview
+
 Secrets are encrypted "vaults" for sensitive configuration such as API keys, auth tokens, passwords, and similar credentials. Each secret contains one or more named variables (key/value pairs). xyOps stores the variable data encrypted at rest and only decrypts it in memory when needed at runtime.
 
 Secrets can be granted (assigned) to events, categories, plugins, and web hooks:

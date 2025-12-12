@@ -1,5 +1,7 @@
 # Categories
 
+## Overview
+
 Categories group related events and workflows, and are completely user-defined. Each event/workflow belongs to exactly one category. Categories aid navigation and search, control visibility (via roles), provide visual separation, and can define default actions and limits for everything inside.
 
 ## Key Points
