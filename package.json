@@ -11,7 +11,8 @@
 		"start": "bin/control.sh start",
 		"debug": "bin/control.sh debug",
 		"boot": "pixl-boot install --script bin/control.sh",
-		"unboot": "pixl-boot uninstall"
+		"unboot": "pixl-boot uninstall",
+		"test": "pixl-unit test/test.js"
 	},
 	"repository": {
 		"type": "git",
