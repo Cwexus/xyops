@@ -3712,8 +3712,6 @@ See [Snapshots](snapshots.md) for more details.
 
 ## Tags
 
-### Usage
-
 Tag APIs manage free-form labels that can be applied to jobs, events and tickets to aid organization and search. Use them to list, fetch, create, update, and delete tags. Tagging enables search and filtering in the UI. Editing tags requires specific privileges; listing and fetching requires a valid session or API Key.
 
 ### get_tags
@@ -3884,8 +3882,6 @@ Deletions are permanent and cannot be undone.
 
 
 ## Tickets
-
-### Usage
 
 Ticket APIs manage lightweight issue tracking and comments within xyOps. Use them to create, search, fetch, update tickets, and add changes/comments. Tickets can be linked to jobs or alerts for incident response. Editing tickets requires specific privileges; searching and reading requires a valid session or API Key.
 
@@ -4260,8 +4256,6 @@ Deletion removes the ticket permanently. References to the ticket in jobs and al
 
 
 ## Users
-
-### Usage
 
 User APIs manage user accounts.  Note that most user management APIs are handled in the [pixl-server-user](https://github.com/jhuckaby/pixl-server-user) component.  The only APIs listed here are those specific to xyOps.
 
