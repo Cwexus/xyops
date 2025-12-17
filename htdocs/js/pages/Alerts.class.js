@@ -33,7 +33,7 @@ Page.Alerts = class Alerts extends Page.PageUtils {
 		var args = this.args;
 		
 		if (!args.offset) args.offset = 0;
-		if (!args.limit) args.limit = 25;
+		if (!args.limit) args.limit = config.items_per_page;
 		
 		app.setWindowTitle('Alert History');
 		app.setHeaderTitle( '<i class="mdi mdi-restore-alert">&nbsp;</i>Alert History' ); // or: cloud-alert-outline
@@ -303,8 +303,12 @@ Page.Alerts = class Alerts extends Page.PageUtils {
 	
 	searchPaginate(offset) {
 		// special hook for intercepting pagination clicks
-		// FUTURE: history.replaceState to update the URI with new offset
 		this.args.offset = offset;
+		
+		var url = '#' + this.ID + (num_keys(this.args) ? compose_query_string(this.args) : '');
+		history.pushState( null, '', url );
+		Nav.loc = url.replace(/^\#/, '');
+		
 		this.div.find('#d_search_results .box_content').addClass('loading');
 		this.doSearch();
 	}

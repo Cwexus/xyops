@@ -698,8 +698,12 @@ Page.Servers = class Servers extends Page.ServerUtils {
 	
 	searchPaginate(offset) {
 		// special hook for intercepting pagination clicks
-		// FUTURE: history.replaceState to update the URI with new offset
 		this.args.offset = offset;
+		
+		var url = '#' + this.ID + (num_keys(this.args) ? compose_query_string(this.args) : '');
+		history.pushState( null, '', url );
+		Nav.loc = url.replace(/^\#/, '');
+		
 		this.div.find('#d_search_results .box_content').addClass('loading');
 		this.doSearch();
 	}

@@ -32,7 +32,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 		// search activity db
 		var self = this;
 		if (!args.offset) args.offset = 0;
-		if (!args.limit) args.limit = 25;
+		if (!args.limit) args.limit = config.items_per_page;
 		
 		var action_items = [].concat( config.ui.list_list ).concat([
 			{ "id": "jobs", "title": "Jobs", "icon": "timer-outline" },
@@ -511,8 +511,12 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 	
 	searchPaginate(offset) {
 		// special hook for intercepting pagination clicks
-		// FUTURE: history.replaceState to update the URI with new offset
 		this.args.offset = offset;
+		
+		var url = '#' + this.ID + (num_keys(this.args) ? compose_query_string(this.args) : '');
+		history.pushState( null, '', url );
+		Nav.loc = url.replace(/^\#/, '');
+		
 		this.div.find('#d_search_results .box_content').addClass('loading');
 		this.doSearch();
 	}
