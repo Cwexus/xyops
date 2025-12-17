@@ -75,6 +75,7 @@ exports.tests = [
 			"enabled": true,
 			"category": category_id,
 			"targets": ["main"],
+			"algo": "random",
 			"plugin": "shellplug",
 			"params": { "script": "#!/bin/bash\necho hello\n", "annotate": false, "json": false },
 			"limits": [ { enabled: true, type: 'time', duration: 60 } ],
