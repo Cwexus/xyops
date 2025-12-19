@@ -46,14 +46,14 @@ Indexed Columns:
 
 | Column ID | Source | Type | Description |
 |-----------|--------|------|-------------|
-| `active` | [AlertInvocation](data.md#alertinvocation) (`/active`) | word | Whether the alert is currently active. |
+| `active` | [AlertInvocation.active](data.md#alertinvocation-active) (`/active`) | word | Whether the alert is currently active (`true` or `false`). |
 | `alert` | [AlertInvocation.alert](data.md#alertinvocation-alert) (`/alert`) | word | Alert definition ID. |
 | `groups` | [AlertInvocation.groups](data.md#alertinvocation-groups) (`/groups`) | word | Groups the server belongs to. |
 | `server` | [AlertInvocation.server](data.md#alertinvocation-server) (`/server`) | word | Server ID associated with the invocation. |
 | `start` | [AlertInvocation.date](data.md#alertinvocation-date) (`/date`) | number | Start timestamp indexed at hour precision. |
 | `end` | [AlertInvocation.modified](data.md#alertinvocation-modified) (`/modified`) | number | Last modified time indexed at hour precision. |
 | `jobs` | [AlertInvocation.jobs](data.md#alertinvocation-jobs) (`/jobs`) | word | Related job IDs. |
-| `tickets` | [AlertInvocation](data.md#alertinvocation) (`/tickets`) | word | Related ticket IDs. |
+| `tickets` | [AlertInvocation.tickets](data.md#alertinvocation-tickets) (`/tickets`) | word | Related ticket IDs. |
 
 ## Snapshots
 
