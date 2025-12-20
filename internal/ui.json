@@ -850,7 +850,9 @@
 		"wf_redo": "Redo",
 		"wf_zoom_auto": "Auto-fit workflow",
 		"wf_zoom_out": "Zoom out",
-		"wf_zoom_in": "Zoom in"
+		"wf_zoom_in": "Zoom in",
+		"wf_tool_draw": "Selection Tool",
+		"wf_tool_move": "Move Tool"
 	},
 	
 	"intros": {

@@ -2627,8 +2627,8 @@ Page.Workflows = class Workflows extends Page.Events {
 			<div class="button icon left disabled" id="d_btn_wf_undo" onClick="$P().doUndo()" title="${config.ui.tooltips.wf_undo}"><i class="mdi mdi-undo"></i></div>
 			<div class="button icon left disabled" id="d_btn_wf_redo" onClick="$P().doRedo()" title="${config.ui.tooltips.wf_redo}"><i class="mdi mdi-redo"></i></div>
 			<div class="wf_button_separator left"></div>
-			<div class="button icon left" id="d_btn_wf_tool_draw" onClick="$P().selectTool('draw')"><i class="mdi mdi-cursor-default-outline"></i></div>
-			<div class="button icon left" id="d_btn_wf_tool_move" onClick="$P().selectTool('move')"><i class="mdi mdi-cursor-move"></i></div>
+			<div class="button icon left" id="d_btn_wf_tool_draw" onClick="$P().selectTool('draw')" title="${config.ui.tooltips.wf_tool_draw}"><i class="mdi mdi-cursor-default-outline"></i></div>
+			<div class="button icon left" id="d_btn_wf_tool_move" onClick="$P().selectTool('move')" title="${config.ui.tooltips.wf_tool_move}"><i class="mdi mdi-cursor-move"></i></div>
 			<div class="wf_button_separator left"></div>
 			<div class="button icon left" onClick="$P().wfZoomAuto()" title="${config.ui.tooltips.wf_zoom_auto}"><i class="mdi mdi-home"></i></div>
 			<div class="button icon left" id="d_btn_wf_zoom_out" onClick="$P().wfZoomOut()" title="${config.ui.tooltips.wf_zoom_out}"><i class="mdi mdi-magnify-minus"></i></div>
