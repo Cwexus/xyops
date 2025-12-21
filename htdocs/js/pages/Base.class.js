@@ -2986,7 +2986,7 @@ Page.Base = class Base extends Page {
 		CodeEditor.onKeyDown = function(event) {
 			// prevent esc from canceling if editor is focused
 			if (event.keyCode == 27) {
-				if (document.activeElement && (document.activeElement.nodeName == 'TEXTAREA')) {
+				if (document.activeElement && ((document.activeElement.nodeName == 'TEXTAREA') || (document.activeElement.className == 'CodeMirror-code'))) {
 					app.focusNext();
 					return;
 				}
@@ -3013,9 +3013,7 @@ Page.Base = class Base extends Page {
 						'Ctrl-I': function() { self.editToggleItalic(); },
 						
 						'Cmd-B': function() { self.editToggleBold(); },
-						'Cmd-I': function() { self.editToggleItalic(); },
-						
-						'Esc': function() { app.focusNext(); }
+						'Cmd-I': function() { self.editToggleItalic(); }
 					}
 				};
 			}
