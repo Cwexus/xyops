@@ -60,7 +60,7 @@ If you want to white-label the xyOps UI so it resembles Cronicle, you can change
 
 ```json
 "name": "Cronicle",
-"logo_url": "images/cronicle-logo.png"
+"logo_url": "/images/cronicle-logo.png"
 ```
 
 Note that these properties are *inside* the `client` object, in your `config.json` file.
@@ -69,8 +69,10 @@ You can also override them via environment variables if you like:
 
 ```
 XYOPS_client__name="Cronicle"
-XYOPS_client__logo_url="images/cronicle-logo.png"
+XYOPS_client__logo_url="/images/cronicle-logo.png"
 ```
+
+Make sure the logo URL is an absolute path, or a fully-qualified URL.
 
 ## Multiplex Events
 
