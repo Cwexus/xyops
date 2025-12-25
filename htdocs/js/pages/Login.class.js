@@ -44,6 +44,7 @@ Page.Login = class Login extends Page.Base {
 		html += '<div class="dialog inline">';
 			html += '<div class="dialog_title">User Login</div>';
 			html += '<div class="dialog_intro">Enter the username and password associated with your ' + config.name + ' account.</div>';
+			html += '<div class="dialog_content">';
 			html += '<div class="box_content">';
 				
 				// username
@@ -80,9 +81,12 @@ Page.Login = class Login extends Page.Base {
 				html += '<div class="button" onClick="$P().navPasswordRecovery()">Forgot Password...</div>';
 				html += '<div class="button primary" onClick="$P().doLogin()"><i class="mdi mdi-key">&nbsp;</i>Login</div>';
 			html += '</div>';
-		html += '</div>';
 		
+		html += '</div>'; // box_content
+		html += '</div>'; // dialog_content
+		html += '</div>'; // dialog
 		html += '</form>';
+		
 		this.div.html( html ).buttonize();
 		
 		setTimeout( function() {
@@ -152,6 +156,7 @@ Page.Login = class Login extends Page.Base {
 		html += '<div class="dialog inline wider">';
 			html += '<div class="dialog_title">Create Account</div>';
 			html += '<div class="dialog_intro">Fill out this form to sign up for ' + config.name + '.</div>';
+			html += '<div class="dialog_content">';
 			html += '<div class="box_content">';
 				
 				// username
@@ -218,9 +223,12 @@ Page.Login = class Login extends Page.Base {
 				html += '<div class="button" onClick="$P().cancelCreate()">Cancel</div>';
 				html += '<div class="button primary" onClick="$P().doCreateAccount()"><i class="mdi mdi-account-plus">&nbsp;</i>Create</div>';
 			html += '</div>';
-		html += '</div>';
 		
+		html += '</div>'; // box_content
+		html += '</div>'; // dialog_content
+		html += '</div>'; // dialog
 		html += '</form>';
+		
 		this.div.html( html ).buttonize();
 		
 		setTimeout( function() {
@@ -303,9 +311,8 @@ Page.Login = class Login extends Page.Base {
 		
 		html += '<div class="dialog inline">';
 			html += '<div class="dialog_title">Forgot Password</div>';
-			
 			html += '<div class="dialog_intro">Please enter the username and e-mail address associated with your account, and we will send you instructions for resetting your password.</div>';
-			
+			html += '<div class="dialog_content">';
 			html += '<div class="box_content">';
 				
 				// username
@@ -336,9 +343,12 @@ Page.Login = class Login extends Page.Base {
 				html += '<div class="button" onClick="$P().cancelRecover()">Cancel</div>';
 				html += '<div class="button primary" onClick="$P().doSendRecoveryEmail()"><i class="mdi mdi-email-outline">&nbsp;</i>Send Email</div>';
 			html += '</div>';
-		html += '</div>';
 		
+		html += '</div>'; // box_content
+		html += '</div>'; // dialog_content
+		html += '</div>'; // dialog
 		html += '</form>';
+		
 		this.div.html( html ).buttonize();
 		
 		setTimeout( function() { 
@@ -397,6 +407,7 @@ Page.Login = class Login extends Page.Base {
 		html += '<div class="dialog inline">';
 			html += '<div class="dialog_title">Reset Password</div>';
 			html += '<div class="dialog_intro">Please enter a new password for your account.</div>';
+			html += '<div class="dialog_content">';
 			html += '<div class="box_content">';
 				
 				// username
@@ -428,9 +439,12 @@ Page.Login = class Login extends Page.Base {
 				html += '<div class="button" onClick="$P().cancelCreate()">Cancel</div>';
 				html += '<div class="button primary" onClick="$P().doResetPassword()"><i class="mdi mdi-key">&nbsp;</i>Reset Password</div>';
 			html += '</div>';
-		html += '</div>';
 		
+		html += '</div>'; // box_content
+		html += '</div>'; // dialog_content
+		html += '</div>'; // dialog
 		html += '</form>';
+		
 		this.div.html( html ).buttonize();
 		
 		setTimeout( function() {
