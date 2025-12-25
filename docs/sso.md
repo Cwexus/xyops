@@ -1,6 +1,6 @@
 # Single Sign-On 
 
-# Overview
+## Overview
 
 Single Sign-On (SSO) is a mechanism for outsourcing the xyOps user authentication to a third party identity provider, such as Microsoft, Google, GitHub, Okta, Auth0, Cognito, etc.  This document outlines the SSO implementation in xyOps, including configuration, usage, and best practices.
 
@@ -16,7 +16,7 @@ The trusted header flow works as follows:
 3. xyOps detects the headers and creates/updates a user account as necessary, and logs the user in using its own session system.
 	- xyOps can also automatically assign user roles and/or privileges based on groups you define in your identity provider.
 
-# Setup
+## Setup
 
 The first step is to pick an authentication tool, and get it all configured and working before we throw xyOps in the mix.  We'll focus on [OAuth2-Proxy](https://github.com/oauth2-proxy/oauth2-proxy) for this guide, as it is extremely quick and easy to get up and running.  It is also free, open source, and supports all the major OIDC providers (SAML is covered separately below).
 
@@ -43,7 +43,7 @@ services:
       OAUTH2_PROXY_SET_AUTHORIZATION_HEADER: "true" # forwards Bearer in Authorization if present
       OAUTH2_PROXY_PASS_ACCESS_TOKEN: "true" # forward access token if present
       OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: "true" # skip splash screen
-	  OAUTH2_PROXY_SKIP_AUTH_ROUTES: "^/(api|health|images|js|css|fonts|sounds|codemirror|manifest.webmanifest)(/|$)" # skip auth for static files
+	  OAUTH2_PROXY_SKIP_AUTH_ROUTES: "^/(api|files|health|images|js|css|fonts|sounds|codemirror|manifest.webmanifest)(/|$)" # skip auth for static files
 
   echo-server:
     image: ealen/echo-server
@@ -110,7 +110,7 @@ The important headers we want to see are these three right here:
 
 These are the magical "trusted headers" that xyOps will use to automatically log in the user (and create/update their user account if necessary).  So, if you are seeing these headers in your test request (or at the very least `x-forwarded-email`), then things are working, and you can swap out `echo-server` for the real xyOps.  But before you do that, proceed to the next section to learn how to configure xyOps for SSO.
 
-# Configuration
+## Configuration
 
 All the SSO settings for xyOps are contained in the `/opt/xyops/conf/sso.json` file.  The default configuration looks like this:
 
@@ -151,7 +151,7 @@ Here are descriptions of all the SSO properties:
 | `admin_bootstrap` | String | Temporarily assign full administrator privileges to a given user.  This is used for bootstrapping the system on initial setup.  See [Admin Bootstrap](#admin-bootstrap) for more. |
 | `logout_url` | String | Set this to the URL to redirect the user to after xyOps performs its own logout.  See [Logging Out](#logging-out) below for details. |
 
-## Header Map
+### Header Map
 
 The `header_map` object allows you to define which incoming headers map to which xyOps user properties (username, email, etc.).  The reason we need a map is because all auth middleware tools and identity providers do this a little differently.  Different auth tools use different header names, and some identity providers *only* provide an email address, while some also provide a username, and some also provide groups.  The header map allows for full flexibility in our configuration, so we can support any combination of tools and IdPs.
 
@@ -178,7 +178,7 @@ However, if you use an identity provider that *only* sends an email address, use
 
 In this case we're using the email address as the username, full name, and email.  Here xyOps can help "clean up" the username and full name fields as it extracts them from the user's email address.  See the following section for details on this.
 
-### Header Cleanup
+#### Header Cleanup
 
 To perform header cleanup, set the `cleanup_username` and/or `cleanup_full_name` properties to `true`.  Here is what each does:
 
@@ -190,7 +190,7 @@ To perform header cleanup, set the `cleanup_username` and/or `cleanup_full_name`
 
 These complications are why it's important to first follow the initial [Setup](#setup) step above, where you can test your SSO setup with a pure passthrough echo server, so you can see exactly what fields your IdP sends over, and how your auth middleware maps those fields to request headers.  Armed with this knowledge, you'll know exactly how to configure the `header_map` in xyOps.
 
-## Default User Privileges
+### Default User Privileges
 
 When users are first created via SSO, a default set of privileges is applied.  This is configured in the main `/opt/xyops/conf/config.json` file in the [default_user_privileges](config.md#default_user_privileges) property.  The default set is:
 
@@ -206,7 +206,7 @@ When users are first created via SSO, a default set of privileges is applied.  T
 
 This is the same set of default privileges applied to new users created manually in the xyOps Admin UI.  These privileges (along with custom user roles) can be further customized by mapping your IdP groups.  See the next section for details.
 
-## User Groups
+### User Groups
 
 With `group_role_map` and `group_privilege_map` you can map your own user groups (as defined in your OIDC/SAML identity provider) to user [roles and privileges](privileges.md) on the xyOps side.  Here is how it works.  Imagine a set of incoming trusted headers like these (GitHub IdP used here as an example):
 
@@ -242,7 +242,7 @@ Note that not all identity providers send along groups by default.  In many case
 
 See [Privileges](privileges.md) for more on xyOps user roles and privileges.
 
-## Admin Bootstrap
+### Admin Bootstrap
 
 For the initial setup and configuration phase, it is often useful to promote yourself to a full administrator.  This comes in handy if your IdP doesn't send along groups, or you haven't yet configured that feature.  To force a single user to be admin, add `admin_bootstrap` and set it to your *exact username*:
 
@@ -252,7 +252,7 @@ For the initial setup and configuration phase, it is often useful to promote you
 
 Note that the username must match exactly here, including any cleanup that may be happening (see `cleanup_username` above).  Also note that xyOps logs a warning in the activity log each time this is applied to a user.  This serves as a reminder to remove `admin_bootstrap` once everything is configured and working with your IdP groups (or manually assigned roles / privileges).
 
-## Logging Out
+### Logging Out
 
 When a user clicks the "Logout" button in the top-right corner of the xyOps UI, we need to perform some additional steps behind the scenes to *fully* log the user out.  With SSO in the mix, there are actually three cookies that need to be cleared:
 
@@ -286,7 +286,7 @@ One final important note here.  When using OAuth2-Proxy, you will need to "white
 OAUTH2_PROXY_WHITELIST_DOMAINS: ".yourcompany.com,.github.com"
 ```
 
-# OAuth2-Proxy with TLS
+## OAuth2-Proxy with TLS
 
 Now you should be ready to integrate xyOps with OAuth2-Proxy.  You have several options for doing this.  If you have a single xyOps conductor server, then the best way is to run OAuth2-Proxy standalone.  That has the fewest moving parts, and OAuth2-Proxy can also terminate TLS for you.  This section covers that configuration.
 
@@ -346,7 +346,7 @@ In this case, since we are only running a single conductor server, we can route 
 
 **Advanced**: For installations with a large amount of worker servers, it is better to expose the xyOps container under its own internal domain, and have worker servers connect directly to that, instead of going through OAuth2-Proxy.  Change the `XYOPS_hostname` environment variable to point to the dedicated xyOps domain to change how it advertises itself to the cluster.
 
-## Multi-Conductor with OAuth2-Proxy and TLS with Nginx
+### Multi-Conductor with OAuth2-Proxy and TLS with Nginx
 
 For a load balanced multi-conductor setup with Nginx w/TLS and OAuth-Proxy for SSO, please read this section.  This is definitely the most complex setup, and requires advanced knowledge of all the components used.  Let me just plug our [Enterprise Plan](https://xyops.io/enterprise) one last time, as we can set all this up for you.  Now, the way this configuration works is as follows:
 
@@ -470,7 +470,7 @@ Notice the request header names are different; they all have a `x-auth-request-`
 
 **Advanced:** xyOps actually performs its own TLS termination in its embedded web server, and hosts HTTPS on port 5523.  This is used by worker servers who connect to the conductor directly.  By default xyOps is configured with a self-signed certificate, which our satellite software ([xySat](https://github.com/pixlcore/xysat)) is designed to support.  You can change all this, however, and include signed certificates for use on your conductor servers, and also configure the worker servers to reject self-signed certs.  For more information, see [Self-Hosting Guide - TLS](hosting.md#tls).
 
-## Troubleshooting
+### Troubleshooting
 
 For troubleshooting OAuth2-Proxy, set these environment variables to enable additional debug logging:
 
@@ -494,17 +494,17 @@ This will allow xyOps to log much more information about the SSO process, includ
 /opt/xyops/logs/SSO.log
 ```
 
-# SAML
+## SAML
 
 If you require [SAML](https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language) for your SSO setup, we highly recommend [SSOReady](https://ssoready.com/), which can easily be integrated with [OAuth2-Proxy](https://github.com/oauth2-proxy/oauth2-proxy).  Basically, SSOReady provides a "SAML-to-OIDC bridge", which OAuth2-Proxy can talk directly with, just like any other OIDC identity provider.  SSOReady is free, [open source](https://github.com/ssoready/ssoready), and [can be self-hosted](https://ssoready.com/docs/self-hosting-ssoready) if you like, but their [hosted version](https://ssoready.com/pricing) is also extremely good.  This guide covers everything you need to get up and running with SAML.
 
-## Prerequisites
+### Prerequisites
 
 - A [SSOReady](https://ssoready.com/) account (or self-host it) and an "Environment".
 - An external SAML IdP (e.g., Okta, Entra ID, OneLogin) configured in SSOReady.
 - Docker / Docker Compose running locally.
 
-## SSOReady Setup
+### SSOReady Setup
 
 1. **Create an account / environment**
 	- Register / login at `https://app.ssoready.com/`.
@@ -525,7 +525,7 @@ If you require [SAML](https://en.wikipedia.org/wiki/Security_Assertion_Markup_La
 	- You must add it to the **OAuth Redirect URI** field specifically, as we're using SAML-over-OAuth.
 	- The redirect URL must match what you have set in OAuth2-Proxy **exactly** (scheme, host, port, path).
 
-## OAuth2-Proxy Setup
+### OAuth2-Proxy Setup
 
 [OAuth2-Proxy](https://github.com/oauth2-proxy/oauth2-proxy) needs to be configured specifically for SSOReady.  We cannot use OIDC discovery mode, because we need to set custom URLs for all the endpoints.  Luckily, OAuth2-Proxy allows us to customize everything, including skipping discovery and specifying all the OAuth URLs manually.  Here is a list of all the [OAuth2-Proxy Config Options](https://oauth2-proxy.github.io/oauth2-proxy/configuration/overview/#config-options) we need to set:
 
@@ -560,7 +560,7 @@ See the [Setup](#setup) section above to run a local test of OAuth2-Proxy using 
 
 Once everything is working, see the [Configuration](#configuration) section above to configure xyOps for SSO.
 
-# Active Directory
+## Active Directory
 
 If your company does not have an OIDC or SAML provider, but does have an [LDAP](https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol) or [Active Directory](https://en.wikipedia.org/wiki/Active_Directory) server, you can use [Authelia](https://www.authelia.com/) instead of OAuth2-Proxy.  Authelia works in the same way as OAuth2-Proxy, but supports LDAP or AD as an upstream user authentication provider.  It is also free and open source, and can forward trusted headers to xyOps.  See the following guides for assistance in setting this up:
 
@@ -581,7 +581,7 @@ The xyOps [Header Map](#header-map) should be set as follows:
 
 Authelia can also be [integrated with Nginx](https://www.authelia.com/integration/proxies/nginx/) for TLS termination.
 
-# Tailscale
+## Tailscale
 
 xyOps works with [Tailscale](https://tailscale.com/) (specifically [Tailscale Serve](https://tailscale.com/kb/1312/serve)), which acts as an SSO auth system by forwarding trusted headers.  Here is how you should configure your [Header Map](#header-map) for Tailscale Serve use:
 
@@ -603,7 +603,7 @@ Finally, make sure you set your [IP Whitelist](#ip-whitelist) to only accept hea
 "whitelist": ["127.0.0.1", "::1/128"]
 ```
 
-# Live Production
+## Live Production
 
 In a production environment, it is crucial to ensure the security and reliability of the SSO implementation. Here is a checklist:
 
@@ -616,7 +616,7 @@ In a production environment, it is crucial to ensure the security and reliabilit
 7. **xyOps Base App URL**: Remember to set the [base_app_url](config.md#base_app_url) configuration property for your live production setup.
 8. **Use Multiple Availability Zones**: For running multiple xyOps conductor servers, ideally put them in separate AZs.
 
-## IP Whitelist
+### IP Whitelist
 
 It's important to configure xyOps so that it **only** accepts trusted headers from your auth proxy server, and *nowhere else*.  To do this, add an IP `whitelist` property in your xyOps SSO configuration.  This should be an array of IPv4 and/or IPv6 addresses or ranges, including single IPs, partial IPs, and/or [CIDR blocks](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing).
 
