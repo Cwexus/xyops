@@ -791,7 +791,7 @@
 				"src_html_file": "htdocs/index-dev.html",
 				"dest_html_file": "htdocs/index.html",
 				"match_key": "COMBINE_STYLE",
-				"dest_bundle_tag": "<link rel=\"stylesheet\" href=\"css/_combo.css?v=[version]\">"
+				"dest_bundle_tag": "<link rel=\"stylesheet\" href=\"/css/_combo.css?v=[version]\">"
 			},
 			{
 				"action": "bundleCompress",
@@ -801,7 +801,7 @@
 				"src_html_file": "htdocs/index.html",
 				"dest_html_file": "htdocs/index.html",
 				"match_key": "COMBINE_SCRIPT",
-				"dest_bundle_tag": "<script src=\"js/_combo.js?v=[version]\"></script>"
+				"dest_bundle_tag": "<script src=\"/js/_combo.js?v=[version]\"></script>"
 			},
 			{
 				"action": "printMessage",
