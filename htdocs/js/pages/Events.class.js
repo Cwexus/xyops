@@ -456,18 +456,20 @@ Page.Events = class Events extends Page.PageUtils {
 		if (is_filtered) this.div.find('#btn_el_reset').show();
 		else this.div.find('#btn_el_reset').hide();
 		
-		// do history.replaceState jazz here
-		// don't mess up initial visit href
-		var query = deep_copy_object(args);
-		delete query.sub;
-		
-		var url = '#Events' + (num_keys(query) ? compose_query_string(query) : '');
-		history.pushState( null, '', url );
-		Nav.loc = url.replace(/^\#/, '');
-		// Nav.go(url);
-		
-		// magic trick: replace link in sidebar for Events
-		// $('#tab_Events').attr( 'href', url );
+		if (reset_max) {
+			// do history.replaceState jazz here
+			// don't mess up initial visit href
+			var query = deep_copy_object(args);
+			delete query.sub;
+			
+			var url = '#Events' + (num_keys(query) ? compose_query_string(query) : '');
+			history.pushState( null, '', url );
+			Nav.loc = url.replace(/^\#/, '');
+			// Nav.go(url);
+			
+			// magic trick: replace link in sidebar for Events
+			// $('#tab_Events').attr( 'href', url );
+		}
 	}
 	
 	resetFilters() {
@@ -3359,7 +3361,7 @@ Page.Events = class Events extends Page.PageUtils {
 				case 'continuous':
 					// continuous mode (no options)
 					if ((idx == -1) && trigger.enabled && find_object(self.event.triggers, { type: 'continuous', enabled: true })) {
-						return app.doError("Sorry, you can only have one continuous rule defined per event.");
+						return app.doError("Sorry, you can only have one continuous trigger defined per event.");
 					}
 				break;
 				
@@ -3388,7 +3390,7 @@ Page.Events = class Events extends Page.PageUtils {
 				case 'manual':
 					// manual mode (no options)
 					if ((idx == -1) && trigger.enabled && find_object(self.event.triggers, { type: 'manual', enabled: true })) {
-						return app.doError("Sorry, you can only have one manual rule defined per event.");
+						return app.doError("Sorry, you can only have one manual trigger defined per event.");
 					}
 				break;
 				
@@ -3408,7 +3410,7 @@ Page.Events = class Events extends Page.PageUtils {
 						};
 					}
 					if ((idx == -1) && trigger.enabled && find_object(self.event.triggers, { type: 'catchup', enabled: true })) {
-						return app.doError("Sorry, you can only have one catch-up rule defined per event.");
+						return app.doError("Sorry, you can only have one catch-up trigger defined per event.");
 					}
 				break;
 				
@@ -3431,7 +3433,7 @@ Page.Events = class Events extends Page.PageUtils {
 				case 'delay':
 					// starting delay
 					if ((idx == -1) && find_object(self.event.triggers, { type: 'delay' })) {
-						return app.doError("Sorry, you can only have one delay rule defined per event.");
+						return app.doError("Sorry, you can only have one delay trigger defined per event.");
 					}
 					trigger.duration = parseInt( $('#fe_et_delay').val() );
 					if (!trigger.duration) return app.badField('#fe_et_delay', "Please enter or select the number of seconds to delay.");
@@ -3449,7 +3451,7 @@ Page.Events = class Events extends Page.PageUtils {
 					trigger.seconds = $('#fe_et_seconds').val().map( function(v) { return parseInt(v); } );
 					
 					if ((idx == -1) && trigger.enabled && find_object(self.event.triggers, { type: 'precision', enabled: true })) {
-						return app.doError("Sorry, you can only have one precision rule defined per event.");
+						return app.doError("Sorry, you can only have one precision trigger defined per event.");
 					}
 					if ((idx == -1) && trigger.enabled && find_object(self.event.triggers, { type: 'interval', enabled: true })) {
 						return app.doError("Sorry, the precision and interval triggers are mutually exclusive.");
@@ -3464,7 +3466,10 @@ Page.Events = class Events extends Page.PageUtils {
 					if (!trigger.plugin_id) return app.badField('#fe_et_plugin', "Please select a Plugin for scheduling.");
 					trigger.params = self.getPluginParamValues( trigger.plugin_id );
 					if (!trigger.params) return false; // invalid
-					if ($('#fe_et_tz').val().length) trigger.timezone = $('#fe_et_tz').val();
+					
+					if ((idx == -1) && trigger.enabled && find_object(self.event.triggers, { type: 'plugin', enabled: true })) {
+						return app.doError("Sorry, you can only have one plugin trigger defined per event.");
+					}
 				break;
 			} // switch trigger.type
 			
@@ -3562,40 +3567,40 @@ Page.Events = class Events extends Page.PageUtils {
 				case 'catchup':
 					$('#d_et_catchup_desc').show();
 					$('#d_et_time_machine').show();
-					new_btn_label = 'Add Option';
+					new_btn_label = 'Add Modifier';
 				break;
 				
 				case 'range':
 					$('#d_et_range_desc').show();
 					$('#d_et_range_start').show();
 					$('#d_et_range_end').show();
-					new_btn_label = 'Add Option';
+					new_btn_label = 'Add Modifier';
 				break;
 				
 				case 'blackout':
 					$('#d_et_blackout_desc').show();
 					$('#d_et_range_start').show();
 					$('#d_et_range_end').show();
-					new_btn_label = 'Add Option';
+					new_btn_label = 'Add Modifier';
 				break;
 				
 				case 'delay':
 					$('#d_et_delay_desc').show();
 					$('#d_et_delay').show();
-					new_btn_label = 'Add Option';
+					new_btn_label = 'Add Modifier';
 				break;
 				
 				case 'precision':
 					$('#d_et_precision_desc').show();
 					$('#d_et_seconds').show();
-					new_btn_label = 'Add Option';
+					new_btn_label = 'Add Modifier';
 				break;
 				
 				case 'plugin':
 					$('#d_et_plugin').show();
 					$('#d_et_plugin_params').show();
 					$('#d_et_param_editor').html( self.getPluginParamEditor( $('#fe_et_plugin').val(), trigger.params || {} ) ).buttonize();
-					$('#d_et_tz').show();
+					new_btn_label = 'Add Modifier';
 				break;
 			} // switch new_type
 			
