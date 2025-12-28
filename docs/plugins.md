@@ -514,7 +514,9 @@ If your Plugin does not output JSON, no problem.  When no JSON is detected in th
 
 ### Trigger Plugins
 
-Trigger Plugins are extensions of the scheduler system, in that they can decide "when" and "if" to launch jobs.  Specifically, if an event uses a trigger plugin, it is consulted *once per minute on the minute* (the same as the scheduler itself), and the Plugin decides whether to launch each assigned job or not.  Foe example, this can be used for custom timing algorithms like sunrise / sunset, or even watching a directory or S3 prefix for new files to appear.
+Trigger Plugins are extensions of the scheduler system, in that they can decide "when" and "if" to launch jobs.  Specifically, if an event uses a trigger plugin, it is consulted *once per scheduled job*, and the Plugin decides whether to launch each assigned job or not.  For example, this can be used for custom timing algorithms like sunrise / sunset, or even watching a directory or S3 prefix for new files to appear.
+
+This is a "modifier" trigger, so it needs to be configured in conjunction with a standard schedule trigger.  The schedule sets the cadence and frequency of when the Plugin is launched.
 
 Trigger Plugins run *on the primary conductor server*, as they execute before a job is launched and before a server is chosen for it.  However, like the other Plugin types, they are spawned as sub-processes and can be written in virtually any language.  There is no SDK to use -- xyOps communicates with Plugins via simple JSON over STDIO.
 
@@ -614,7 +616,7 @@ Once your plugin decides which events should launch jobs (if any), you need to c
 }
 ```
 
-The `items` array should have the same number of elements as the initial one you received, and each element can be set to a simple Boolean as shown above.  In this case `true` means launch a job for the event, and `false` means do not.  Each item in your output array matches up with the corresponding object in the input array, via their indexes.
+The `items` array should have the same number of elements as the initial one you received, and each element can be set to a simple Boolean as shown above.  In this case `true` means launch a job for the event, and `false` means do not.  Each item in your output array needs to line up with the corresponding object in the input array, via their indexes.
 
 Now, instead of a simple Boolean, the items can also be objects containing a `launch` Boolean (indicating whether to launch a job or not).  This alternate verbose format exists so you can include additional metadata for the launched jobs.  Example:
 

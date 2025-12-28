@@ -43,7 +43,7 @@ function summarize_event_timings(event) {
 	// summarize all event triggers from event into human-readable string
 	// separate schedule items and options
 	var triggers = event.triggers.filter( function(trigger) { return trigger.enabled; } );
-	var schedules = triggers.filter( function(trigger) { return !!(trigger.type || '').match(/^(schedule|continuous|interval|single|plugin)$/); } );
+	var schedules = triggers.filter( function(trigger) { return !!(trigger.type || '').match(/^(schedule|interval|single)$/); } );
 	var parts = (schedules.length == 1) ? [summarize_event_timing(schedules[0])] : schedules.map( summarize_event_timing );
 	if (!parts.length) {
 		if (find_object(triggers, { type: 'manual', enabled: true })) return "On Demand";
@@ -52,13 +52,22 @@ function summarize_event_timings(event) {
 	var summary = (parts.length == 1) ? parts[0] : (parts.slice(0, parts.length - 1).join(', ') + ', and ' + parts[ parts.length - 1 ]);
 	
 	var opts = [];
-	if (find_object(triggers, { type: 'catchup' })) opts.push("Catch-Up");
-	if (find_object(triggers, { type: 'range' })) opts.push("Date Range");
-	if (find_object(triggers, { type: 'blackout' })) opts.push("Blackout");
-	if (find_object(triggers, { type: 'delay' })) opts.push("Delay");
-	if (find_object(triggers, { type: 'precision' })) opts.push("Precision");
-	// if (find_object(triggers, { type: 'plugin' })) opts.push("Plugin");
-	if (opts.length) summary += ' (' + opts.join(', ') + ')';
+	triggers.forEach( function(trigger) {
+		switch (trigger.type) {
+			case 'catchup': opts.push("Catch-Up"); break;
+			case 'range': opts.push("Date Range"); break;
+			case 'blackout': opts.push("Blackout"); break;
+			case 'delay': opts.push("Delay"); break;
+			case 'precision': opts.push("Precision"); break;
+			case 'plugin':
+				var plugin = find_object( app.plugins, { id: trigger.plugin_id } );
+				if (plugin) opts.push(plugin.title);
+				else opts.push("Plugin");
+			break;
+		}
+	} );
+	var unique_opts = [...new Set(opts)];
+	if (unique_opts.length) summary += ' (' + unique_opts.join(', ') + ')';
 	
 	return summary;
 }

@@ -745,6 +745,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		
 		// pre-scan events for plugin-based and continuous scheduler modes
 		var extra_rows = [];
+		var final_events = [];
 		
 		events.forEach( function(event) {
 			var plugin_trigger = find_object( event.triggers, { type: 'plugin', enabled: true } );
@@ -765,10 +766,12 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				});
 				return;
 			}
+			
+			final_events.push(event);
 		} ); // foreach event
 		
 		var opts = {
-			events: events,
+			events: final_events,
 			duration: 86400 * 32,
 			burn: 16,
 			max: 1000,
@@ -3702,7 +3705,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		
 		if (!trigger.enabled) short_desc = '(Disabled)';
 		
-		if (trigger.type.match(/^(catchup|range|blackout|delay|precision)$/)) {
+		if (trigger.type.match(/^(catchup|range|blackout|delay|precision|plugin)$/)) {
 			// option triggers are rendered as pure circles with no pole
 			nice_title = alt_type;
 			inner_classes.push('wf_option');

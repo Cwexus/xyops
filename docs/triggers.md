@@ -61,7 +61,7 @@ The following trigger types are available.
 
 ### Manual Run
 
-Allow the event to be launched on demand by users (UI) and API keys (API). Does not produce automatic runs.
+Allow the event to be launched on demand by users (UI) and API keys (API). Does not produce automatic runs.  Skips over modifiers like [Catch-Up](#catch-up), [Range](#range), [Blackout](#blackout), [Delay](#delay), [Precision](#precision) and [Plugin](#plugin).
 
 Parameters: None
 
@@ -179,6 +179,8 @@ This trigger type generates a unique URL to start a job from a web request (a.k.
 - A link to a standalone HTML landing page (no login required), where the user can provide event parameters, and upload files (if allowed).
 
 For the landing page presentation, when the job is started, progress is streamed back to the page for live updates.  When the job completes, the user is presented with the job results, including any output files, data, and other user-provided content in the job.
+
+This is an "on-demand" trigger, and thus it skips over modifiers like [Catch-Up](#catch-up), [Range](#range), [Blackout](#blackout), [Delay](#delay), [Precision](#precision) and [Plugin](#plugin).
 
 Trigger Parameters:
 
@@ -338,7 +340,7 @@ Example (launch at :05, :20, :35, :50 within each matched minute):
 
 ### Plugin
 
-Use a custom [Trigger Plugin](plugins.md#trigger-plugins) to decide whether to launch on each minute for this event. The plugin runs with configured parameters and returns a launch/no-launch decision per minute.
+Use a custom [Trigger Plugin](plugins.md#trigger-plugins) to decide whether to launch a job or not. The plugin runs with configured parameters and returns a launch/no-launch decision per each scheduled run.  This is a "modifier" so it needs to be used in conjunction with a standard schedule trigger.
 
 Parameters:
 
@@ -350,7 +352,8 @@ Parameters:
 
 Notes:
 
-- At a high level, xyOps invokes the plugin once per minute with context, and launches jobs if the plugin indicates so. Plugins can also request a per-launch delay and may provide input data/files for the job.  See [Plugins](plugins.md) for details.
+- At a high level, xyOps invokes the plugin once per scheduled run with context, and launches jobs if the plugin indicates so. Plugins can also request a per-launch delay and may provide input data/files for the job.  See [Plugins](plugins.md) for details.
+- For use cases like watching for new files, set a schedule trigger to run every minute, so the Plugin is checked as often as possible.
 
 Example:
 

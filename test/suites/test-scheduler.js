@@ -473,6 +473,11 @@ exports.tests = [
 		let triggers = [
 			{
 				"enabled": true,
+				"type": "schedule",
+				"minutes": [ 29 ]
+			},
+			{
+				"enabled": true,
 				"type": "plugin",
 				"plugin_id": this.scheduler_plugin_id,
 				"params": {}
