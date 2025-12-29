@@ -185,20 +185,27 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		html += '</div>';
 		html += '<div class="box_content">';
 		
-		this.plugin = {
-			"id": "",
-			"title": "",
-			"enabled": true,
-			"type": "event",
-			"command": "",
-			"script": "",
-			"groups": [],
-			"format": "text",
-			"params": [],
-			"kill": "parent",
-			"runner": false,
-			"notes": ""
-		};
+		if (this.clone) {
+			this.plugin = this.clone;
+			delete this.clone;
+			app.showMessage('info', "The plugin has been cloned as an unsaved draft.", 8);
+		}
+		else {
+			this.plugin = {
+				"id": "",
+				"title": "",
+				"enabled": true,
+				"type": "event",
+				"command": "",
+				"script": "",
+				"groups": [],
+				"format": "text",
+				"params": [],
+				"kill": "parent",
+				"runner": false,
+				"notes": ""
+			};
+		}
 		this.params = this.plugin.params;
 		
 		html += this.get_plugin_edit_html();
@@ -296,6 +303,7 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		html += '<div class="box_buttons">';
 			html += '<div class="button cancel mobile_collapse" onClick="$P().cancel_plugin_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Close</span></div>';
 			html += '<div class="button danger mobile_collapse" onClick="$P().show_delete_plugin_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
+			html += '<div class="button secondary mobile_collapse" onClick="$P().do_clone()"><i class="mdi mdi-content-copy">&nbsp;</i><span>Clone...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>History...</span></div>';
 			html += '<div class="button save phone_collapse" id="btn_save" onClick="$P().do_save_plugin()"><i class="mdi mdi-floppy">&nbsp;</i><span>Save Changes</span></div>';
@@ -314,6 +322,25 @@ Page.Plugins = class Plugins extends Page.PageUtils {
 		this.setupBoxButtonFloater();
 		this.renderParamEditor();
 		this.setupEditTriggers();
+	}
+	
+	do_clone() {
+		// make copy of plugin and jump over to new
+		app.clearError();
+		var plugin = this.get_plugin_form_json();
+		if (!plugin) return; // error
+		
+		var clone = deep_copy_object(plugin);
+		clone.title = "Copy of " + clone.title;
+		delete clone.id;
+		delete clone.created;
+		delete clone.modified;
+		delete clone.revision;
+		delete clone.username;
+		delete clone.marketplace;
+		
+		this.clone = clone;
+		Nav.go('Plugins?sub=new');
 	}
 	
 	do_export() {

@@ -46,7 +46,13 @@ Page.Workflows = class Workflows extends Page.Events {
 		html += '</div>';
 		html += '<div class="box_content">';
 		
-		if (this.getPageDraft()) {
+		if (this.clone) {
+			this.event = this.clone;
+			this.workflow = this.event.workflow;
+			delete this.clone;
+			app.showMessage('info', "The workflow has been cloned as an unsaved draft.", 8);
+		}
+		else if (this.getPageDraft()) {
 			// restore draft
 			this.event = this.checkRestorePageDraft();
 			this.workflow = this.event.workflow;
@@ -133,9 +139,9 @@ Page.Workflows = class Workflows extends Page.Events {
 		
 		// render workflow editor
 		html += this.get_wf_editor_html(`
-			<div class="button primary right tablet_collapse" id="btn_save" onClick="$P().do_new_workflow()"><i class="mdi mdi-floppy">&nbsp;</i><span>${config.ui.buttons.wf_new_save}<span></div>
-			<div class="button secondary right mobile_collapse sm_hide" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>${config.ui.buttons.export}</span></div>
-			<div class="button right mobile_collapse" onClick="$P().cancel_workflow_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>${config.ui.buttons.cancel}</span></div>
+			<div class="button primary right tablet_collapse" id="btn_save" title="${config.ui.buttons.wf_new_save}" onClick="$P().do_new_workflow()"><i class="mdi mdi-floppy">&nbsp;</i><span>${config.ui.buttons.wf_new_save}<span></div>
+			<div class="button secondary right mobile_collapse mobile_hide" title="${config.ui.buttons.export}" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>${config.ui.buttons.export}</span></div>
+			<div class="button right mobile_collapse" title="${config.ui.buttons.cancel}" onClick="$P().cancel_workflow_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>${config.ui.buttons.cancel}</span></div>
 		`);
 		
 		this.div.html( html ).buttonize();
@@ -252,11 +258,12 @@ Page.Workflows = class Workflows extends Page.Events {
 		
 		// render workflow editor
 		html += this.get_wf_editor_html(`
-			<div class="button save right tablet_collapse" id="btn_save" onClick="$P().do_save_workflow()"><i class="mdi mdi-floppy">&nbsp;</i><span>${config.ui.buttons.save_changes}</span></div>
-			<div class="button secondary right mobile_collapse sm_hide" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>${config.ui.buttons.history}</span></div>
-			<div class="button secondary right mobile_collapse sm_hide" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>${config.ui.buttons.export}</span></div>
-			<div class="button danger right mobile_collapse" onClick="$P().show_delete_event_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>${config.ui.buttons.delete}</span></div>
-			<div class="button cancel right mobile_collapse sm_hide" onClick="$P().cancel_workflow_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>${config.ui.buttons.close}</span></div>
+			<div class="button save right tablet_collapse" id="btn_save" title="${config.ui.buttons.save_changes}" onClick="$P().do_save_workflow()"><i class="mdi mdi-floppy">&nbsp;</i><span>${config.ui.buttons.save_changes}</span></div>
+			<div class="button secondary right early_collapse mobile_hide" title="${config.ui.buttons.history}" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>${config.ui.buttons.history}</span></div>
+			<div class="button secondary right early_collapse mobile_hide" title="${config.ui.buttons.export}" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>${config.ui.buttons.export}</span></div>
+			<div class="button secondary right early_collapse mobile_hide" title="${config.ui.buttons.clone}" onClick="$P().do_clone()"><i class="mdi mdi-content-copy">&nbsp;</i><span>${config.ui.buttons.clone}</span></div>
+			<div class="button danger right early_collapse mobile_hide" title="${config.ui.buttons.delete}" onClick="$P().show_delete_event_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>${config.ui.buttons.delete}</span></div>
+			<div class="button cancel right early_collapse" title="${config.ui.buttons.close}" onClick="$P().cancel_workflow_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>${config.ui.buttons.close}</span></div>
 		`);
 		
 		this.div.html( html ).buttonize();
@@ -273,6 +280,24 @@ Page.Workflows = class Workflows extends Page.Events {
 		
 		if (do_snap) this.savePageSnapshot( this.get_event_form_json(true) );
 		if (this.args.scroll == 'bottom') app.scrollToBottom();
+	}
+	
+	do_clone() {
+		// make copy of workflow and jump over to new
+		app.clearError();
+		var event = this.get_event_form_json();
+		if (!event) return; // error
+		
+		var clone = deep_copy_object(event);
+		clone.title = "Copy of " + clone.title;
+		delete clone.id;
+		delete clone.created;
+		delete clone.modified;
+		delete clone.revision;
+		delete clone.username;
+		
+		this.clone = clone;
+		Nav.go('Workflows?sub=new');
 	}
 	
 	do_save_workflow() {

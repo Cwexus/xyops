@@ -493,9 +493,12 @@ body.dark .wf_condition {
 	position: absolute;
 	left: 0;
 	top: 100%;
-	margin-top: -31px;
+	margin-top: -32px;
 	width: 100%;
-	height: 30px;
+	height: 32px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	overflow: hidden;
 	z-index: 4;
 }
 .wf_grid_footer div.button.icon.left {

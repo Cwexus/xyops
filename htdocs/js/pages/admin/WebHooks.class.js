@@ -180,24 +180,31 @@ Page.WebHooks = class WebHooks extends Page.PageUtils {
 		html += '</div>';
 		html += '<div class="box_content">';
 		
-		this.web_hook = {
-			"id": "",
-			"title": "",
-			"enabled": true,
-			"url": "",
-			"method": "POST",
-			"headers": [
-				{ "name": "Content-Type", "value": "application/json" },
-				{ "name": "User-Agent", "value": "xyOps/WebHook" }
-			],
-			"body": JSON.stringify({ content: '[description]', text: '[description]' }, null, "\t"),
-			"timeout": 30,
-			"retries": 0,
-			"follow": false,
-			"ssl_cert_bypass": false,
-			"max_per_day": 0,
-			"notes": ""
-		};
+		if (this.clone) {
+			this.web_hook = this.clone;
+			delete this.clone;
+			app.showMessage('info', "The web hook has been cloned as an unsaved draft.", 8);
+		}
+		else {
+			this.web_hook = {
+				"id": "",
+				"title": "",
+				"enabled": true,
+				"url": "",
+				"method": "POST",
+				"headers": [
+					{ "name": "Content-Type", "value": "application/json" },
+					{ "name": "User-Agent", "value": "xyOps/WebHook" }
+				],
+				"body": JSON.stringify({ content: '[description]', text: '[description]' }, null, "\t"),
+				"timeout": 30,
+				"retries": 0,
+				"follow": false,
+				"ssl_cert_bypass": false,
+				"max_per_day": 0,
+				"notes": ""
+			};
+		}
 		this.headers = this.web_hook.headers;
 		
 		html += this.get_web_hook_edit_html();
@@ -294,6 +301,7 @@ Page.WebHooks = class WebHooks extends Page.PageUtils {
 		html += '<div class="box_buttons">';
 			html += '<div class="button cancel mobile_collapse" onClick="$P().cancel_web_hook_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Close</span></div>';
 			html += '<div class="button danger mobile_collapse" onClick="$P().show_delete_web_hook_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
+			html += '<div class="button secondary mobile_collapse" onClick="$P().do_clone()"><i class="mdi mdi-content-copy">&nbsp;</i><span>Clone...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().do_test_web_hook()"><i class="mdi mdi-test-tube">&nbsp;</i><span>Test...</span></div>';
 			html += '<div class="button secondary mobile_collapse sm_hide" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
 			html += '<div class="button secondary mobile_collapse sm_hide" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>History...</span></div>';
@@ -310,6 +318,24 @@ Page.WebHooks = class WebHooks extends Page.PageUtils {
 		this.setupBoxButtonFloater();
 		this.setupEditor();
 		this.setupEditTriggers();
+	}
+	
+	do_clone() {
+		// make copy of web hook and jump over to new
+		app.clearError();
+		var web_hook = this.get_web_hook_form_json();
+		if (!web_hook) return; // error
+		
+		var clone = deep_copy_object(web_hook);
+		clone.title = "Copy of " + clone.title;
+		delete clone.id;
+		delete clone.created;
+		delete clone.modified;
+		delete clone.revision;
+		delete clone.username;
+		
+		this.clone = clone;
+		Nav.go('WebHooks?sub=new');
 	}
 	
 	do_export() {

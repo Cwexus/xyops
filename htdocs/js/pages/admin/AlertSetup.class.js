@@ -185,16 +185,23 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 		html += '</div>';
 		html += '<div class="box_content">';
 		
-		this.alert = {
-			"id": "",
-			"title": "",
-			"expression": "",
-			"samples": 1,
-			"message": "",
-			"groups": [],
-			"enabled": true,
-			"actions": []
-		};
+		if (this.clone) {
+			this.alert = this.clone;
+			delete this.clone;
+			app.showMessage('info', "The alert has been cloned as an unsaved draft.", 8);
+		}
+		else {
+			this.alert = {
+				"id": "",
+				"title": "",
+				"expression": "",
+				"samples": 1,
+				"message": "",
+				"groups": [],
+				"enabled": true,
+				"actions": []
+			};
+		}
 		this.actions = this.alert.actions; // for action editor
 		
 		html += this.get_alert_edit_html();
@@ -291,6 +298,7 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 		html += '<div class="box_buttons">';
 			html += '<div class="button cancel mobile_collapse" onClick="$P().cancel_alert_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Close</span></div>';
 			html += '<div class="button danger mobile_collapse" onClick="$P().show_delete_alert_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
+			html += '<div class="button secondary mobile_collapse" onClick="$P().do_clone()"><i class="mdi mdi-content-copy">&nbsp;</i><span>Clone...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().do_test_alert()"><i class="mdi mdi-test-tube">&nbsp;</i><span>Test...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>History...</span></div>';
@@ -307,6 +315,24 @@ Page.AlertSetup = class AlertSetup extends Page.PageUtils {
 		this.setupBoxButtonFloater();
 		this.setupEditor('text/plain');
 		this.setupEditTriggers();
+	}
+	
+	do_clone() {
+		// make copy of alert and jump over to new
+		app.clearError();
+		var alert = this.get_alert_form_json();
+		if (!alert) return; // error
+		
+		var clone = deep_copy_object(alert);
+		clone.title = "Copy of " + clone.title;
+		delete clone.id;
+		delete clone.created;
+		delete clone.modified;
+		delete clone.revision;
+		delete clone.username;
+		
+		this.clone = clone;
+		Nav.go('AlertSetup?sub=new');
 	}
 	
 	do_export() {

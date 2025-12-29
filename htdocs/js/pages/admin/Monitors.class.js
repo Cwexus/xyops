@@ -189,16 +189,23 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 		html += '</div>';
 		html += '<div class="box_content">';
 		
-		this.monitor = {
-			"id": "",
-			"title": "",
-			"source": "",
-			"data_type": "float",
-			"suffix": "",
-			"groups": [],
-			"display": true,
-			"min_vert_scale": 0
-		};
+		if (this.clone) {
+			this.monitor = this.clone;
+			delete this.clone;
+			app.showMessage('info', "The monitor has been cloned as an unsaved draft.", 8);
+		}
+		else {
+			this.monitor = {
+				"id": "",
+				"title": "",
+				"source": "",
+				"data_type": "float",
+				"suffix": "",
+				"groups": [],
+				"display": true,
+				"min_vert_scale": 0
+			};
+		}
 		
 		html += this.get_monitor_edit_html();
 		
@@ -290,6 +297,7 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 		html += '<div class="box_buttons">';
 			html += '<div class="button cancel mobile_collapse" onClick="$P().cancel_monitor_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Close</span></div>';
 			html += '<div class="button danger mobile_collapse" onClick="$P().show_delete_monitor_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
+			html += '<div class="button secondary mobile_collapse" onClick="$P().do_clone()"><i class="mdi mdi-content-copy">&nbsp;</i><span>Clone...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().do_test_monitor()"><i class="mdi mdi-test-tube">&nbsp;</i><span>Test...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>History...</span></div>';
@@ -304,6 +312,24 @@ Page.Monitors = class Monitors extends Page.PageUtils {
 		MultiSelect.init( this.div.find('select[multiple]') );
 		this.setupBoxButtonFloater();
 		this.setupEditTriggers();
+	}
+	
+	do_clone() {
+		// make copy of monitor and jump over to new
+		app.clearError();
+		var monitor = this.get_monitor_form_json();
+		if (!monitor) return; // error
+		
+		var clone = deep_copy_object(monitor);
+		clone.title = "Copy of " + clone.title;
+		delete clone.id;
+		delete clone.created;
+		delete clone.modified;
+		delete clone.revision;
+		delete clone.username;
+		
+		this.clone = clone;
+		Nav.go('Monitors?sub=new');
 	}
 	
 	do_export() {

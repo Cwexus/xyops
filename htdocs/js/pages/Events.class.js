@@ -800,7 +800,7 @@ Page.Events = class Events extends Page.PageUtils {
 			</div>`;
 			
 			html += `<div class="wf_grid_footer">
-				<div class="button icon left" onClick="$P().wfZoomAuto()" title="Auto-fit workflow"><i class="mdi mdi-home"></i></div>
+				<div class="button icon left" onClick="$P().wfZoomAuto()" title="Zoom to fit"><i class="mdi mdi-home"></i></div>
 				<div class="button icon left" id="d_btn_wf_zoom_out" onClick="$P().wfZoomOut()" title="Zoom out"><i class="mdi mdi-magnify-minus"></i></div>
 				<div class="button icon left" id="d_btn_wf_zoom_in" onClick="$P().wfZoomIn()" title="Zoom in"><i class="mdi mdi-magnify-plus"></i></div>
 				<div class="wf_zoom_msg left tablet_hide"></div>
@@ -1798,7 +1798,12 @@ Page.Events = class Events extends Page.PageUtils {
 		html += '</div>';
 		html += '<div class="box_content">';
 		
-		if (this.getPageDraft()) {
+		if (this.clone) {
+			this.event = this.clone;
+			delete this.clone;
+			app.showMessage('info', "The event has been cloned as an unsaved draft.", 8);
+		}
+		else if (this.getPageDraft()) {
 			this.event = this.checkRestorePageDraft();
 			do_snap = false;
 		}
@@ -1943,6 +1948,7 @@ Page.Events = class Events extends Page.PageUtils {
 		html += '<div class="box_buttons">';
 			html += '<div class="button cancel mobile_collapse" onClick="$P().cancel_event_edit()"><i class="mdi mdi-close-circle-outline">&nbsp;</i><span>Close</span></div>';
 			html += '<div class="button danger mobile_collapse" onClick="$P().show_delete_event_dialog()"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>Delete...</span></div>';
+			html += '<div class="button secondary mobile_collapse" onClick="$P().do_clone()"><i class="mdi mdi-content-copy">&nbsp;</i><span>Clone...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().do_test_event()"><i class="mdi mdi-test-tube">&nbsp;</i><span>Test...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().do_export()"><i class="mdi mdi-cloud-download-outline">&nbsp;</i><span>Export...</span></div>';
 			html += '<div class="button secondary mobile_collapse" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>History...</span></div>';
@@ -1972,6 +1978,24 @@ Page.Events = class Events extends Page.PageUtils {
 		
 		if (this.event.id) Nav.go( '#Events?sub=view&id=' + this.event.id );
 		else Nav.go( '#Events?sub=list' );
+	}
+	
+	do_clone() {
+		// make copy of event and jump over to new
+		app.clearError();
+		var event = this.get_event_form_json();
+		if (!event) return; // error
+		
+		var clone = deep_copy_object(event);
+		clone.title = "Copy of " + clone.title;
+		delete clone.id;
+		delete clone.created;
+		delete clone.modified;
+		delete clone.revision;
+		delete clone.username;
+		
+		this.clone = clone;
+		Nav.go('Events?sub=new');
 	}
 	
 	do_export() {
