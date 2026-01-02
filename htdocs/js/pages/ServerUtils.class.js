@@ -796,12 +796,12 @@ Page.ServerUtils = class ServerUtils extends Page.PageUtils {
 		} // foreach row
 		
 		if (!disp_rows.length) {
-			html += '<ul class="grid_row_empty"><div style="grid-column-start: span ' + opts.column_ids.length + ';">';
+			html += '<ul class="grid_row_empty"><div style="grid-column: 1 / -1;">';
 			html += 'No ' + pluralize(opts.item_name) + ' found.';
 			html += '</div></ul>';
 		}
 		else if (chopped) {
-			html += '<ul class="grid_row_more"><div style="grid-column-start: span ' + opts.column_ids.length + ';">';
+			html += '<ul class="grid_row_more"><div style="grid-column: 1 / -1;">';
 			html += `(${commify(chopped)} more ${pluralize(opts.item_name, chopped)} not shown)`;
 			html += '</div></ul>';
 		}
@@ -1649,7 +1649,7 @@ Page.ServerUtils = class ServerUtils extends Page.PageUtils {
 			rows: this.servers,
 			cols: cols,
 			data_type: 'server',
-			below: '<ul class="grid_row_empty" id="ul_vg_none_found" style="display:none"><div style="grid-column-start: span ' + cols.length + ';">No servers found matching your filters.</div></ul>'
+			below: '<ul class="grid_row_empty" id="ul_vg_none_found" style="display:none"><div style="grid-column: 1 / -1;">No servers found matching your filters.</div></ul>'
 		};
 		
 		html += this.getBasicGrid( grid_opts, function(item, idx) {

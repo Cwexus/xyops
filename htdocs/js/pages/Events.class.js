@@ -294,7 +294,7 @@ Page.Events = class Events extends Page.PageUtils {
 			cols: cols,
 			data_type: 'event',
 			grid_template_columns: '40px' + ' auto'.repeat( cols.length - 1 ),
-			below: '<ul class="grid_row_empty" id="ul_el_none_found" style="display:none"><div style="grid-column-start: span ' + cols.length + ';">No events found matching your filters.</div></ul>'
+			below: '<ul class="grid_row_empty" id="ul_el_none_found" style="display:none"><div style="grid-column: 1 / -1;">No events found matching your filters.</div></ul>'
 		};
 		
 		html += this.getBasicGrid( grid_opts, function(item, idx) {
