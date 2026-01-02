@@ -4,7 +4,7 @@ We stand on the shoulders of giants.  xyOps was built using these awesome open s
 
 | Package Name | Description | License |
 |--------------|-------------|---------|
-| [highlightjs](https://www.npmjs.com/package/@highlightjs/cdn-assets) | Syntax highlighting with language auto-detection (pre-compiled CDN assets). | BSD-3-Clause |
+| [highlightjs](https://www.npmjs.com/package/@highlightjs/cdn-assets) | Syntax highlighting with language auto-detection. | BSD-3-Clause |
 | [@mdi/font](https://www.npmjs.com/package/@mdi/font) | Material Design icon webfont distribution. | Apache-2.0 |
 | [@mdi/svg](https://www.npmjs.com/package/@mdi/svg) | Material Design Icons in SVG format. | Apache-2.0 |
 | [@xterm/xterm](https://www.npmjs.com/package/@xterm/xterm) | Full xterm-compatible terminal in the browser. | MIT |
