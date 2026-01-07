@@ -1,5 +1,13 @@
 # xyOps Changelog
 
+## Version v0.9.12
+
+> January 7, 2026
+
+- [90c5044](https://github.com/pixlcore/xyops/commit/90c504418c7431b43ee8f9230246e353b6492610): Version 0.9.12
+- [23ad69e](https://github.com/pixlcore/xyops/commit/23ad69ea89312c3a4b07b852931fb5da0faeb64d): Marketplace: Try to "fix" inline image URLs in product READMEs, if they are relative links.
+- [ff81208](https://github.com/pixlcore/xyops/commit/ff812086e36bcb968a33453aa22852b974da05fa): Marketplace: Show "Visit Repo..." button on product details page.
+
 ## Version v0.9.11
 
 > January 6, 2026
