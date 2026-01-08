@@ -1901,7 +1901,7 @@ Page.ServerUtils = class ServerUtils extends Page.PageUtils {
 		var self = this;
 		
 		var conn_opts = {
-			id: 't_snap_conns',
+			id: 't_grp_conns',
 			item_name: 'connection',
 			attribs: {
 				class: 'data_grid grp_conn_grid'
