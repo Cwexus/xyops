@@ -50,6 +50,10 @@ app.extend({
 		delete resp.code;
 		window.config = resp.config;
 		
+		// add progress bar into CodeEditor
+		CodeEditor.showProgress = Dialog.showProgress;
+		CodeEditor.hideProgress = Dialog.hideProgress;
+		
 		// set logo image
 		$('div.sidebar > div.title').css('background-image', 'url(' + config.logo_url + ')');
 		
