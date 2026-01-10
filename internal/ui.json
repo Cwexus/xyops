@@ -1072,7 +1072,9 @@
 		],
 		"allowedAttributes": {
 			"a": [ "href", "target" ],
-			"div": [ "class" ]
+			"div": [ "class" ],
+			"pre": [ "class" ],
+			"code": [ "class" ]
 		}
 	},
 	
