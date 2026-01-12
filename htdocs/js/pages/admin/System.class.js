@@ -689,7 +689,7 @@ Page.System = class System extends Page.PageUtils {
 			content: this.getFormMenuSingle({
 				id: 'fe_sys_sat_release',
 				options: [ { id: '', title: config.ui.menu_bits.generic_loading } ],
-				value: '',
+				value: app.getPref('sys.sat_release') || '',
 				'data-shrinkwrap': 1
 			})
 		});
@@ -699,7 +699,7 @@ Page.System = class System extends Page.PageUtils {
 			id: 'd_sys_sat_stagger',
 			content: this.getFormRelativeTime({
 				id: 'fe_sys_sat_stagger',
-				value: 30
+				value: app.getPref('sys.sat_stagger') ?? 30
 			})
 		});
 		
@@ -713,6 +713,10 @@ Page.System = class System extends Page.PageUtils {
 			
 			var release = $('#fe_sys_sat_release').val();
 			var stagger = parseInt( $('#fe_sys_sat_stagger').val() ) || 0;
+			
+			// save values in prefs for next time
+			app.setPref('sys.sat_release', release);
+			app.setPref('sys.sat_stagger', stagger);
 			
 			Dialog.hide();
 			
@@ -772,7 +776,7 @@ Page.System = class System extends Page.PageUtils {
 			content: this.getFormMenuSingle({
 				id: 'fe_sys_multi_release',
 				options: [ { id: '', title: config.ui.menu_bits.generic_loading } ],
-				value: '',
+				value: app.getPref('sys.multi_release') || '',
 				'data-shrinkwrap': 1
 			})
 		});
@@ -782,7 +786,7 @@ Page.System = class System extends Page.PageUtils {
 			id: 'd_sys_multi_stagger',
 			content: this.getFormRelativeTime({
 				id: 'fe_sys_multi_stagger',
-				value: 60
+				value: app.getPref('sys.multi_stagger') ?? 60
 			})
 		});
 		
@@ -796,6 +800,10 @@ Page.System = class System extends Page.PageUtils {
 			
 			var release = $('#fe_sys_multi_release').val();
 			var stagger = parseInt( $('#fe_sys_multi_stagger').val() ) || 0;
+			
+			// save values in prefs for next time
+			app.setPref('sys.multi_release', release);
+			app.setPref('sys.multi_stagger', stagger);
 			
 			Dialog.hide();
 			
