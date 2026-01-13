@@ -34,7 +34,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 		if (!args.offset) args.offset = 0;
 		if (!args.limit) args.limit = config.items_per_page;
 		
-		var action_items = [].concat( config.ui.list_list ).concat([
+		var action_items = [].concat( deep_copy_object(config.ui.list_list) ).concat([
 			{ "id": "jobs", "title": "Jobs", "icon": "timer-outline" },
 			{ "id": "tickets", "title": "Tickets", "icon": "text-box-outline" },
 			{ "id": "servers", "title": "Servers", "icon": "router-network" },
@@ -42,6 +42,12 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 			{ "id": "system", "title": "System", "icon": "desktop-classic" }
 		]);
 		sort_by( action_items, 'title' );
+		
+		action_items[0].group = 'Categories:';
+		action_items.unshift({ id: 'critical', title: "Critical", icon: "fire-alert" });
+		action_items.unshift({ id: 'error', title: "Errors", icon: "alert-decagram" });
+		action_items.unshift({ id: 'warning', title: "Warnings", icon: "alert-rhombus" });
+		action_items.unshift({ id: 'notice', title: "Notices", icon: "information-outline", group: "General:" });
 		
 		var date_items = config.ui.date_range_menu_items;
 		
@@ -212,7 +218,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 		var self = this;
 		var query = args.query ? args.query.toString().toLowerCase().trim() : '';
 		
-		if (args.action) {
+		if (args.action && config.ui.activity_search_map[args.action]) {
 			// each action is an alias -- lookup the individual actions for the query
 			var re = new RegExp( config.ui.activity_search_map[args.action] || '.+' );
 			var keys = [];
@@ -220,6 +226,9 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 				if (key.match(re)) keys.push( key );
 			}
 			if (keys.length) query += ' action:' + keys.join('|');
+		}
+		else if (args.action && args.action.match(/^(notice|warning|error|critical)$/)) {
+			query += ' action:' + args.action;
 		}
 		
 		if (args.username) {
@@ -277,7 +286,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 		
 		var grid_args = {
 			resp: resp,
-			cols: ['Date/Time', 'Type', 'Description', 'User', 'IP Address', 'Actions'],
+			cols: ['Date/Time', 'Type', 'Description', 'User', 'IP / Host', 'Actions'],
 			data_type: 'item',
 			offset: this.args.offset || 0,
 			limit: this.args.limit,
@@ -469,13 +478,19 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 				// misc
 				case 'error':
 					desc = encode_entities( item.description );
-					color = 'red';
+					color = 'error';
 					click = `$P().showActionReport(${idx},'unused')`;
 					actions.push(`<button class="link" onClick="${click}"><b>Details...</b></button>`);
 				break;
 				case 'warning':
 					desc = encode_entities( item.description );
 					color = 'warning';
+					click = `$P().showActionReport(${idx},'unused')`;
+					actions.push(`<button class="link" onClick="${click}"><b>Details...</b></button>`);
+				break;
+				case 'critical':
+					desc = encode_entities( item.description );
+					color = 'critical';
 					click = `$P().showActionReport(${idx},'unused')`;
 					actions.push(`<button class="link" onClick="${click}"><b>Details...</b></button>`);
 				break;
@@ -495,7 +510,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 				'<div class="td_big" style="white-space:nowrap; font-weight:normal;"><i class="mdi mdi-' + item_type.icon + '">&nbsp;</i>' + item_type.label + '</div>',
 				'' + desc + '',
 				'' + self.getNiceUser(item.admin || item.username, true) + '',
-				self.getNiceIP(item.ip),
+				item.ip ? self.getNiceIP(item.ip) : (item.hostname ? app.formatHostname(item.hostname) : 'n/a'),
 				actions.join(' | ') || '&nbsp;'
 			];
 			if (color) tds.className = color;
@@ -545,10 +560,18 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 		md += '- **Date/Time:** ' + this.getRelativeDateTime(item.epoch).replace(/\&nbsp;<\/i>/g, '</i>') + "\n";
 		
 		// user info
-		md += "\n### Client Info\n\n";
-		md += '- **User:** ' + this.getNiceUser(item.admin || item.username, true) + "\n";
-		md += '- **IP Addresses:** ' + (item.ips.join(', ') || 'n/a') + "\n";
-		md += '- **User Agent:** ' + (item.useragent || 'Unknown') + "\n";
+		if (item.admin || item.username || item.ips.length || item.useragent) {
+			md += "\n### Client Info\n\n";
+			md += '- **User:** ' + this.getNiceUser(item.admin || item.username, true) + "\n";
+			md += '- **IP Addresses:** ' + (item.ips.join(', ') || 'n/a') + "\n";
+			md += '- **User Agent:** ' + (item.useragent || 'Unknown') + "\n";
+		}
+		if (item.server || item.hostname) {
+			md += "\n### Server Info\n\n";
+			md += '- **Server ID:** ' + (item.server || 'n/a') + "\n";
+			md += '- **Hostname:** ' + app.formatHostname(item.hostname || 'n/a') + "\n";
+			md += '- **IP Address:** ' + (item.ip || 'n/a') + "\n";
+		}
 		
 		// headers
 		if (item.headers) {
@@ -558,6 +581,11 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 				md += key + ": " + item.headers[key] + "\n";
 			}
 			md += '```' + "\n";
+		}
+		
+		// details
+		if (item.details) {
+			md += "\n### Details\n\n" + item.details.trim() + "\n";
 		}
 		
 		// the thing
@@ -570,6 +598,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 		else {
 			var temp = deep_copy_object(item);
 			delete temp.headers;
+			delete temp.details;
 			delete temp._type;
 			delete temp._desc;
 			

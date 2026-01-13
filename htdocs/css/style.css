@@ -1206,6 +1206,9 @@ div.td_big {
 .data_grid > ul.grid_row.error > div {
 	background: color-mix(in srgb, var(--red) 20%, transparent) !important;
 }
+.data_grid > ul.grid_row.critical > div {
+	background: color-mix(in srgb, var(--purple) 20%, transparent) !important;
+}
 .data_grid > ul.grid_row.highlight > div {
 	background: color-mix(in srgb, var(--theme-color-highlight) 20%, transparent) !important;
 }
