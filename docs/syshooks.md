@@ -230,7 +230,7 @@ Example:
 }
 ```
 
-Note that to send emails for new alerts (a very common configuration) it is **much** better to use the [alert_universal_actions](config.md#alert_universal_actions) feature, which generates a proper alert-centric email (emails generated from system hooks are more generic).  Recommended configuration for global alert emails:
+Note that to send emails for server alerts (a very common configuration) it is **much** better to use the [alert_universal_actions](config.md#alert_universal_actions) feature, which generates a proper alert-centric email (emails generated from system hooks are more generic).  Recommended configuration for global alert emails:
 
 ```json
 "alert_universal_actions": [
