@@ -1,5 +1,18 @@
 # xyOps Changelog
 
+## Version v0.9.27
+
+> January 14, 2026
+
+- [`773673c`](https://github.com/pixlcore/xyops/commit/773673c7ad239687190d57b4e8691f4d4893af0d): Version 0.9.27
+- [`2e51788`](https://github.com/pixlcore/xyops/commit/2e517882cb53d1793bbf10f3fcea4b124a822762): Job Completion: Check for free queue slots on each job complete, to speed up queue item throughput.
+- [`dab255c`](https://github.com/pixlcore/xyops/commit/dab255ca9a5ce37ddbb149ba3972eea3ae516827): Alerts: Include server info in alert_new and alert_cleared activity log entries.
+- [`e872466`](https://github.com/pixlcore/xyops/commit/e872466fc48300bfeac161c3011c78bc2dbbaac9): UI: activity_search_map: Add "master_primary" activity ID to "peers" search group.
+- [`a77fe3e`](https://github.com/pixlcore/xyops/commit/a77fe3e40f31df1ac5181691b82bbce710db5f5c): Activity UI: Fix issue where alert invocations were not searchable by "Alerts" menu item, and also show copyable ID in dialogs.
+- [`bbacd45`](https://github.com/pixlcore/xyops/commit/bbacd45d16d23228d8cac89f4a10dd208ee5d963): CSS: Adjust font size of non-styled code in code_viewer
+- [`ee4e234`](https://github.com/pixlcore/xyops/commit/ee4e234697170d50ec38a13ae15495eacbb91e4c): Comm UI: Only show "reconnecting" progress dialog if a dialog (or code editor) isn't already being displayed.
+- [`af23237`](https://github.com/pixlcore/xyops/commit/af23237bec2bb296c5f1717389e3c486111a2d18): api_get_servers API: Drop admin requirement, as this is a read-only API.  Fixes #46.
+
 ## Version v0.9.26
 
 > January 14, 2026
