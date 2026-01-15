@@ -214,7 +214,7 @@
 		"users": "^(user_.+)$",
 		"roles": "^(role_.+)$",
 		"servers": "^(server_.+)$",
-		"peers": "^(peer_.+)$",
+		"peers": "^(peer_.+|master_primary)$",
 		"system": "^(state_update|internal_job)$"
 	},
 	
