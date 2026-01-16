@@ -1058,6 +1058,9 @@ div.td_big {
 .fr_content .checkbox_container label i {
 	text-indent: 0;
 }
+.fr_content .checkbox_container:first-child {
+	margin-top: 2px;
+}
 
 .wrap {
 	white-space: normal;
