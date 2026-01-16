@@ -180,15 +180,16 @@ Example: Event A → Repeat (x10) → Event A has a `continue` wire → Event B.
 
 Inputs and outputs are automatically passed along:
 
-- At workflow start, the engine blends the workflow job's `params` with any inbound `input.data` and passes `input.files` to the trigger node.  The trigger nodes passes these on to any soldered nodes.
+- At workflow start, the inbound `input.data` and `input.files` are passed to the trigger node.  The trigger nodes passes these on to any soldered nodes.
 - When an Event/Job finishes, its output `data` and `files` are passed to downstream nodes as `input.data` and `input.files`.
+- If the workflow itself has any user fields defined, these are passed to all sub-jobs via a `workflow.params` object inside the job data.
 - Tags: user tags from sub-jobs bubble up to the workflow job and can drive `tag:...` conditions.
 - HTML and table content: if a sub-job emits `html` or `table`, it bubbles up to the parent for display.  If multiple jobs emit content The latter prevails.
 - Retries: if a sub-job was retried, its data/files are not bubbled and it doesn't count toward tag/condition firing.
 
 Join specifics:
 
-- The next node after a Join receives `input.data` with two properties: `items` (array of each upstream job's data) and `combined` (shallow merge of all data).
+- The next node after a Join Controller receives a custom `input.data` with two properties: `items` (array of each upstream job's data) and `combined` (shallow merge of all data).
 - Any files are concatenated onto the `input.files` array.
 
 Split specifics:
