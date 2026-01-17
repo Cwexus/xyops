@@ -3930,6 +3930,8 @@ Page.PageUtils = class PageUtils extends Page.Base {
 	getWFCenterPoint(sel) {
 		// get x/y coords of center of pole, relative to canvas origin
 		var el = $(sel)[0];
+		if (!el) return [0, 0]; // sanity
+		
 		var x = el.offsetWidth / 2;
 		var y = el.offsetHeight / 2;
 		
@@ -4913,7 +4915,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			
 			case 'plugin':
 				nice_icon = '<i class="mdi mdi-power-plug"></i>';
-				nice_type = 'Plugin';
+				nice_type = alt_type = 'Plugin';
 				nice_desc = this.getNicePlugin(item.plugin_id);
 				var plugin = find_object( app.plugins, { id: item.plugin_id } ) || { title: item.plugin_id };
 				short_desc = plugin.title;
