@@ -304,7 +304,7 @@ Page.Events = class Events extends Page.PageUtils {
 			var actions = [];
 			actions.push( '<button class="link" onClick="$P().do_run_event_from_list('+idx+')"><b>Run</b></button>' );
 			actions.push( '<button class="link" onClick="$P().edit_event('+idx+')"><b>Edit</b></button>' );
-			actions.push( '<button class="link" onClick="$P().do_clone_from_list('+idx+')"><b>Clone</b></button>' );
+			// actions.push( '<button class="link" onClick="$P().do_clone_from_list('+idx+')"><b>Clone</b></button>' );
 			actions.push( '<button class="link" onClick="$P().go_hist_from_list('+idx+')"><b>History</b></button>' );
 			// actions.push( '<button class="link danger" onClick="$P().delete_event('+idx+')"><b>Delete</b></button>' );
 			
