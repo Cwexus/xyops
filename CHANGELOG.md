@@ -1,5 +1,19 @@
 # xyOps Changelog
 
+## Version v0.9.32
+
+> January 19, 2026
+
+- [`440913b`](https://github.com/pixlcore/xyops/commit/440913b833a0e890148bde5fd9fe1fd3aa784654): Version 0.9.32
+- [`5510605`](https://github.com/pixlcore/xyops/commit/5510605836ff2ac283d0b1b46d3b5f788152ef9e): Event List: Remove "Clone" link, as it was taking up too much room.
+- [`b5ca35e`](https://github.com/pixlcore/xyops/commit/b5ca35e44b0eec9d99475eb0d05ea3fe11916ee3): CSS: Add styles for job media slideshow, and also disabled button.link buttons
+- [`a0e1ce5`](https://github.com/pixlcore/xyops/commit/a0e1ce5845ecc84a14387a21ec4cc935563f0b0d): Feature: Media slideshow when job outputs images, video or audio files.
+- [`d9f8723`](https://github.com/pixlcore/xyops/commit/d9f8723b75f96b14c8e2b337d4e84f1b4d3c9a99): HTTP Range: Fixed another issue with computing the byte range
+- [`3052623`](https://github.com/pixlcore/xyops/commit/30526233233398971dd6ed409a7f48306f101ec2): Crasher: Fix issue with HTTP Range headers and streaming media hosting.
+- [`18be0f6`](https://github.com/pixlcore/xyops/commit/18be0f61ff77c05d62364426293da3cc253c4e50): Cosmetic Fix: Ensure CodeMirror deselects the current text selection on blur.
+- [`82e61d4`](https://github.com/pixlcore/xyops/commit/82e61d4bea6855d9e8acee2f0bbe83ac90471ce9): Job Completion: if job failed with no output, set description as output (better UX).
+- [`0224608`](https://github.com/pixlcore/xyops/commit/0224608dd702eb765dfafb022ca21d335894a7d1): Event List UI: Fix sorting order issue with some categeories.
+
 ## Version v0.9.31
 
 > January 16, 2026
