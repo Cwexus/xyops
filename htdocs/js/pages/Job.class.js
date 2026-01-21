@@ -190,15 +190,16 @@ Page.Job = class Job extends Page.PageUtils {
 					
 					html += '<div class="button icon right secondary" title="Update Tags..." onClick="$P().do_update_tags(this)"><i class="mdi mdi-tag-plus-outline"></i></div>';
 					
-					if (app.hasPrivilege('edit_tickets')) {
-						html += '<div class="button icon right secondary sm_hide" title="Add to Ticket..." onClick="$P().doAddToTicket()"><i class="mdi mdi-text-box-search-outline"></i></div>';
-					}
+					// if (app.hasPrivilege('edit_tickets')) {
+					// 	html += '<div class="button icon right secondary sm_hide" title="Add to Ticket..." onClick="$P().doAddToTicket()"><i class="mdi mdi-text-box-search-outline"></i></div>';
+					// }
 					if (app.hasPrivilege('create_tickets') && app.hasPrivilege('edit_tickets')) {
-						html += '<div class="button icon right secondary sm_hide" title="Create Ticket..." onClick="$P().doCreateTicket()"><i class="mdi mdi-text-box-plus-outline"></i></div>';
+						html += '<div id="d_btn_job_ticket_actions" class="button icon right secondary sm_hide" title="Ticket Actions..." onClick="$P().popupTicketActions()"><i class="mdi mdi-text-box-plus-outline"></i></div>';
 					}
 					
 					// html += '<div class="button icon right secondary sm_hide" title="View JSON..." onClick="$P().do_view_job_data()"><i class="mdi mdi-code-json"></i></div>';
 					if (job.event && find_object(app.events, { id: job.event })) {
+						html += '<div class="button icon right secondary" title="Edit Event..." onClick="$P().do_edit_event()"><i class="mdi mdi-file-edit-outline"></i></div>';
 						html += '<div class="button icon right" title="Run Again..." onClick="$P().do_confirm_run_again()"><i class="mdi mdi-run-fast"></i></div>';
 					}
 					
@@ -686,6 +687,27 @@ Page.Job = class Job extends Page.PageUtils {
 		}); // Dialog.confirm
 		
 		Dialog.autoResize();
+	}
+	
+	popupTicketActions() {
+		// show quick menu for ticket actions
+		var self = this;
+		
+		SingleSelect.popupQuickMenu({
+			elem: '#d_btn_job_ticket_actions',
+			title: "Ticket Actions",
+			items: [
+				{ id: 'doCreateTicket', title: "Create Ticket...", icon: 'text-box-plus-outline' },
+				{ id: 'doAddToTicket', title: "Add to Ticket...", icon: 'text-box-search-outline' }
+			],
+			value: '',
+			nocheck: true,
+			
+			callback: function(value) {
+				self[value]();
+			} // callback
+			
+		}); // popupQuickMenu
 	}
 	
 	doCreateTicket() {
@@ -3048,6 +3070,14 @@ Page.Job = class Job extends Page.PageUtils {
 			// jump immediately to live details page
 			Nav.go('Job?id=' + resp.id);
 		} );
+	}
+	
+	do_edit_event() {
+		// jump over to editing event (or workflow!)
+		if (!this.event || !this.event.id) return; // sanity
+		
+		if (this.workflow) Nav.go('Workflows?sub=edit&id=' + this.event.id);
+		else Nav.go('Events?sub=edit&id=' + this.event.id);
 	}
 	
 	do_notify_me() {
