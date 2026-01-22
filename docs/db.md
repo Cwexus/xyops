@@ -19,24 +19,24 @@ Indexed Columns:
 
 | Column ID | Source | Type | Description |
 |-----------|--------|------|-------------|
-| `code` | [Job.code](data.md#job-code) (`/code`) | word | Result code for the job (0 success, non-zero failure; special values like `warning`, `critical`, `abort`). |
-| `date` | [Job.completed](data.md#job-completed) (`/completed`) | number | Completion timestamp indexed at hour precision. |
-| `source` | [Job.source](data.md#job-source) (`/source`) | word | Launch source (scheduler, plugin, key, user, action, alert, workflow). |
-| `tags` | [Job.tags](data.md#event-tags) (`/tags`) | word | Tags assigned to the job. |
-| `event` | [Job.event](data.md#job-event) (`/event`) | word | Event ID that spawned the job. |
-| `category` | [Job.category](data.md#event-category) (`/category`) | word | Event category ID copied into the job. |
-| `plugin` | [Event.plugin](data.md#event-plugin) (`/plugin`) | word | Plugin ID that executed the job. |
-| `server` | [Job.server](data.md#job-server) (`/server`) | word | Server ID selected to run the job. |
-| `groups` | [Job.groups](data.md#job-groups) (`/groups`) | word | Server group IDs copied into the job. |
-| `workflow` | [Job.workflow](data.md#job-workflow) (`/workflow/event`) | word | When part of a workflow, the workflow event ID. |
-| `tickets` | [Job](data.md#job-tickets) (`/tickets`) | word | Linked ticket IDs associated with the job. |
+| `code` | [Job.code](data.md#job-code) | Word | Result code for the job (0 success, non-zero failure; special values like `warning`, `critical`, `abort`). |
+| `date` | [Job.completed](data.md#job-completed) | Number | Completion timestamp indexed at hour precision. |
+| `source` | [Job.source](data.md#job-source) | Word | Launch source (scheduler, plugin, key, user, action, alert, workflow). |
+| `tags` | [Job.tags](data.md#event-tags) | Word | Tags assigned to the job. |
+| `event` | [Job.event](data.md#job-event) | Word | Event ID that spawned the job. |
+| `category` | [Job.category](data.md#event-category) | Word | Event category ID copied into the job. |
+| `plugin` | [Event.plugin](data.md#event-plugin) | Word | Plugin ID that executed the job. |
+| `server` | [Job.server](data.md#job-server) | Word | Server ID selected to run the job. |
+| `groups` | [Job.groups](data.md#job-groups) | Word | Server group IDs copied into the job. |
+| `workflow` | [Job.workflow](data.md#job-workflow) | Word | When part of a workflow, the workflow event ID. |
+| `tickets` | [Job](data.md#job-tickets) | Word | Linked ticket IDs associated with the job. |
 
 Sorters:
 
 | Sorter ID | Source | Type | Description |
 |-----------|--------|------|-------------|
-| `completed` | [Job.completed](data.md#job-completed) (`/completed`) | number | Sort by job completion timestamp. |
-| `elapsed` | [Job.elapsed](data.md#job-elapsed) (`/elapsed`) | number | Sort by job elapsed duration (seconds). |
+| `completed` | [Job.completed](data.md#job-completed) | Number | Sort by job completion timestamp. |
+| `elapsed` | [Job.elapsed](data.md#job-elapsed) | Number | Sort by job elapsed duration (seconds). |
 
 ## Alerts
 
@@ -46,14 +46,14 @@ Indexed Columns:
 
 | Column ID | Source | Type | Description |
 |-----------|--------|------|-------------|
-| `active` | [AlertInvocation.active](data.md#alertinvocation-active) (`/active`) | word | Whether the alert is currently active (`true` or `false`). |
-| `alert` | [AlertInvocation.alert](data.md#alertinvocation-alert) (`/alert`) | word | Alert definition ID. |
-| `groups` | [AlertInvocation.groups](data.md#alertinvocation-groups) (`/groups`) | word | Groups the server belongs to. |
-| `server` | [AlertInvocation.server](data.md#alertinvocation-server) (`/server`) | word | Server ID associated with the invocation. |
-| `start` | [AlertInvocation.date](data.md#alertinvocation-date) (`/date`) | number | Start timestamp indexed at hour precision. |
-| `end` | [AlertInvocation.modified](data.md#alertinvocation-modified) (`/modified`) | number | Last modified time indexed at hour precision. |
-| `jobs` | [AlertInvocation.jobs](data.md#alertinvocation-jobs) (`/jobs`) | word | Related job IDs. |
-| `tickets` | [AlertInvocation.tickets](data.md#alertinvocation-tickets) (`/tickets`) | word | Related ticket IDs. |
+| `active` | [AlertInvocation.active](data.md#alertinvocation-active) | Word | Whether the alert is currently active (`true` or `false`). |
+| `alert` | [AlertInvocation.alert](data.md#alertinvocation-alert) | Word | Alert definition ID. |
+| `groups` | [AlertInvocation.groups](data.md#alertinvocation-groups) | Word | Groups the server belongs to. |
+| `server` | [AlertInvocation.server](data.md#alertinvocation-server) | Word | Server ID associated with the invocation. |
+| `start` | [AlertInvocation.date](data.md#alertinvocation-date) | Number | Start timestamp indexed at hour precision. |
+| `end` | [AlertInvocation.modified](data.md#alertinvocation-modified) | Number | Last modified time indexed at hour precision. |
+| `jobs` | [AlertInvocation.jobs](data.md#alertinvocation-jobs) | Word | Related job IDs. |
+| `tickets` | [AlertInvocation.tickets](data.md#alertinvocation-tickets) | Word | Related ticket IDs. |
 
 ## Snapshots
 
@@ -63,13 +63,13 @@ Indexed Columns:
 
 | Column ID | Source | Type | Description |
 |-----------|--------|------|-------------|
-| `type` | [Snapshot.type](data.md#snapshot-type) (`/type`) | word | Snapshot type: `server` or `group`. |
-| `source` | [Snapshot.source](data.md#snapshot-source) (`/source`) | word | Snapshot origin: `alert`, `watch`, `user`, or `job`. |
-| `server` | [Snapshot.server](data.md#snapshot-server) (`/server`) | word | Server ID for server snapshots. |
-| `groups` | [Snapshot.groups](data.md#snapshot-groups) (`/groups`) | word | Groups associated at the time of the snapshot. |
-| `date` | [Snapshot.date](data.md#snapshot-date) (`/date`) | number | Snapshot timestamp indexed at hour precision. |
-| `alerts` | [Snapshot.alerts](data.md#snapshot-alerts) (`/alerts`) | word | Active alert invocation IDs at snapshot time. |
-| `jobs` | [Snapshot.jobs](data.md#snapshot-jobs) (`/jobs`) | word | Active job IDs at snapshot time. |
+| `type` | [Snapshot.type](data.md#snapshot-type) | Word | Snapshot type: `server` or `group`. |
+| `source` | [Snapshot.source](data.md#snapshot-source) | Word | Snapshot origin: `alert`, `watch`, `user`, or `job`. |
+| `server` | [Snapshot.server](data.md#snapshot-server) | Word | Server ID for server snapshots. |
+| `groups` | [Snapshot.groups](data.md#snapshot-groups) | Word | Groups associated at the time of the snapshot. |
+| `date` | [Snapshot.date](data.md#snapshot-date) | Number | Snapshot timestamp indexed at hour precision. |
+| `alerts` | [Snapshot.alerts](data.md#snapshot-alerts) | Word | Active alert invocation IDs at snapshot time. |
+| `jobs` | [Snapshot.jobs](data.md#snapshot-jobs) | Word | Active job IDs at snapshot time. |
 
 ## Servers
 
@@ -79,17 +79,17 @@ Indexed Columns:
 
 | Column ID | Source | Type | Description |
 |-----------|--------|------|-------------|
-| `groups` | [Server.groups](data.md#server-groups) (`/groups`) | word | Group IDs (master list enabled). |
-| `created` | [Server.created](data.md#server-created) (`/created`) | number | Created timestamp indexed at hour precision. |
-| `modified` | [Server.modified](data.md#server-modified) (`/modified`) | number | Last modified timestamp indexed at hour precision. |
-| `keywords` | [Server.keywords](data.md#server-keywords) (`/keywords`) | word | Search keywords (min 1, max 64 chars per word). |
-| `os_platform` | [Server.info.os.platform](data.md#server-info) (`/info/os/platform`) | word | OS platform (filtered alphanumeric; master list/labels). |
-| `os_distro` | [Server.info.os.distro](data.md#server-info) (`/info/os/distro`) | word | OS distribution (filtered alphanumeric; master list/labels). |
-| `os_release` | [Server.info.os.release](data.md#server-info) (`/info/os/release`) | word | OS release/version (filtered alphanumeric; master list/labels). |
-| `os_arch` | [Server.info.os.arch](data.md#server-info) (`/info/os/arch`) | word | CPU architecture (filtered alphanumeric; master list/labels). |
-| `cpu_virt` | [Server.info.virt.vendor](data.md#server-info) (`/info/virt/vendor`) | word | Virtualization vendor (filtered alphanumeric; master list/labels). |
-| `cpu_brand` | [Server.info.cpu.combo](data.md#server-info) (`/info/cpu/combo`) | word | CPU vendor/brand (filtered alphanumeric; master list/labels). |
-| `cpu_cores` | [Server.info.cpu.cores](data.md#server-info) (`/info/cpu/cores`) | word | CPU core count (filtered alphanumeric; master list/labels). |
+| `groups` | [Server.groups](data.md#server-groups) | Word | Group IDs (master list enabled). |
+| `created` | [Server.created](data.md#server-created) | Number | Created timestamp indexed at hour precision. |
+| `modified` | [Server.modified](data.md#server-modified) | Number | Last modified timestamp indexed at hour precision. |
+| `keywords` | [Server.keywords](data.md#server-keywords) | Word | Search keywords (min 1, max 64 chars per word). |
+| `os_platform` | [Server.info.os.platform](data.md#server-info) | Word | OS platform (filtered alphanumeric; master list/labels). |
+| `os_distro` | [Server.info.os.distro](data.md#server-info) | Word | OS distribution (filtered alphanumeric; master list/labels). |
+| `os_release` | [Server.info.os.release](data.md#server-info) | Word | OS release/version (filtered alphanumeric; master list/labels). |
+| `os_arch` | [Server.info.os.arch](data.md#server-info) | Word | CPU architecture (filtered alphanumeric; master list/labels). |
+| `cpu_virt` | [Server.info.virt.vendor](data.md#server-info) | Word | Virtualization vendor (filtered alphanumeric; master list/labels). |
+| `cpu_brand` | [Server.info.cpu.combo](data.md#server-info) | Word | CPU vendor/brand (filtered alphanumeric; master list/labels). |
+| `cpu_cores` | [Server.info.cpu.cores](data.md#server-info) | Word | CPU core count (filtered alphanumeric; master list/labels). |
 
 ## Activity
 
@@ -99,9 +99,9 @@ Indexed Columns:
 
 | Column ID | Source | Type | Description |
 |-----------|--------|------|-------------|
-| `action` | [Activity.action](data.md#activity-action) (`/action`) | word | Activity action identifier. |
-| `keywords` | [Activity.keywords](data.md#activity-keywords) (`/keywords`) | word | Keywords for search (IDs, usernames, IPs). |
-| `date` | [Activity.epoch](data.md#activity-epoch) (`/epoch`) | number | Activity timestamp indexed at hour precision. |
+| `action` | [Activity.action](data.md#activity-action) | Word | Activity action identifier. |
+| `keywords` | [Activity.keywords](data.md#activity-keywords) | Word | Keywords for search (IDs, usernames, IPs). |
+| `date` | [Activity.epoch](data.md#activity-epoch) | Number | Activity timestamp indexed at hour precision. |
 
 ## Tickets
 
@@ -111,29 +111,29 @@ Indexed Columns:
 
 | Column ID | Source | Type | Description |
 |-----------|--------|------|-------------|
-| `type` | [Ticket.type](data.md#ticket-type) (`/type`) | word | Ticket type (`issue`, `feature`, `change`, `maintenance`, `question`, `other`). |
-| `num` | [Ticket.num](data.md#ticket-num) (`/num`) | number | Auto-assigned ticket number. |
-| `status` | [Ticket.status](data.md#ticket-status) (`/status`) | word | Ticket status (`open`, `closed`, `draft`). |
-| `category` | [Ticket.category](data.md#ticket-category) (`/category`) | word | Category ID. |
-| `username` | [Ticket.username](data.md#ticket-username) (`/username`) | word | Creator username (filtered alphanumeric). |
-| `assignees` | [Ticket.assignees](data.md#ticket-assignees) (`/assignees`) | word | Assigned users (filtered alphanumeric array). |
-| `cc` | [Ticket.cc](data.md#ticket-cc) (`/cc`) | word | Users CC’d (filtered alphanumeric array). |
-| `jobs` | [Ticket](data.md#ticket) (`/jobs`) | word | Related job IDs. |
-| `tags` | [Ticket.tags](data.md#ticket-tags) (`/tags`) | word | Tag IDs (master list enabled). |
-| `created` | [Ticket.created](data.md#ticket-created) (`/created`) | number | Created timestamp indexed at hour precision. |
-| `modified` | [Ticket.modified](data.md#ticket-modified) (`/modified`) | number | Last modified timestamp indexed at hour precision. |
-| `due` | [Ticket.due](data.md#ticket-due) (`/due`) | date | Due date. |
-| `server` | [Ticket.server](data.md#ticket-server) (`/server`) | word | Associated server ID. |
-| `subject` | [Ticket.subject](data.md#ticket-subject) (`/subject`) | word | Short summary (FTS; stemming enabled). |
-| `body` | [Ticket.body](data.md#ticket-body) (`[/username] [/subject] [/body]`) | word | Full-text search across username, subject and body (markdown filtered; stemming enabled). |
-| `changes` | [Ticket.changes](data.md#ticket-changes) (`/changes`) | word | Full-text search across change log content (markdown filtered; stemming enabled). |
+| `type` | [Ticket.type](data.md#ticket-type) | Word | Ticket type (`issue`, `feature`, `change`, `maintenance`, `question`, `other`). |
+| `num` | [Ticket.num](data.md#ticket-num) | Number | Auto-assigned ticket number. |
+| `status` | [Ticket.status](data.md#ticket-status) | Word | Ticket status (`open`, `closed`, `draft`). |
+| `category` | [Ticket.category](data.md#ticket-category) | Word | Category ID. |
+| `username` | [Ticket.username](data.md#ticket-username) | Word | Creator username (filtered alphanumeric). |
+| `assignees` | [Ticket.assignees](data.md#ticket-assignees) | Word | Assigned users (filtered alphanumeric array). |
+| `cc` | [Ticket.cc](data.md#ticket-cc) | Word | Users CC’d (filtered alphanumeric array). |
+| `jobs` | [Ticket](data.md#ticket) | Word | Related job IDs. |
+| `tags` | [Ticket.tags](data.md#ticket-tags) | Word | Tag IDs (master list enabled). |
+| `created` | [Ticket.created](data.md#ticket-created) | Number | Created timestamp indexed at hour precision. |
+| `modified` | [Ticket.modified](data.md#ticket-modified) | Number | Last modified timestamp indexed at hour precision. |
+| `due` | [Ticket.due](data.md#ticket-due) | Date | Due date. |
+| `server` | [Ticket.server](data.md#ticket-server) | Word | Associated server ID. |
+| `subject` | [Ticket.subject](data.md#ticket-subject) | Word | Short summary (FTS; stemming enabled). |
+| `body` | [Ticket.body](data.md#ticket-body) | Word | Full-text search across username, subject and body (markdown filtered; stemming enabled). |
+| `changes` | [Ticket.changes](data.md#ticket-changes) | Word | Full-text search across change log content (markdown filtered; stemming enabled). |
 
 Sorters:
 
 | Sorter ID | Source | Type | Description |
 |-----------|--------|------|-------------|
-| `num` | [Ticket.num](data.md#ticket-num) (`/num`) | number | Sort by ticket number. |
-| `modified` | [Ticket.modified](data.md#ticket-modified) (`/modified`) | number | Sort by last modified timestamp. |
+| `num` | [Ticket.num](data.md#ticket-num) | Number | Sort by ticket number. |
+| `modified` | [Ticket.modified](data.md#ticket-modified) | Number | Sort by last modified timestamp. |
 
 ## Column Properties
 
