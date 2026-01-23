@@ -2838,7 +2838,9 @@ Page.Job = class Job extends Page.PageUtils {
 				'<a href="' + url + '" target="_blank"><b>View</b></a>',
 				'<a href="' + url + '?download=' + encodeURIComponent(file.filename) + '"><b>Download</b></a>',
 			];
-			if (file.source == 'output') actions.push( '<button class="link danger" onClick="$P().do_delete_file(' + idx + ')"><b>Delete</b></button>' );
+			if ((file.source == 'output') || ((file.source == 'input') && !file.bucket && !file.ticket)) {
+				actions.push( '<button class="link danger" onClick="$P().do_delete_file(' + idx + ')"><b>Delete</b></button>' );
+			}
 			
 			var nice_source = '';
 			if (file.source == 'input') {
@@ -2885,7 +2887,11 @@ Page.Job = class Job extends Page.PageUtils {
 				
 				if (!self.active) return; // sanity
 				
-				delete_object( job.files, { path: file.path } );
+				switch (file.source) {
+					case 'output': delete_object( job.files, { path: file.path } ); break;
+					case 'input': delete_object( job.input.files, { path: file.path } ); break;
+				}
+				
 				self.div.find('#d_job_files > .box_content').html( self.getFileTable() );
 				self.renderMediaSlideshow();
 			} ); // api.post
