@@ -31,7 +31,7 @@ Most automation platforms focus on workflow orchestration -- they run tasks, but
 
 # Installation
 
-See our **[Self-Hosting Guide](https://github.com/pixlcore/xyops/blob/main/docs/hosting.md)** for installation details.
+See our **[Self-Hosting Guide](https://docs.xyops.io/hosting)** for installation details.
 
 Just want to test out xyOps locally really quick?  One-liner Docker command:
 
@@ -48,7 +48,7 @@ Then open http://localhost:5522 in your browser, and use username `admin` and pa
 
 # Documentation
 
-Check out our docs here: **[xyOps Documentation Index](https://github.com/pixlcore/xyops/blob/main/docs/index.md)**
+Check out our official docs site here: **[xyOps Documentation](https://docs.xyops.io)**
 
 Full documentation is also provided inside the xyOps app.  Just click the "Documentation" link in the sidebar.
 
@@ -60,7 +60,7 @@ TL;DR; we do not accept feature PRs, but there are **lots** of other ways you ca
 
 # Development
 
-See our **[Development Guide](https://github.com/pixlcore/xyops/blob/main/docs/dev.md)** for local dev setup.  In short, install [Node.js LTS](https://nodejs.org/en/download) and then:
+See our **[Development Guide](https://docs.xyops.io/dev)** for local dev setup.  In short, install [Node.js LTS](https://nodejs.org/en/download) and then:
 
 ```sh
 git clone https://github.com/pixlcore/xyops.git
@@ -72,7 +72,7 @@ bin/debug.sh
 
 # Security
 
-Read our **[Security Guide](https://github.com/pixlcore/xyops/blob/main/docs/security.md)** to learn how to report security vulnerabilities to the xyOps team.
+Read our **[Security Guide](https://docs.xyops.io/security)** to learn how to report security vulnerabilities to the xyOps team.
 
 Please do **not** submit vulnerabilities as GitHub issues!
 
@@ -80,7 +80,7 @@ Please do **not** submit vulnerabilities as GitHub issues!
 
 The xyOps project exists to empower users and developers through openness, reliability, and fairness.
 
-Our **[Governance Model](https://github.com/pixlcore/xyops/blob/main/docs/governance.md)** is designed to preserve these principles indefinitely.
+Our **[Governance Model](https://docs.xyops.io/governance)** is designed to preserve these principles indefinitely.
 
 # Longevity
 
