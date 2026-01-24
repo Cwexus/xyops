@@ -159,7 +159,7 @@ If you use Slack's newer Bot Token + chat.postMessage, set `Authorization: Beare
 
 ### Pushover
 
-- Create a Pushover application and collect `API_TOKEN` and `USER_KEY`.
+- Create a Pushover application and collect `PUSHOVER_API_KEY` and `PUSHOVER_APP_KEY`.
 - Use `encode` macro function to URI-encode the values for x-www-form-urlencoded.
 - Hook settings:
   - method: `POST`
@@ -168,7 +168,7 @@ If you use Slack's newer Bot Token + chat.postMessage, set `Authorization: Beare
   - body:
 
 ```
-token={{ encode(secrets.PUSHOVER_TOKEN) }}&user={{ encode(secrets.PUSHOVER_USER) }}&message={{ encode(text) }}
+token={{ encode(secrets.PUSHOVER_APP_KEY) }}&user={{ encode(secrets.PUSHOVER_API_KEY) }}&message={{ encode(text) }}
 ```
 
 ### Generic Bearer API
