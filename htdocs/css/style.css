@@ -2139,6 +2139,36 @@ div.box_code_none {
 	color: var(--label-color);
 }
 
+.doc-body pre {
+	background-color: var(--form-background-color);
+}
+
+.markdown-body pre {
+	position: relative;
+}
+
+.markdown-body pre > .copy_icon {
+	position: absolute;
+	left: calc(100% - 30px);
+	top: 10px;
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+	text-align: center;
+	color: var(--icon-color);
+	cursor: pointer;
+	display: none;
+}
+.markdown-body pre:hover > .copy_icon {
+	display: block;
+}
+.markdown-body pre > .copy_icon:hover {
+	color: var(--theme-color);
+}
+.markdown-body pre > .copy_icon:active {
+	color: var(--theme-color-highlight);
+}
+
 /* Icon Overrides */
 
 i.mdi.mdi-moon-waning-crescent:before {

@@ -65,7 +65,7 @@ Page.Docs = class Docs extends Page.PageUtils {
 			app.setWindowTitle( title + ' | Documentation' );
 			app.setHeaderNav([
 				{ icon: 'file-document-multiple-outline', loc: '#Docs', title: 'Docs' },
-				{ icon: 'file-document-outline', title: title }
+				{ icon: 'file-document-outline', title: `<span class="link" onClick="window.scrollTo(0,0)">${title}</span>` }
 			]);
 			app.highlightTab( 'Docs' );
 		}
@@ -204,6 +204,29 @@ Page.Docs = class Docs extends Page.PageUtils {
 			$this.addClass('heading').prepend( '<a href="#Docs/' + doc + '/' + id + '" class="anchor"><i class="mdi mdi-link-variant"></i></a>' );
 			if (anchor && (id == anchor) && !pre_scrolled) this.scrollIntoView(true);
 		});
+	}
+	
+	highlightCodeBlocks(elem) {
+		// highlight code blocks inside markdown doc
+		var self = this;
+		if (!elem) elem = this.div;
+		else if (typeof(elem) == 'string') elem = $(elem);
+		
+		elem.find('div.markdown-body pre code').each( function() {
+			var $this = $(this);
+			var text = this.innerText;
+			$this.data('raw', text);
+			if (text.match(/^\s*\{[\S\s]+\}\s*$/)) this.classList.add('language-json');
+			if (this.classList.length) hljs.highlightElement(this);
+			$this.after(`<div class="copy_icon" title="Copy to Clipboard" onClick="$P().copyCode(this)"><i class="mdi mdi-clipboard-text-outline"></i></div>`);
+		});
+	}
+	
+	copyCode(elem) {
+		// copy code block to clipboard
+		var $code = $(elem).closest('pre').find('> code');
+		copyToClipboard( $code.data('raw') );
+		app.showMessage('info', "Code snippet copied to clipboard.");
 	}
 	
 	onStatusUpdate() {
