@@ -1,5 +1,19 @@
 # xyOps Changelog
 
+## Version v0.9.37
+
+> January 23, 2026
+
+- [`4c5af9c`](https://github.com/pixlcore/xyops/commit/4c5af9cd9cca191652ce30b4084b3a4b53f31c23): Version 0.9.37
+- [`4885ccb`](https://github.com/pixlcore/xyops/commit/4885ccba5ef25a350633979ca1ac0ec4cacb659f): UI: Disable spellcheck in param text fields.
+- [`d1d8aa1`](https://github.com/pixlcore/xyops/commit/d1d8aa1061821937c6588f24c60e17d5b128882e): CSS: Tweak scroll shadows background color for compact table grids.
+- [`294a97f`](https://github.com/pixlcore/xyops/commit/294a97f2d4d5a9d91e5cc8319305dc29b75036bf): Event Timing Summaries: Redesign to support date/time locales and 24-hour time.
+- [`ff97285`](https://github.com/pixlcore/xyops/commit/ff972853458621a43ee5bb8cce4deec143f6ee1a): Event View: Cosmetic: Set max-height to trigger/action/limit summaries, and add auto-scroll.
+- [`7bb4415`](https://github.com/pixlcore/xyops/commit/7bb4415d0336f435a88c39a04c4946d870461e4c): Tweak last day of month summarization format.
+- [`dd108df`](https://github.com/pixlcore/xyops/commit/dd108dfc1ce5ea86dc03766d707f601ca3201e45): Cosmetic Fix: Add proper default icon for tags in drop-down menus.
+- [`ad29d24`](https://github.com/pixlcore/xyops/commit/ad29d24b0975a7bc3ffd38d6a7a668d4178f7d51): Job Details: Allow input files to be deleted if source was a user or a plugin.
+- [`875eb39`](https://github.com/pixlcore/xyops/commit/875eb39d299da7743da374add82fa971ec452d8e): README: Update docs links to use new official docs website.
+
 ## Version v0.9.36
 
 > January 22, 2026
