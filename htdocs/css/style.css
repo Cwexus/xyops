@@ -882,6 +882,10 @@ body.dark .fr_caption code {
 	word-break: break-word;
 }
 
+.doc-body div.table {
+	overflow-x: auto;
+}
+
 .markdown-body a.anchor {
 	position: absolute;
 	margin-left: -1.5em;

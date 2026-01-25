@@ -104,6 +104,7 @@ Page.Docs = class Docs extends Page.PageUtils {
 		this.highlightCodeBlocks();
 		this.fixDocumentLinks();
 		this.setupHeaderLinks();
+		this.wrapTables();
 		
 		setTimeout( function() {
 			$('#fe_doc_search').keypress( function(event) {
@@ -118,7 +119,6 @@ Page.Docs = class Docs extends Page.PageUtils {
 	
 	gosub(sub) {
 		// go to sub-anchor (article section link), MIGHT be different doc tho
-		// GOT HERE, in gosub: hosting/key-rotation
 		var args = this.args;
 		var [ doc, anchor ] = sub.split(/\//);
 		if (!doc) doc = 'index';
@@ -227,6 +227,17 @@ Page.Docs = class Docs extends Page.PageUtils {
 		var $code = $(elem).closest('pre').find('> code');
 		copyToClipboard( $code.data('raw') );
 		app.showMessage('info', "Code snippet copied to clipboard.");
+	}
+	
+	wrapTables(elem) {
+		// wrap all tables with DIVs with special class, for overflow
+		var self = this;
+		if (!elem) elem = this.div;
+		else if (typeof(elem) == 'string') elem = $(elem);
+		
+		elem.find('div.markdown-body table').each( function() {
+			$(this).wrap('<div class="table"></div>');
+		});
 	}
 	
 	onStatusUpdate() {
