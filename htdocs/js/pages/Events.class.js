@@ -2886,7 +2886,7 @@ Page.Events = class Events extends Page.PageUtils {
 		// get html for trigger table
 		var self = this;
 		var html = '';
-		var cols = ['<i class="mdi mdi-checkbox-marked-outline"></i>', 'Description', 'Type', 'Actions'];
+		var cols = ['<i class="mdi mdi-checkbox-marked-outline"></i>', 'Description', 'Type', 'Tags', 'Actions'];
 		var add_link = '<div class="button small secondary" onClick="$P().editTrigger(-1)"><i class="mdi mdi-plus-circle-outline">&nbsp;</i>New Trigger...</div>';
 		
 		if (!this.event.triggers.length) return add_link;
@@ -2902,7 +2902,7 @@ Page.Events = class Events extends Page.PageUtils {
 			class: 'data_grid c_trigger_grid',
 			empty_msg: add_link,
 			always_append_empty_msg: true,
-			grid_template_columns: '40px auto auto auto'
+			grid_template_columns: '40px auto auto auto auto'
 		};
 		
 		html += this.getCompactGrid(targs, function(item, idx) {
@@ -2919,6 +2919,7 @@ Page.Events = class Events extends Page.PageUtils {
 				}) + '</div>',
 				'<div class="td_big nowrap">' + '<button class="link" onClick="$P().editTrigger('+idx+')">' + nice_desc.replace(/\&nbsp\;/g, '') + '</button></div>',
 				'<div class="ellip nowrap">' + nice_icon + nice_type + '</div>',
+				self.getNiceTagList( item.tags || [] ),
 				'<span class="nowrap">' + actions.join(' | ') + '</span>'
 			];
 			
@@ -3358,6 +3359,30 @@ Page.Events = class Events extends Page.PageUtils {
 			caption: 'Select the desired timezone for the trigger.'
 		});
 		
+		// tags
+		html += this.getFormRow({
+			id: 'd_et_tags',
+			label: "Tags:",
+			content: this.getFormMenuMulti({
+				id: 'fe_et_tags',
+				title: "Select tags for trigger",
+				placeholder: "(Use event defaults)",
+				options: app.tags,
+				values: trigger.tags || [],
+				default_icon: 'tag-outline',
+				// 'data-shrinkwrap': 1
+			}),
+			caption: "Optionally add jobs tags for the trigger."
+		});
+		
+		// user form fields
+		html += this.getFormRow({
+			id: 'd_et_params',
+			label: 'User Parameters:',
+			content: '<div class="plugin_param_editor_cont">' + this.getParamEditor(this.event.fields || [], trigger.params || {}) + '</div>',
+			caption: 'Set the event-defined parameters for the trigger.'
+		});
+		
 		html += '</div>';
 		Dialog.confirm( title, html, btn, function(result) {
 			if (!result) return;
@@ -3555,6 +3580,12 @@ Page.Events = class Events extends Page.PageUtils {
 				break;
 			} // switch trigger.type
 			
+			if (trigger.type.match(/^(schedule|single|interval)$/)) {
+				trigger.tags = $('#fe_et_tags').val();
+				trigger.params = self.getParamValues(self.event.fields || []);
+				if (!trigger.params) return; // invalid
+			}
+			
 			// see if we need to add or replace
 			if (idx == -1) {
 				self.event.triggers.push(trigger);
@@ -3582,6 +3613,8 @@ Page.Events = class Events extends Page.PageUtils {
 					$('#d_et_hours').show();
 					$('#d_et_minutes').show();
 					$('#d_et_tz').show();
+					$('#d_et_tags').show();
+					$('#d_et_params').show();
 				break;
 				
 				case 'yearly':
@@ -3590,6 +3623,8 @@ Page.Events = class Events extends Page.PageUtils {
 					$('#d_et_hours').show();
 					$('#d_et_minutes').show();
 					$('#d_et_tz').show();
+					$('#d_et_tags').show();
+					$('#d_et_params').show();
 				break;
 				
 				case 'monthly':
@@ -3597,6 +3632,8 @@ Page.Events = class Events extends Page.PageUtils {
 					$('#d_et_hours').show();
 					$('#d_et_minutes').show();
 					$('#d_et_tz').show();
+					$('#d_et_tags').show();
+					$('#d_et_params').show();
 				break;
 				
 				case 'weekly':
@@ -3604,22 +3641,30 @@ Page.Events = class Events extends Page.PageUtils {
 					$('#d_et_hours').show();
 					$('#d_et_minutes').show();
 					$('#d_et_tz').show();
+					$('#d_et_tags').show();
+					$('#d_et_params').show();
 				break;
 				
 				case 'daily':
 					$('#d_et_hours').show();
 					$('#d_et_minutes').show();
 					$('#d_et_tz').show();
+					$('#d_et_tags').show();
+					$('#d_et_params').show();
 				break;
 				
 				case 'hourly':
 					$('#d_et_minutes').show();
 					$('#d_et_tz').show();
+					$('#d_et_tags').show();
+					$('#d_et_params').show();
 				break;
 				
 				case 'crontab':
 					$('#d_et_crontab').show();
 					$('#d_et_tz').show();
+					$('#d_et_tags').show();
+					$('#d_et_params').show();
 				break;
 				
 				case 'continuous':
@@ -3630,10 +3675,14 @@ Page.Events = class Events extends Page.PageUtils {
 					$('#d_et_interval_desc').show();
 					$('#d_et_interval').show();
 					$('#d_et_range_start').show();
+					$('#d_et_tags').show();
+					$('#d_et_params').show();
 				break;
 				
 				case 'single':
 					$('#d_et_single').show();
+					$('#d_et_tags').show();
+					$('#d_et_params').show();
 				break;
 				
 				case 'manual':
@@ -3704,7 +3753,7 @@ Page.Events = class Events extends Page.PageUtils {
 		}); // type change
 		
 		SingleSelect.init( $('#fe_et_type, #fe_et_tz, #fe_et_plugin') );
-		MultiSelect.init( $('#fe_et_years, #fe_et_months, #fe_et_weekdays, #fe_et_days, #fe_et_hours, #fe_et_minutes, #fe_et_seconds') );
+		MultiSelect.init( $('#fe_et_years, #fe_et_months, #fe_et_weekdays, #fe_et_days, #fe_et_hours, #fe_et_minutes, #fe_et_seconds, #fe_et_tags') );
 		RelativeTime.init( $('#fe_et_interval') );
 		// this.updateAddRemoveMe('#fe_eja_email');
 		
