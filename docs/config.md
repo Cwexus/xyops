@@ -567,7 +567,7 @@ Client-side limits for bucket uploads (max files/size/types). Enforced in the UI
 	"max_files_per_bucket": 100,
 	"max_file_size": 1073741824,
 	"accepted_file_types": ""
-}		
+}
 ```
 
 ### client.ticket_upload_settings
