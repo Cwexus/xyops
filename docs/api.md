@@ -5290,6 +5290,7 @@ Parameters (multipart/form-data fields):
 |---------------|------|-------------|
 | `file` | File | **(Required)** NDJSON file to import (may be `.gz`). The field name may be arbitrary; only one file should be included. |
 | `format` | String | Optional. `xyops` (default) or `cronicle`. When `cronicle`, the server will convert known structures before importing. |
+| `danger` | Boolean | Optional. When set to `true` xyOps will **not** disable the schedule nor abort any running jobs for the import.  Use with caution. |
 
 NDJSON line formats supported:
 
