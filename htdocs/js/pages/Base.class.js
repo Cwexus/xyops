@@ -2491,8 +2491,18 @@ Page.Base = class Base extends Page {
 			switch (param.type) {
 				case 'text':
 					if (elem_value.toString().length) {
-						html += '<i class="link mdi mdi-' + elem_icon + '" onClick="$P().copyPluginParamValue(this)" title="Copy to Clipboard">&nbsp;</i>';
-						html += '<span class="data_value">' + encode_entities(elem_value) + '</span>';
+						if (param.variant) {
+							var variant_def = find_object( config.ui.text_field_variants, { id: param.variant } );
+							if (variant_def) elem_icon = variant_def.icon;
+						}
+						if (param.variant == 'password') {
+							html += '<i class="mdi mdi-' + elem_icon + '">&nbsp;</i>';
+							html += '<span class="data_value">********</span>';
+						}
+						else {
+							html += '<i class="link mdi mdi-' + elem_icon + '" onClick="$P().copyPluginParamValue(this)" title="Copy to Clipboard">&nbsp;</i>';
+							html += '<span class="data_value">' + encode_entities(elem_value) + '</span>';
+						}
 					}
 					else html += none;
 				break;
