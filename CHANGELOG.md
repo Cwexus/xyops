@@ -1,5 +1,19 @@
 # xyOps Changelog
 
+## Version v0.9.43
+
+> January 29, 2026
+
+- [`93017cd`](https://github.com/pixlcore/xyops/commit/93017cde0db8332194e5ba35a89c63b75c4b2911): Version 0.9.43
+- [`ca8fb60`](https://github.com/pixlcore/xyops/commit/ca8fb604abe382fc5dbe4bfd95d7b81ba2fdde01): New Feature: Configuration Editor in the UI!
+- [`860ea3b`](https://github.com/pixlcore/xyops/commit/860ea3b17d23dbedc41d21d7025b37e61a8d93db): UI: Improve event / plugin parameter summary display, with correct icons for text variants, and masking password fields.  Fixes #89
+- [`2689af3`](https://github.com/pixlcore/xyops/commit/2689af32d2925c106105f4612ed3350e52e4219f): Add Content-Disposition header for satellite file downloads.
+- [`0a4f430`](https://github.com/pixlcore/xyops/commit/0a4f4301469341338942452199d7fa954ec61126): Admin Import Data API: Add optional "danger" mode which will skip scheduler disable and job abort.  For future use (i.e. sync with external systems).
+- [`0e6e4cb`](https://github.com/pixlcore/xyops/commit/0e6e4cb1c1e74bbf99358510b687c2246b197e38): Delete Server: FIx issue with server sticking in cache after deletion, and also properly updating jobs on deleted servers.
+- [`b26601e`](https://github.com/pixlcore/xyops/commit/b26601e682f88a39eb3ae7be9f1cc3bdd9cf6f6a): Alerts: Write active alerts to recovery data so they survive restarts cleanly.
+- [`d8cd137`](https://github.com/pixlcore/xyops/commit/d8cd1378f1322dd70b0597be71d0edcf4abe9668): UI Bug FIx: Clicks on header widgets may get missed if they are redrawn during the mousedown.
+- [`ff9837c`](https://github.com/pixlcore/xyops/commit/ff9837c0c72838cd34e20b412131c326449ad720): Workflow UI: Improve trigger icon titles a bit (for internal / single shot).
+
 ## Version v0.9.42
 
 > January 26, 2026
