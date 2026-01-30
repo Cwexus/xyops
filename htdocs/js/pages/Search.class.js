@@ -630,10 +630,6 @@ Page.Search = class Search extends Page.PageUtils {
 		
 		if (!this.active) return; // sanity
 		
-		// massage the DB search resp so that things are happy
-		// resp.rows = resp.records;
-		// resp.list = { length: resp.total };
-		
 		this.lastSearchResp = resp;
 		this.jobs = [];
 		if (resp.rows) this.jobs = resp.rows;
@@ -889,6 +885,8 @@ Page.Search = class Search extends Page.PageUtils {
 	
 	onDeactivate() {
 		// called when page is deactivated
+		delete this.lastSearchResp;
+		delete this.jobs;
 		delete this.jobFileSearch;
 		this.div.html( '' );
 		return true;
