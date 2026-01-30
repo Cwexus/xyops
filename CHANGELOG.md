@@ -1,5 +1,12 @@
 # xyOps Changelog
 
+## Version v0.9.45
+
+> January 30, 2026
+
+- [`67ae5d2`](https://github.com/pixlcore/xyops/commit/67ae5d2ba23b514f98cd3f28d92d507bf065fabb): Version 0.9.45
+- [`f64d395`](https://github.com/pixlcore/xyops/commit/f64d395c37c1fbd01071a50e164c53351d21f468): Log Viewer Bug Fix: Custom Date menu was not working correctly.
+
 ## Version v0.9.44
 
 > January 30, 2026
