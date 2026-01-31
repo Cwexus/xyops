@@ -468,7 +468,7 @@ This API allows you to write bucket data into a storage bucket.  The [edit_bucke
 
 | Property Name | Type | Description |
 |---------------|------|-------------|
-| `bucket` | String | **(Required)** The alphanumeric ID of the bucket to write data to. |
+| `id` | String | **(Required)** The alphanumeric ID of the bucket to write data to. |
 | `data` | Object | **(Required)** The data object to shallow-merge into the bucket data. |
 | `fetch` | Boolean | Optional flag requesting the entire data object be returned in the API response. |
 
