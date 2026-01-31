@@ -36,6 +36,7 @@ app.extend({
 		"php": "text/x-php",
 		"python": "text/x-python",
 		"shell": "text/x-sh",
+		"powershell": "application/x-powershell",
 		"xml": "text/xml"
 	},
 	cmThemeMap: {
@@ -1032,6 +1033,10 @@ app.extend({
 			case 'deno':
 			case 'bun':
 				cmd = 'javascript';
+			break;
+			
+			case 'pwsh':
+				cmd = 'powershell';
 			break;
 		}
 		return hljs.listLanguages().includes(cmd) ? cmd : null;

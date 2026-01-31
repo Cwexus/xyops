@@ -778,9 +778,8 @@
 	"build": {
 		"common": [
 			[ "symlinkFile", "node_modules/codemirror", "htdocs/codemirror" ],
+			[ "symlinkFile", "node_modules/@highlightjs/cdn-assets", "htdocs/highlight" ],
 			
-			[ "symlinkCompress", "node_modules/@highlightjs/cdn-assets/highlight.min.js", "htdocs/js/external/" ],
-			[ "symlinkCompress", "node_modules/@highlightjs/cdn-assets/languages/http.min.js", "htdocs/js/external/" ],
 			[ "symlinkCompress", "node_modules/@highlightjs/cdn-assets/styles/atom-one-light.css", "htdocs/css/" ],
 			[ "symlinkCompress", "node_modules/@highlightjs/cdn-assets/styles/atom-one-dark.css", "htdocs/css/" ],
 			
