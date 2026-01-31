@@ -43,11 +43,11 @@ See [Privileges](privileges.md#buckets) for specifics. Listing and fetching typi
 
 ## Using Buckets In Jobs
 
-Buckets integrate with jobs through two action types: Fetch Bucket and Store Bucket. You attach these as job actions with conditions controlling when they run.
+Buckets integrate with jobs through two action types: [Fetch Bucket](actions.md#fetch-bucket) and [Store Bucket](actions.md#store-bucket). You attach these as job actions with conditions controlling when they run.
 
 ### Fetch At Job Start
 
-Use Fetch Bucket with the `start` condition to pull bucket content into the job's input context before launch:
+Use [Fetch Bucket](actions.md#fetch-bucket) with the `start` condition to pull bucket content into the job's input context before launch:
 
 - **Data**: Shallow-merged into the job's `input.data`. Avoid key collisions or namespace your keys deliberately.
 - **Files**: Selected files are added to the job's input file list and staged into the job's temp directory on the remote server before the Plugin starts.
@@ -67,7 +67,7 @@ Example (JSON):
 
 ### Store On Completion
 
-Use Store Bucket with a completion condition (e.g., `success`, `error`, `complete`) to persist job outputs:
+Use [Store Bucket](actions.md#store-bucket) with a completion condition (e.g., `success`, `error`, `complete`) to persist job outputs:
 
 - **Data**: The job can emit output data which is written into the bucket when `bucket_sync` includes `data`.
 - **Files**: The job's output files can be filtered by `bucket_glob` and stored in the bucket when `bucket_sync` includes `files`.
@@ -109,6 +109,44 @@ Every bucket file includes a `path` (e.g., `files/bucket/<bucket_id>/<hash>/<fil
 ```
 GET https://your.xyops.example.com/files/bucket/bme4wi6pg35/bdY8zZ9nKynfFUb4xH6fA/report.csv
 ```
+
+These URLs have built-in authentication and are "stable" (i.e. permalinks) even if the files are replaced in the bucket (however, not if they are deleted and then re-added).
+
+## Programmatic Access
+
+Using the [get_bucket](api.md#get_bucket), [write_bucket_data](api.md#write_bucket_data) and [upload_bucket_files](api.md#upload_bucket_files) APIs, you can programmatically read and write bucket data and files at any time, including during a job run.  Here is how to set that up:
+
+- First, create a storage bucket, and save the new [Bucket.id](data.md#bucket-id).
+- Next, create an [API Key](api.md#api-keys), and grant it the [edit_buckets](privileges.md#edit_buckets) privilege.  Save the API key secret when prompted.
+- Then, create a [Secret Vault](secrets.md), and add your API Key and Bucket ID as variables (e.g. `XYOPS_API_KEY` and `XYOPS_BUCKET_ID`).
+- Assign the secret vault to your Event, Category or Plugin (the scope is up to you).
+
+When your job runs, you will now have access to your secret variables, and also a special magic variable called [Job.base_url](data.md#job-base_url) (also available as the `JOB_BASE_URL` environment variable).  Using these variables, you can write bucket data like this:
+
+```sh
+#!/bin/sh
+JSON_PAYLOAD='{ "data": { "foo": "bar", "number": 1234 } }'
+API_URL="$JOB_BASE_URL/api/app/write_bucket_data/v1?id=$XYOPS_BUCKET_ID"
+
+curl -sS "$API_URL" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $XYOPS_API_KEY" \
+  -d "$JSON_PAYLOAD" >/dev/null
+```
+
+And read it back like this:
+
+```sh
+#!/bin/sh
+API_URL="$JOB_BASE_URL/api/app/get_bucket/v1?id=$XYOPS_BUCKET_ID"
+RESPONSE=$(curl -sS -H "X-API-Key: $XYOPS_API_KEY" "$API_URL")
+
+echo "Response: $RESPONSE"
+```
+
+The [write_bucket_data](api.md#write_bucket_data) API is designed to be rugged, and can easily handle getting bombarded with many jobs hitting it at once.  It uses locking to ensure the bucket data doesn't get corrupted.  Also, each request performs a "shallow merge" write into the data, so multiple "clients" (events / workflows) can read/write different properties in the same bucket at the same time.
+
+Of course, you can get similar functionality using the [Store Bucket](actions.md#store-bucket) and [Fetch Bucket](actions.md#fetch-bucket) actions, but this way you have complete control over when the data is read and written, and you're not limited to the start and completion of the job.
 
 ## Tips
 

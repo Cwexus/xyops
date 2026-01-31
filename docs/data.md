@@ -856,6 +856,10 @@ This is set to `true` when the job was fired from an event test.  This is used t
 
 If any secrets were assigned to the job, this object will *temporarily* hold the decrypted key/value pairs for the job code to use.  They are **not** stored anywhere, and only passed to the Event Plugin running the job for immediate use.
 
+### Job.base_url
+
+While the job is running, i.e. in the data passed to the Event Plugin, the job object will contain a `base_url` property.  This will be a fully-qualified URL pointing to the current primary conductor server, using the same protocol, hostname and port that xySat used to connect.  This is useful if your job needs to call any xyOps APIs directly.
+
 ### Job.workflow
 
 When the job is itself a workflow, or a sub-job inside a workflow, this object will contain additional information.  See [JobWorkflow](#jobworkflow) for details.

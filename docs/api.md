@@ -458,6 +458,43 @@ And an example response:
 
 Deletions are permanent and cannot be undone.
 
+### write_bucket_data
+
+```
+POST /api/app/write_bucket_data/v1
+```
+
+This API allows you to write bucket data into a storage bucket.  The [edit_buckets](privileges.md#edit_buckets) privilege is required, as well as a valid user session or API Key.  The input parameters are as follows:
+
+| Property Name | Type | Description |
+|---------------|------|-------------|
+| `bucket` | String | **(Required)** The alphanumeric ID of the bucket to write data to. |
+| `data` | Object | **(Required)** The data object to shallow-merge into the bucket data. |
+| `fetch` | Boolean | Optional flag requesting the entire data object be returned in the API response. |
+
+Here is an example request:
+
+```json
+{
+	"id": "bme4wi6pg35",
+	"fetch": true,
+	"data": { "foo": "bar" }
+}
+```
+
+And an example response:
+
+```json
+{
+	"code": 0,
+	"data": { "foo": "bar", "other": 12345 }
+}
+```
+
+Notably, data passed to this API is *shallow-merged* into the bucket data.  In this way multiple "clients" can read/write data to the same bucket without affecting each other (as long as they use unique property names).  Locking is used to ensure only one read/write operation occurs at a time.  If multiple clients write the same property names the latter prevails.
+
+This API is designed to be called from within jobs (i.e. Event Plugin scripts), so it does not update the bucket record itself, nor log a user transaction.
+
 ### upload_bucket_files
 
 ```
@@ -473,6 +510,8 @@ This API allows you to upload files into a storage bucket.  Unlike most of the o
 The file properties are automatically set based on the user files themselves, including the filename, file size, etc.  The `bucket` parameter is used to specify the target bucket for the upload.
 
 Note that bucket files are automatically added or replaced based on their normalized filenames.  Normalization involves converting anything other than alphanumerics, dashes and periods to underscores, and converting the filename to lowercase.
+
+This API is designed to be called from within jobs (i.e. Event Plugin scripts), so it does not update the bucket record itself, nor log a user transaction.
 
 ### delete_bucket_file
 
