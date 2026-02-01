@@ -569,7 +569,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 		// user info
 		if (item.admin || item.username || item.ips.length || item.useragent) {
 			md += "\n### Client Info\n\n";
-			md += '- **User:** ' + this.getNiceUser(item.admin || item.username, true) + "\n";
+			md += '- **User:** ' + this.getNiceUser(item.admin || item.username, false) + "\n";
 			md += '- **IP Addresses:** ' + (item.ips.join(', ') || 'n/a') + "\n";
 			md += '- **User Agent:** ' + (item.useragent || 'Unknown') + "\n";
 		}
@@ -630,7 +630,7 @@ Page.ActivityLog = class ActivityLog extends Page.PageUtils {
 		md += "- **Job ID:** `" + job.id + "`\n";
 		md += "- **Job Title:** " + job.title + "\n";
 		md += "- **Job Type:** " + this.getNiceInternalJobType(job.type) + "\n";
-		md += "- **Requested By:** " + this.getNiceUser(job.username) + "\n";
+		md += "- **Requested By:** " + this.getNiceUser(job.username, false) + "\n";
 		
 		md += "\n### Timing\n\n";
 		md += "- **Started:** " + this.getRelativeDateTime(job.started, true).replace(/\&nbsp;<\/i>/g, '</i>') + "\n";
