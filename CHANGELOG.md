@@ -1,5 +1,15 @@
 # xyOps Changelog
 
+## Version v0.9.50
+
+> February 1, 2026
+
+- [`b39ded7`](https://github.com/pixlcore/xyops/commit/b39ded7256052ed27cd2d0912a22fdedeba9b992): Version 0.9.50
+- [`7eaaaae`](https://github.com/pixlcore/xyops/commit/7eaaaae9b1a832397532e4088a6c12609e446b07): UI: Remove default sidebar "expanded" classes in prep for pixl-xyapp 2.1.20, which manages them automatically.
+- [`1c82bf4`](https://github.com/pixlcore/xyops/commit/1c82bf4d0c06f76f3fa02c7b552ba0de5ab75d79): Bug Fix: Dashboard: "Jobs Failed" counter could be incorrect in certain situations.
+- [`2df18c0`](https://github.com/pixlcore/xyops/commit/2df18c0eeff32033ab90c08cc32113dad665228b): Bucket API: api_delete_bucket_file: Allow params to be specified on the query string or HTTP form data.
+- [`fb835c1`](https://github.com/pixlcore/xyops/commit/fb835c12b0694083dc6a5902544a77993a82b95e): API Keys: Add "Clone" button.  Fixes #99
+
 ## Version v0.9.49
 
 > January 31, 2026
