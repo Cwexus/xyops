@@ -51,7 +51,7 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 		} );
 		
 		// NOTE: Don't change these columns without also changing the responsive css column collapse rules in style.css
-		var cols = ['App Title', 'Partial Key', 'Status', 'Author', 'Created', 'Actions'];
+		var cols = ['App Title', 'Partial Key', 'Status', 'Author', 'Created', 'Last Used', 'Actions'];
 		
 		html += '<div class="box">';
 		html += '<div class="box_title">';
@@ -75,12 +75,15 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 				nice_status = '<span class="color_label red"><i class="mdi mdi-alert-circle">&nbsp;</i>Disabled</span>';
 			}
 			
+			var last_used_epoch = get_path( app.state, `api_keys.${item.id}.date` ) || 0;
+			
 			return [
 				'<b>' + self.getNiceAPIKey(item, true) + '</b>',
 				'<span class="mono" data-private>' + item.mask + '</span>',
 				nice_status,
 				self.getNiceUser(item.username, app.isAdmin()),
-				'<span title="'+self.getNiceDateTimeText(item.created)+'">'+self.getNiceDate(item.created)+'</span>',
+				'<span title="' + self.getNiceDateTimeText(item.created) + '">' + self.getNiceDate(item.created) + '</span>',
+				last_used_epoch ? self.getRelativeDateTime(last_used_epoch) : 'Never',
 				actions.join(' | ')
 			];
 		} ); // getBasicGrid
@@ -148,6 +151,7 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 				active: 1,
 				privileges: copy_object( config.default_user_privileges ),
 				roles: [],
+				max_per_sec: 0,
 				expires: 0
 			};
 		}
@@ -283,6 +287,20 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 			html += '<div class="box_subtitle"><a href="#APIKeys?sub=list">&laquo; Back to Key List</a></div>';
 		html += '</div>';
 		html += '<div class="box_content">';
+		
+		// id
+		html += this.getFormRow({
+			label: 'Key ID:',
+			content: this.getFormText({
+				id: 'fe_ak_id',
+				class: 'monospace',
+				spellcheck: 'false',
+				disabled: 'disabled',
+				value: this.api_key.id
+			}),
+			suffix: this.getFormIDCopier(),
+			caption: 'This is the internal ID for the API Key (not used for authentication).  It cannot be changed.'
+		});
 		
 		// API Key
 		html += this.getFormRow({
@@ -480,6 +498,17 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 			caption: 'Select which privileges the API Key account should have. Administrators have <b>all</b> privileges.'
 		});
 		
+		// rate limit
+		html += this.getFormRow({
+			label: 'Rate Limit:',
+			content: this.getFormText({
+				id: 'fe_ak_limit',
+				type: 'number',
+				value: api_key.max_per_sec || 0
+			}),
+			caption: 'Optionally set a rate limit for the API key (maximum requests per second).  Set to `0` for unlimited.'
+		});
+		
 		// expiration date
 		html += this.getFormRow({
 			label: 'Expiration:',
@@ -549,6 +578,7 @@ Page.APIKeys = class APIKeys extends Page.PageUtils {
 		api_key.description = $('#fe_ak_desc').val();
 		api_key.privileges = array_to_hash_keys( $('#fe_ak_privs').val(), true );
 		api_key.roles = $('#fe_ak_roles').val();
+		api_key.max_per_sec = parseInt( $('#fe_ak_limit').val() );
 		
 		api_key.expires = $('#fe_ak_expires').val();
 		if (api_key.expires.length) {

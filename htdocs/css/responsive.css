@@ -232,9 +232,10 @@
 	.data_grid.user_grid { grid-template-columns: auto auto 0px auto auto auto auto !important; }
 	.data_grid.user_grid > ul > div:nth-child(3) { visibility: hidden; }
 	
-	/* 'App Title', 'API Key', 'Status', 'Author', 'Created', 'Actions' */
-	.data_grid.key_grid { grid-template-columns: auto auto 0px auto auto auto !important; }
+	/* 'App Title', 'Partial Key', 'Status', 'Author', 'Created', 'Last Used', 'Actions' */
+	.data_grid.key_grid { grid-template-columns: auto auto 0px 0px auto auto auto !important; }
 	.data_grid.key_grid > ul > div:nth-child(3) { visibility: hidden; }
+	.data_grid.key_grid > ul > div:nth-child(4) { visibility: hidden; }
 	
 	/* 'Command', 'User', 'PID', 'Parent', 'CPU', 'Memory', 'Age', 'State' */
 	.data_grid.process_grid { grid-template-columns: auto auto auto auto auto auto 0px 0px !important; }
@@ -635,10 +636,11 @@
 	.data_grid.user_grid > ul > div:nth-child(3) { visibility: hidden; }
 	.data_grid.user_grid > ul > div:nth-child(4) { visibility: hidden; }
 	
-	/* 'App Title', 'API Key', 'Status', 'Author', 'Created', 'Actions' */
-	.data_grid.key_grid { grid-template-columns: auto auto 0px 0px auto auto !important; }
+	/* 'App Title', 'Partial Key', 'Status', 'Author', 'Created', 'Last Used', 'Actions' */
+	.data_grid.key_grid { grid-template-columns: auto auto 0px 0px 0px auto auto !important; }
 	.data_grid.key_grid > ul > div:nth-child(3) { visibility: hidden; }
 	.data_grid.key_grid > ul > div:nth-child(4) { visibility: hidden; }
+	.data_grid.key_grid > ul > div:nth-child(5) { visibility: hidden; }
 	
 	/* 'Command', 'User', 'PID', 'Parent', 'CPU', 'Memory', 'Age', 'State' */
 	.data_grid.process_grid { grid-template-columns: auto auto auto 0px auto auto 0px 0px !important; }
@@ -1202,8 +1204,9 @@
 	.data_grid.user_grid > ul > div:nth-child(4) { visibility: hidden; }
 	.data_grid.user_grid > ul > div:nth-child(5) { visibility: hidden; }
 	
-	/* 'App Title', 'API Key', 'Status', 'Author', 'Created', 'Actions' */
-	.data_grid.key_grid { grid-template-columns: auto auto 0px 0px 0px auto !important; }
+	/* 'App Title', 'Partial Key', 'Status', 'Author', 'Created', 'Last Used', 'Actions' */
+	.data_grid.key_grid { grid-template-columns: auto 0px 0px 0px 0px auto auto !important; }
+	.data_grid.key_grid > ul > div:nth-child(2) { visibility: hidden; }
 	.data_grid.key_grid > ul > div:nth-child(3) { visibility: hidden; }
 	.data_grid.key_grid > ul > div:nth-child(4) { visibility: hidden; }
 	.data_grid.key_grid > ul > div:nth-child(5) { visibility: hidden; }
@@ -1674,12 +1677,13 @@
 	.data_grid.user_grid > ul > div:nth-child(6) { visibility: hidden; }
 	.data_grid.user_grid > ul > div:nth-child(7) { visibility: hidden; }
 	
-	/* 'App Title', 'API Key', 'Status', 'Author', 'Created', 'Actions' */
-	.data_grid.key_grid { grid-template-columns: auto 0px 0px 0px 0px auto !important; }
+	/* 'App Title', 'Partial Key', 'Status', 'Author', 'Created', 'Last Used', 'Actions' */
+	.data_grid.key_grid { grid-template-columns: auto 0px 0px 0px 0px 0px auto !important; }
 	.data_grid.key_grid > ul > div:nth-child(2) { visibility: hidden; }
 	.data_grid.key_grid > ul > div:nth-child(3) { visibility: hidden; }
 	.data_grid.key_grid > ul > div:nth-child(4) { visibility: hidden; }
 	.data_grid.key_grid > ul > div:nth-child(5) { visibility: hidden; }
+	.data_grid.key_grid > ul > div:nth-child(6) { visibility: hidden; }
 	
 	/* 'Command', 'User', 'PID', 'Parent', 'CPU', 'Memory', 'Age', 'State' */
 	.data_grid.process_grid { grid-template-columns: auto 0px auto 0px 0px 0px 0px 0px !important; }
