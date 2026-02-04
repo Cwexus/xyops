@@ -1,5 +1,13 @@
 # xyOps Changelog
 
+## Version v0.9.53
+
+> February 4, 2026
+
+- [`e0d06e1`](https://github.com/pixlcore/xyops/commit/e0d06e1f394ac95532505338c1d86f4e4686e944): Version 0.9.53
+- [`0522ade`](https://github.com/pixlcore/xyops/commit/0522adef6c28fbb8aebad1d40a8eb39ed32fa3f6): Global Hot Keys: Add default Cmd+K / Ctrl+K for focusing primary search box.
+- [`3767585`](https://github.com/pixlcore/xyops/commit/37675858465a97ea3abd5caf76d998563e4eef4f): UI Bug Fix: User Prefs: Steamer mode was showing raw HTML tags in the button label.
+
 ## Version v0.9.52
 
 > February 4, 2026
