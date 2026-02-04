@@ -396,6 +396,25 @@ body.dark div.dash_unit_box {
 	color: var(--red);
 }
 
+.dash_unit_box.clicky {
+	cursor: pointer;
+}
+.dash_unit_box.clicky > * {
+	pointer-events: none;
+}
+.dash_unit_box.clicky:hover {
+	border: 1px solid var(--theme-color-half);
+}
+.dash_unit_box.clicky:active {
+	border: 1px solid var(--theme-color);
+}
+.dash_unit_box.warning.clicky:hover {
+	border: 1px solid var(--red-half);
+}
+.dash_unit_box.warning.clicky:active {
+	border: 1px solid var(--red);
+}
+
 /* Dash Donuts */
 
 .dash_donut_grid {
