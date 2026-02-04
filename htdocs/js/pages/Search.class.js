@@ -547,7 +547,23 @@ Page.Search = class Search extends Page.PageUtils {
 		// construct our row
 		// ['Job ID', 'Event', 'Filename', 'Preview', 'Matches', 'Job Completed']
 		var nice_file = '';
-		if (pdata.file.match(/^logs\/jobs\//)) {
+		if (pdata.file.match(/^custom\/description/)) {
+			var url = '#Job?id=' + pdata.job;
+			nice_file = this.getNiceFile( 'Job Description', url, 'account-file-text-outline');
+		}
+		else if (pdata.file.match(/^custom\/input\/data/)) {
+			var url = '#Job?id=' + pdata.job;
+			nice_file = this.getNiceFile( 'Input Data', url, 'code-json');
+		}
+		else if (pdata.file.match(/^custom\/data/)) {
+			var url = '#Job?id=' + pdata.job;
+			nice_file = this.getNiceFile( 'Output Data', url, 'code-json');
+		}
+		else if (pdata.file.match(/^custom\/(html|table)/)) {
+			var url = '#Job?id=' + pdata.job;
+			nice_file = this.getNiceFile( 'User Content', url, 'account-details');
+		}
+		else if (pdata.file.match(/^custom\/output/)) {
 			var url = app.base_api_url + '/app/view_job_log?id=' + pdata.job + '&t=' + pdata.token;
 			nice_file = this.getNiceFile( 'Job Output', url, 'file-document-outline');
 		}

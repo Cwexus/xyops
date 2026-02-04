@@ -684,7 +684,7 @@ Page.Base = class Base extends Page {
 		icon = '<i class="mdi mdi-' + icon + '"></i>';
 		
 		if (link) {
-			html += '<a href="' + link + '" target="_blank">';
+			html += '<a href="' + link + '"' + (link.match(/^\#/) ? '' : ' target="_blank"') + '>';
 			html += icon + '<span>' + filename + '</span></a>';
 		}
 		else {
