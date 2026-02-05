@@ -1,5 +1,13 @@
 # xyOps Changelog
 
+## Version v0.9.55
+
+> February 4, 2026
+
+- [`244ccf6`](https://github.com/pixlcore/xyops/commit/244ccf649c0287dbc2f752174a66a0a119b87464): Version 0.9.55
+- [`046aa4b`](https://github.com/pixlcore/xyops/commit/046aa4b0d5ab8ae4c64c4280cefec0dbe6fd2294): Startup Triggers: If a background upgrade or restart command was issued, skip the startup trigger check.
+- [`6d14225`](https://github.com/pixlcore/xyops/commit/6d1422529469d0d80faf90b47d92ced40296fb21): Multi: Ensure becomeMaster() only ever gets called once per server process lifetime.
+
 ## Version v0.9.54
 
 > February 4, 2026
