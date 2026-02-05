@@ -30,8 +30,8 @@
 	"file_expiration": "5 years",
 	"timeline_expiration": "10 years",
 	
-	"ping_freq_sec": 10,
-	"ping_timeout_sec": 20,
+	"ping_freq_sec": 5,
+	"ping_timeout_sec": 30,
 	
 	"max_jobs_per_min": 100,
 	"dead_job_timeout": 120,
