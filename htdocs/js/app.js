@@ -313,7 +313,7 @@ app.extend({
 		// update top-right display
 		var html = '';
 		
-		html += '<div class="header_widget icon danger" title="Logout"><i class="mdi mdi-power-standby" onClick="app.doConfirmLogout()"></i></div>';
+		html += '<div class="header_widget icon danger" title="Logout" onClick="app.doConfirmLogout()"><i class="mdi mdi-power-standby"></i></div>';
 		html += '<div id="d_my_account" class="header_widget user" style="background-image:url(' + this.getUserAvatarURL( this.retina ? 64 : 32, bust ) + ')" onClick="app.doMyAccount()" title="My Account (' + encode_attrib_entities(app.user.full_name) + ')"></div>';
 		html += '<div id="d_my_settings" class="header_widget icon" title="My Preferences" onClick="app.doMySettings()"><i class="mdi mdi-tune-vertical-variant"></i></div>';
 		html += '<div id="d_theme_ctrl" class="header_widget icon" onClick="app.openThemeSelector()" title="Select Theme"></div>';
