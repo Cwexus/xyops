@@ -3998,7 +3998,7 @@ Page.Events = class Events extends Page.PageUtils {
 	}
 	
 	renderPluginParamEditor() {
-		// render plugin paral editor
+		// render plugin param editor
 		var html = this.getPluginParamEditor( this.div.find('#fe_ee_plugin').val(), this.event.params, true );
 		this.div.find('#d_ee_params').html( html ).buttonize();
 	}
