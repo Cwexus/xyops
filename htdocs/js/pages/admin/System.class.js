@@ -665,7 +665,7 @@ Page.System = class System extends Page.PageUtils {
 		var self = this;
 		var html = '';
 		
-		html += `<div class="dialog_intro">This allows you to upgrade the xyOps Satellite (xySat) software on your worker servers.  The installer will also wait for all jobs to complete on each worker server before starting the upgrade process, to reduce potential disruptions.</div>`;
+		html += `<div class="dialog_intro markdown-inline">` + inline_marked(`This allows you to upgrade the xyOps Satellite (xySat) software on your worker servers.  The installer will also wait for all jobs to complete on each worker server before starting the upgrade process, to reduce potential disruptions.  [xySat Changelog](https://github.com/pixlcore/xysat/blob/main/CHANGELOG.md)`) + `</div>`;
 		html += '<div class="dialog_box_content maximize" style="max-height:75vh; overflow-x:hidden; overflow-y:auto;">';
 		
 		// targets
@@ -751,7 +751,7 @@ Page.System = class System extends Page.PageUtils {
 		var self = this;
 		var html = '';
 		
-		html += `<div class="dialog_intro">This allows you to upgrade the xyOps software on your conductor servers.  Note that if you include the current primary conductor in the upgrade list, it will be upgraded last (and the client will be disconnected during the upgrade process).</div>`;
+		html += `<div class="dialog_intro markdown-inline">` + inline_marked(`This allows you to upgrade the xyOps software on your conductor servers.  Note that if you include the current primary conductor in the upgrade list, it will be upgraded last (and the client will be disconnected during the upgrade process). [xyOps Changelog](https://github.com/pixlcore/xyops/blob/main/CHANGELOG.md)`) + `</div>`;
 		html += '<div class="dialog_box_content maximize" style="max-height:75vh; overflow-x:hidden; overflow-y:auto;">';
 		
 		// targets
