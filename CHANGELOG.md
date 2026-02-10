@@ -1,5 +1,19 @@
 # xyOps Changelog
 
+## Version v0.9.62
+
+> February 10, 2026
+
+- [`ab7fbd6`](https://github.com/pixlcore/xyops/commit/ab7fbd64c936d20cbe929c02f9064a149f036102): Version 0.9.62
+- [`6aa0e25`](https://github.com/pixlcore/xyops/commit/6aa0e25e86a12d708fc5fce8289a232689251e39): Marketplace: Add xyOps version to XYPDF file format, and include on export and validate on import.  Affects direct imports and Marketplace Plugins.  Fixes #128.
+- [`205d5a0`](https://github.com/pixlcore/xyops/commit/205d5a0efa56729ab5551dc820ea2d902c14ca00): Hot Keys: Add "Delete" as an alternate key for workflow delete selection, as well as delete job.
+- [`b369346`](https://github.com/pixlcore/xyops/commit/b369346472479fbce57f35fcec251223af7e1c84): Workflow UI: Change wording of upper delete button for nodes to say "Remove", to differientiate it from the lower "Delete" button that deletes the entire workflow.  Fixes #131.
+- [`cb7cf94`](https://github.com/pixlcore/xyops/commit/cb7cf943031016f4647085577802e45c07ddd575): Improve "select [id]" syntax handling for param menus (better default value fallback).
+- [`f75b508`](https://github.com/pixlcore/xyops/commit/f75b508231aee16a3153cc796d6743ee4b4c796d): Bug Fix: Prevent macro expansion infinite loop when job params is expanded directly.  Fixes #132.
+- [`fd7d010`](https://github.com/pixlcore/xyops/commit/fd7d0100c3d995297ecb110d40341bf87caa9344): Server List: Add architecture as sortable column.
+- [`0e69ca9`](https://github.com/pixlcore/xyops/commit/0e69ca996da28c1329f59e18bc1188600c7c237f): Job Action Details UI: Fix spacing issue between summary and mailer debug log sections.
+- [`71ffe2c`](https://github.com/pixlcore/xyops/commit/71ffe2cb9131b050e8721998d15b37eec353350b): Workflow UI: When adding a new job node, honor the new_event_template config settings (category, plugin, targets)
+
 ## Version v0.9.61
 
 > February 7, 2026
