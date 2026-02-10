@@ -222,7 +222,14 @@ Example (Fastmail):
 <!-- Type: Menu -->
 <!-- Items: ["html", "text"] -->
 
-This string controls the email body format (default: `html`); use `html` for styled emails or `text` for plain text.
+This string controls the email body format (default: `html`).  Use `html` for styled emails or `text` for plain text.
+
+## email_logo
+<!-- Title: Email Logo -->
+<!-- Type: Menu -->
+<!-- Items: ["link", "inline", "none"] -->
+
+This controls the email logo image (default: `inline`).  Use `link` to link out to the logo image on your xyOps conductor server, `inline` to include it as an inline attachment, or `none` to hide the logo image entirely.
 
 ## max_emails_per_day
 <!-- Title: Maximum Emails Per Day -->

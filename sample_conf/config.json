@@ -12,6 +12,7 @@
 		}
 	},
 	"email_format": "html",
+	"email_logo": "inline",
 	"max_emails_per_day": 0,
 	
 	"log_dir": "logs",
