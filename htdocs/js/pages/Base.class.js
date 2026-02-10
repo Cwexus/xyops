@@ -2546,13 +2546,13 @@ Page.Base = class Base extends Page {
 				
 				case 'select':
 					html += '<i class="link mdi mdi-' + elem_icon + '" onClick="$P().copyPluginParamValue(this)" title="Copy to Clipboard">&nbsp;</i>';
-					html += '<span class="data_value">' + encode_entities( elem_value.toString().replace(/\,.*$/, '') ) + '</span>';
+					html += '<span class="data_value">' + encode_entities( elem_value.toString().replace(/\,.*$/, '').replace(/^.+\[([\w\-\.]+)\]\s*$/, '$1') ) + '</span>';
 				break;
 				
 				case 'bucket':
 					if (elem_value.toString().length) {
 						html += '<i class="link mdi mdi-' + elem_icon + '" onClick="$P().copyPluginParamValue(this)" title="Copy to Clipboard">&nbsp;</i>';
-						html += '<span class="data_value">' + encode_entities( elem_value.toString().replace(/\,.*$/, '') ) + '</span>';
+						html += '<span class="data_value">' + encode_entities( elem_value ) + '</span>';
 					}
 					else html += self.getNiceBucket(param.bucket_id);
 				break;

@@ -2557,7 +2557,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				break;
 				
 				case 'select':
-					elem_value = (param.id in params) ? params[param.id] : param.value.replace(/\,.*$/, '');
+					elem_value = (param.id in params) ? params[param.id] : param.value.replace(/\,.*$/, '').replace(/^.+\[([\w\-\.]+)\]\s*$/, '$1');
 					html += self.getFormMenu({ id: elem_id, value: elem_value, options: self.csvToMenuItems(param.value), disabled: elem_dis });
 				break;
 				
@@ -3593,13 +3593,13 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				
 				case 'select':
 					html += '<i class="mdi mdi-' + elem_icon + '">&nbsp;</i>';
-					html += strip_html( elem_value.toString().replace(/\,.*$/, '') );
+					html += strip_html( elem_value.toString().replace(/\,.*$/, '').replace(/^.+\[([\w\-\.]+)\]\s*$/, '$1') );
 				break;
 				
 				case 'bucket':
 					if (elem_value.toString().length) {
 						html += '<i class="mdi mdi-' + elem_icon + '">&nbsp;</i>';
-						html += strip_html( elem_value.toString().replace(/\,.*$/, '') );
+						html += strip_html( elem_value );
 					}
 					else html += self.getNiceBucket( param.bucket_id );
 				break;
@@ -4940,7 +4940,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				break;
 				
 				case 'select':
-					elem_value = (param.id in params) ? params[param.id] : param.value.replace(/\,.*$/, '');
+					elem_value = (param.id in params) ? params[param.id] : param.value.replace(/\,.*$/, '').replace(/^.+\[([\w\-\.]+)\]\s*$/, '$1');
 					html += self.getFormMenu({ id: elem_id, value: elem_value, options: self.csvToMenuItems(param.value), disabled: elem_dis });
 				break;
 				
