@@ -1597,6 +1597,13 @@ body.dark .plugin_param_editor_cont div.button.secondary:hover {
 	border-color: var(--green);
 }
 
+body.dark .plugin_param_editor_cont div.button.danger {
+	border-color: var(--icon-color-half);
+}
+body.dark .plugin_param_editor_cont div.button.danger:hover {
+	border-color: var(--red);
+}
+
 .dialog .plugin_param_editor_cont {
 	background: rgba(233, 236, 240, 0.3);
 }

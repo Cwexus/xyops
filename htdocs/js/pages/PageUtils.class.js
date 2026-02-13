@@ -2501,7 +2501,11 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			var elem_icon = config.ui.control_type_icons[param.type];
 			if (param.type == 'hidden') return;
 			
-			if (param.type != 'checkbox') html += '<div class="info_label">' + param.title + '</div>';
+			if (param.type != 'checkbox') {
+				if (elem_dis) html += '<div class="info_label" style="color:var(--red)"><i class="mdi mdi-lock">&nbsp;</i>' + param.title + ' (Admin Locked)</div>';
+				else html += '<div class="info_label">' + param.title + '</div>';
+			}
+			
 			html += '<div class="info_value" aria-label="' + param.title + '">';
 			
 			switch (param.type) {
@@ -2538,7 +2542,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				case 'code':
 					html += self.getFormTextarea({ id: elem_id, value: elem_value, rows: 1, disabled: elem_dis, style: 'display:none' });
 					if (elem_dis) {
-						html += '<div class="button small secondary" onClick="$P().viewPluginParamCode(\'' + plugin_id + '\',\'' + param.id + '\')"><i class="mdi mdi-code-json">&nbsp;</i>View Code...</div>';
+						html += '<div class="button small danger" onClick="$P().viewPluginParamCode(\'' + plugin_id + '\',\'' + param.id + '\')"><i class="mdi mdi-code-json">&nbsp;</i>View Code...</div>';
 					}
 					else {
 						html += '<div class="button small secondary" onClick="$P().editPluginParamCode(\'' + plugin_id + '\',\'' + param.id + '\')"><i class="mdi mdi-text-box-edit-outline">&nbsp;</i>Edit Code...</div>';
@@ -2549,7 +2553,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 					if (typeof(elem_value) == 'object') elem_value = JSON.stringify(elem_value, null, "\t");
 					html += self.getFormTextarea({ id: elem_id, value: elem_value, rows: 1, disabled: elem_dis, style: 'display:none' });
 					if (elem_dis) {
-						html += '<div class="button small secondary" onClick="$P().viewPluginParamCode(\'' + plugin_id + '\',\'' + param.id + '\')"><i class="mdi mdi-code-json">&nbsp;</i>View JSON...</div>';
+						html += '<div class="button small danger" onClick="$P().viewPluginParamCode(\'' + plugin_id + '\',\'' + param.id + '\')"><i class="mdi mdi-code-json">&nbsp;</i>View JSON...</div>';
 					}
 					else {
 						html += '<div class="button small secondary" onClick="$P().editPluginParamCode(\'' + plugin_id + '\',\'' + param.id + '\')"><i class="mdi mdi-text-box-edit-outline">&nbsp;</i>Edit JSON...</div>';
@@ -2607,6 +2611,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			} // switch type
 			
 			if (param.caption) html += '<div class="info_caption">' + inline_marked( strip_html(param.caption) ) + '</div>';
+			else if (elem_dis) html += '<div class="info_caption">This parameter is locked, and only editable by administrators.</div>';
 			
 			html += '</div>';
 		} ); // foreach param
@@ -2681,7 +2686,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		var param = find_object( plugin.params, { id: param_id } );
 		if (!param) return; // sanity
 		
-		this.viewCodeAuto(param.title, elem_value);
+		this.viewCodeAuto(param.title + ' (View Only)', elem_value);
 	}
 	
 	editPluginParamCode(plugin_id, param_id) {
@@ -4884,7 +4889,11 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			var elem_icon = config.ui.control_type_icons[param.type];
 			if (param.type == 'hidden') return;
 			
-			if (param.type != 'checkbox') html += '<div class="info_label">' + param.title + '</div>';
+			if (param.type != 'checkbox') {
+				if (elem_dis) html += '<div class="info_label" style="color:var(--red)"><i class="mdi mdi-lock">&nbsp;</i>' + param.title + ' (Admin Locked)</div>';
+				else html += '<div class="info_label">' + param.title + '</div>';
+			}
+			
 			html += '<div class="info_value" aria-label="' + param.title + '">';
 			
 			switch (param.type) {
@@ -4921,7 +4930,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 				case 'code':
 					html += self.getFormTextarea({ id: elem_id, value: elem_value, rows: 1, disabled: elem_dis, style: 'display:none', 'data-title': param.title });
 					if (elem_dis) {
-						html += '<div class="button small secondary" onClick="$P().viewParamCode(\'' + param.id + '\')"><i class="mdi mdi-code-json">&nbsp;</i>View Code...</div>';
+						html += '<div class="button small danger" onClick="$P().viewParamCode(\'' + param.id + '\')"><i class="mdi mdi-code-json">&nbsp;</i>View Code...</div>';
 					}
 					else {
 						html += '<div class="button small secondary" onClick="$P().editParamCode(\'' + param.id + '\')"><i class="mdi mdi-text-box-edit-outline">&nbsp;</i>Edit Code...</div>';
@@ -4932,7 +4941,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 					if (typeof(elem_value) == 'object') elem_value = JSON.stringify(elem_value, null, "\t");
 					html += self.getFormTextarea({ id: elem_id, value: elem_value, rows: 1, disabled: elem_dis, style: 'display:none', 'data-title': param.title, 'data-format': 'json' });
 					if (elem_dis) {
-						html += '<div class="button small secondary" onClick="$P().viewParamCode(\'' + param.id + '\')"><i class="mdi mdi-code-json">&nbsp;</i>View JSON...</div>';
+						html += '<div class="button small danger" onClick="$P().viewParamCode(\'' + param.id + '\')"><i class="mdi mdi-code-json">&nbsp;</i>View JSON...</div>';
 					}
 					else {
 						html += '<div class="button small secondary" onClick="$P().editParamCode(\'' + param.id + '\')"><i class="mdi mdi-text-box-edit-outline">&nbsp;</i>Edit JSON...</div>';
@@ -4963,6 +4972,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 			} // switch type
 			
 			if (param.caption) html += '<div class="info_caption">' + inline_marked( strip_html(param.caption) ) + '</div>';
+			else if (elem_dis) html += '<div class="info_caption">This field is locked, and only editable by administrators.</div>';
 			
 			html += '</div>';
 		} ); // foreach param
@@ -4974,7 +4984,7 @@ Page.PageUtils = class PageUtils extends Page.Base {
 		// show param code (no editing)
 		var elem_id = 'fe_uf_' + CSS.escape(param_id);
 		var elem_value = $('#' + elem_id).val();
-		var title = $('#' + elem_id).data('title');
+		var title = $('#' + elem_id).data('title') + ' (View Only)';
 		
 		this.viewCodeAuto(title, elem_value);
 	}
