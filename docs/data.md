@@ -634,6 +634,7 @@ Specifies which state the job is currently in.  Here is a list of all the possib
 | `start_delay` | Job has a custom starting delay.  The timestamp at which the delay expires should be in [Job.until](#job-until). |
 | `retry_delay` | Job is currently in a retry delay.  The timestamp at which the delay expires should be in [Job.until](#job-until). |
 | `ready` | Job is ready to start. |
+| `starting` | Job is in the process of starting (running start actions). |
 | `active` | Job is currently active (running). |
 | `finishing` | Job is finishing (uploading logs and/or files). |
 | `complete` | Job is complete. |
