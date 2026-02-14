@@ -68,12 +68,12 @@ This duration string sets the retention for monitor timelines; older points are 
 ## ping_freq_sec
 <!-- Title: WebSocket Ping Frequency (seconds) -->
 
-This number (seconds) controls the interval for sending WebSocket pings to clients/workers (default: `10`).
+This number (seconds) controls the interval for sending WebSocket pings to clients/workers (default: `5`).
 
 ## ping_timeout_sec
 <!-- Title: WebSocket Timeout (seconds) -->
 
-This number (seconds) is the max allowed time without a pong before a socket is considered timed out (default: `20`).
+This number (seconds) is the max allowed time without a pong before a socket is considered timed out (default: `30`).
 
 ## max_jobs_per_min
 <!-- Title: Max Jobs Per Minute -->
