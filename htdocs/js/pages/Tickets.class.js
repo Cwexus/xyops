@@ -1248,7 +1248,7 @@ Page.Tickets = class Tickets extends Page.PageUtils {
 				// html += '<div class="button secondary mobile_collapse" onClick="$P().go_edit_history()"><i class="mdi mdi-history">&nbsp;</i><span>History...</span></div>';
 				
 				html += '<div id="btn_et_add_event" class="button secondary mobile_collapse sm_hide" onClick="$P().do_edit_event(-1)"><i class="mdi mdi-calendar-edit-outline">&nbsp;</i><span>Add Event...</span></div>';
-				html += '<div id="btn_et_add_event" class="button secondary mobile_collapse sm_hide" onClick="$P().do_attach_files()"><i class="mdi mdi-cloud-upload-outline">&nbsp;</i><span>Attach Files...</span></div>';
+				html += '<div id="btn_et_attach_files" class="button secondary mobile_collapse sm_hide" onClick="$P().do_attach_files()"><i class="mdi mdi-cloud-upload-outline">&nbsp;</i><span>Attach Files...</span></div>';
 				html += '<div id="btn_et_assign" class="button mobile_collapse" onClick="$P().do_assign_to_me()"><i class="mdi mdi-account">&nbsp;</i><span>Assign to Me</span></div>';
 				
 				var is_fav = !!(ticket.cc && ticket.cc.includes(app.username));
