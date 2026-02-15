@@ -2768,7 +2768,7 @@ Page.Workflows = class Workflows extends Page.Events {
 			<div class="button secondary left mobile_collapse" id="d_btn_wf_test" onClick="$P().doTestSelection()" style="display:none" title="${config.ui.tooltips.wf_test_sel_node}"><i class="mdi mdi-test-tube">&nbsp;</i><span>${config.ui.buttons.wf_test_sel_node}</span></div>
 			<div class="button icon left mobile_collapse" id="d_btn_wf_dup" onClick="$P().doDuplicateSelection()" style="display:none" title="${config.ui.tooltips.wf_dupe_sel}"><i class="mdi mdi-content-duplicate">&nbsp;</i><span>${config.ui.buttons.wf_dupe_sel}</span></div>
 			<div class="button danger left mobile_collapse" id="d_btn_wf_dis" onClick="$P().doDetachSelection()" style="display:none" title="${config.ui.tooltips.wf_detach_sel}"><i class="mdi mdi-soldering-iron">&nbsp;</i><span>${config.ui.buttons.wf_detach_sel}</span></div>
-			<div class="button danger left mobile_collapse" id="d_btn_wf_del" onClick="$P().doDeleteSelection()" style="display:none" title="${config.ui.tooltips.wf_delete_sel}"><i class="mdi mdi-trash-can-outline">&nbsp;</i><span>${config.ui.buttons.wf_delete_sel}</span></div>
+			<div class="button danger left mobile_collapse" id="d_btn_wf_del" onClick="$P().doDeleteSelection()" style="display:none" title="${config.ui.tooltips.wf_delete_sel}"><i class="mdi mdi-selection-remove">&nbsp;</i><span>${config.ui.buttons.wf_delete_sel}</span></div>
 			<div class="wf_sel_msg left tablet_hide"></div>
 			
 			<div class="button default right tablet_collapse" id="d_btn_wf_new" onClick="$P().doAddNode()"><i class="mdi mdi-plus-circle">&nbsp;</i><span>${config.ui.buttons.wf_add_node}</span></div>
