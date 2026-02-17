@@ -3492,6 +3492,10 @@ Page.Base = class Base extends Page {
 			opts.sort_by = col_id;
 		}
 		
+		// save sort options in prefs
+		app.setPref(`tables.${id}.sort_by`, opts.sort_by);
+		app.setPref(`tables.${id}.sort_dir`, opts.sort_dir);
+		
 		var disp_rows = this.getSortedTableRows( opts.id );
 		
 		// redraw pagination thing
@@ -3512,6 +3516,9 @@ Page.Base = class Base extends Page {
 		var self = this;
 		var html = '';
 		if (!this.tables) this.tables = {};
+		
+		opts.sort_by = app.getPref(`tables.${opts.id}.sort_by`) || opts.sort_by;
+		opts.sort_dir = app.getPref(`tables.${opts.id}.sort_dir`) || opts.sort_dir;
 		
 		// retrieve previous settings if applicable
 		if (this.tables[ opts.id ]) {
