@@ -165,7 +165,7 @@ Page.Servers = class Servers extends Page.ServerUtils {
 		html += '</div>';
 		html += '<div class="box_content table">';
 		
-		html += this.getSortableTable( this.servers, table_opts, function(item, idx) {
+		html += this.getSortableTable( this.servers, table_opts, function(item) {
 			var classes = [];
 			
 			var nice_jobs = 'Idle';

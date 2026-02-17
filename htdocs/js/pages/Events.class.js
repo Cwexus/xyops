@@ -314,14 +314,14 @@ Page.Events = class Events extends Page.PageUtils {
 			column_labels: ['Event Title', 'Category', 'Tags', 'Plugin', 'Target', 'Trigger', 'Status', 'Actions']
 		};
 		
-		html += this.getSortableTable( this.events, table_opts, function(item, idx) {
+		html += this.getSortableTable( this.events, table_opts, function(item) {
 			var classes = [];
 			var cat = cat_map[ item.category ] || { title: item.category };
 			
 			var actions = [];
-			actions.push( '<button class="link" onClick="$P().do_run_event_from_list('+idx+')"><b>Run</b></button>' );
-			actions.push( '<button class="link" onClick="$P().edit_event('+idx+')"><b>Edit</b></button>' );
-			actions.push( '<button class="link" onClick="$P().go_hist_from_list('+idx+')"><b>History</b></button>' );
+			actions.push( `<button class="link" data-event="${item.id}" onClick="$P().do_run_event_from_list(this)"><b>Run</b></button>` );
+			actions.push( `<button class="link" data-event="${item.id}" onClick="$P().do_edit_event_from_list(this)"><b>Edit</b></button>` );
+			actions.push( `<button class="link" data-event="${item.id}" onClick="$P().go_hist_from_list(this)"><b>History</b></button>` );
 			
 			var tds = [
 				'<span style="font-weight:bold">' + self.getNiceEvent(item, true) + '</span>',
@@ -563,9 +563,20 @@ Page.Events = class Events extends Page.PageUtils {
 		return true; // show
 	}
 	
-	do_run_event_from_list(idx) {
+	do_edit_event_from_list(elem) {
+		// edit event from list
+		var id = $(elem).data('event');
+		var event = find_object( this.events, { id } );
+		
+		if (event.type == 'workflow') Nav.go( '#Workflows?sub=edit&id=' + event.id );
+		else Nav.go( '#Events?sub=edit&id=' + event.id );
+	}
+	
+	do_run_event_from_list(elem) {
 		// run event from list
-		this.doRunEvent( this.events[idx] );
+		var id = $(elem).data('event');
+		var event = find_object( this.events, { id } );
+		this.doRunEvent( event );
 	}
 	
 	do_run_current_event() {
@@ -602,10 +613,10 @@ Page.Events = class Events extends Page.PageUtils {
 		}
 	}
 	
-	go_hist_from_list(idx) {
+	go_hist_from_list(elem) {
 		// jump over to rev history for specific event
-		// Nav.go('Events?sub=history&id=' + this.events[idx].id);
-		Nav.go('Search?event=' + this.events[idx].id);
+		var id = $(elem).data('event');
+		Nav.go('Search?event=' + id);
 	}
 	
 	delete_event(idx) {
