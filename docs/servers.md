@@ -46,9 +46,11 @@ Notes:
 
 To automate adding new ephemeral servers to your cluster, follow these steps:
 
-First, create a new [API Key](api.md#api-keys) in the UI, and assign it the [add_servers](privileges.md#add_servers) privilege only (remove all the default privileges).  Next, click "Add Server" in the UI and copy the Linux installation command.  Do not enter any server options like label, icon or group.
+First, create a new [API Key](api.md#api-keys) in the UI, and assign it the [add_servers](privileges.md#add_servers) privilege only (remove all the default privileges).  
 
-Replace the auth token value (which expires after 24 hours) with your new API Key (which won't expire).  The token is the value of the `t` query string parameter in the URL.  Example:
+Next, click "Add Server" in the UI and copy the Linux installation command.  Do not enter any server options like label, icon or group.
+
+Replace the temporary auth token (which expires after 24 hours) with your new API Key (which won't expire).  The token is the value of the `t` query string parameter in the URL.  Example:
 
 ```sh
 curl -s "https://xyops01.mycompany.com/api/app/satellite/install?t=API_KEY_HERE" | sudo sh
@@ -62,6 +64,58 @@ Notes:
 - After initial download, xySat will install from a local cache and not have to hit the internet for anything (or just use [Air-Gapped Mode](hosting.md#air-gapped-mode)).
 - Make sure your servers have `curl` preinstalled.  Alternatively, you can rewrite the command to use `wget`.
 - In automated mode your server's hostname will dictate which server groups it gets added to.
+
+### Automated Docker Workers
+
+To automate adding new Docker based workers to your cluster, follow these steps:
+
+First, create a new [API Key](api.md#api-keys) in the UI, and assign it the [add_servers](privileges.md#add_servers) privilege only (remove all the default privileges).
+
+Next, click "Add Server" from the sidebar, select "Docker" as the target platform, and copy the installation command to your clipboard.  Do not enter any server options like label, icon or group.  It will look like this:
+
+```sh
+docker run --detach --init --restart unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -e XYOPS_setup="http://YOUR_XYOPS_SERVER:5522/api/app/satellite/config?t=1234567890abcdefghijk" --name "xyops-worker-12345" --hostname "docker-12345" ghcr.io/pixlcore/xysat:latest
+```
+
+Grab the `XYOPS_setup` environment variable from the install command, and replace the temporary auth token (which expires after 24 hours) with your new API Key (which won't expire).  The token is the value of the `t` query string parameter in the URL.  Example:
+
+```
+http://YOUR_XYOPS_SERVER:5522/api/app/satellite/config?t=YOUR_API_KEY_HERE
+```
+
+You can now use this to spin up as many Docker workers as you want.  Just specify your new URL with API Key as the `XYOPS_setup` environment variable, and use the official `ghcr.io/pixlcore/xysat:latest` Docker image.  Here is an example using Docker Compose:
+
+```yaml
+services:
+  worker1:
+    image: ghcr.io/pixlcore/xysat:latest
+    init: true
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      XYOPS_setup: http://YOUR_XYOPS_SERVER:5522/api/app/satellite/config?t=YOUR_API_KEY_HERE
+
+  worker2:
+    image: ghcr.io/pixlcore/xysat:latest
+    init: true
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      XYOPS_setup: http://YOUR_XYOPS_SERVER:5522/api/app/satellite/config?t=YOUR_API_KEY_HERE
+
+  worker3:
+    image: ghcr.io/pixlcore/xysat:latest
+    init: true
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      XYOPS_setup: http://YOUR_XYOPS_SERVER:5522/api/app/satellite/config?t=YOUR_API_KEY_HERE
+```
+
+All workers can use the same exact `XYOPS_setup` value and API Key.  Each request generates a new unique Server ID and permanent Auth Token.
 
 ## Groups and Auto-Assignment
 
